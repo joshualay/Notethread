@@ -26,7 +26,6 @@
 		981821781468026E00DBC1D2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 981821761468026E00DBC1D2 /* InfoPlist.strings */; };
 		9818217B1468026E00DBC1D2 /* NotethreadTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9818217A1468026E00DBC1D2 /* NotethreadTests.m */; };
 		981821861468066300DBC1D2 /* Note.m in Sources */ = {isa = PBXBuildFile; fileRef = 981821851468066300DBC1D2 /* Note.m */; };
-		981821891468067500DBC1D2 /* Page.m in Sources */ = {isa = PBXBuildFile; fileRef = 981821881468067500DBC1D2 /* Page.m */; };
 		98C3FF9A146806D800133628 /* Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = 98C3FF99146806D800133628 /* Tag.m */; };
 /* End PBXBuildFile section */
 
@@ -67,8 +66,6 @@
 		9818217A1468026E00DBC1D2 /* NotethreadTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotethreadTests.m; sourceTree = "<group>"; };
 		981821841468066300DBC1D2 /* Note.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Note.h; sourceTree = "<group>"; };
 		981821851468066300DBC1D2 /* Note.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Note.m; sourceTree = "<group>"; };
-		981821871468067500DBC1D2 /* Page.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Page.h; sourceTree = "<group>"; };
-		981821881468067500DBC1D2 /* Page.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Page.m; sourceTree = "<group>"; };
 		98C3FF98146806D800133628 /* Tag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tag.h; sourceTree = "<group>"; };
 		98C3FF99146806D800133628 /* Tag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tag.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -181,8 +178,6 @@
 			isa = PBXGroup;
 			children = (
 				981821571468026D00DBC1D2 /* Notethread.xcdatamodeld */,
-				981821871468067500DBC1D2 /* Page.h */,
-				981821881468067500DBC1D2 /* Page.m */,
 				981821841468066300DBC1D2 /* Note.h */,
 				981821851468066300DBC1D2 /* Note.m */,
 				98C3FF98146806D800133628 /* Tag.h */,
@@ -305,7 +300,6 @@
 				9818215C1468026D00DBC1D2 /* MasterViewController.m in Sources */,
 				9818215F1468026D00DBC1D2 /* DetailViewController.m in Sources */,
 				981821861468066300DBC1D2 /* Note.m in Sources */,
-				981821891468067500DBC1D2 /* Page.m in Sources */,
 				98C3FF9A146806D800133628 /* Tag.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
