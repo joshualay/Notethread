@@ -10,8 +10,13 @@
 
 #import "DetailViewController.h"
 
+#import "Note.h"
+
+#import "NTWriteViewController.h"
+
 @interface MasterViewController ()
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
+- (void)displayWriteView;
 @end
 
 @implementation MasterViewController
@@ -20,11 +25,13 @@
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext = __managedObjectContext;
 
+const NSInteger rootDepthInteger = 0;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Master", @"Master");
+        self.title = NSLocalizedString(@"Notethread", @"Notethread");
     }
     return self;
 }
@@ -44,7 +51,7 @@
     // Set up the edit and add buttons.
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
 
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject)];
+    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(displayWriteView)];
     self.navigationItem.rightBarButtonItem = addButton;
 }
 
@@ -166,21 +173,26 @@
     // Create the fetch request for the entity.
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     // Edit the entity name as appropriate.
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Event" inManagedObjectContext:self.managedObjectContext];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Note" inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];
     
     // Set the batch size to a suitable number.
     [fetchRequest setFetchBatchSize:20];
     
+    NSPredicate *predicate = [NSPredicate
+                              predicateWithFormat:@"depth == %@", [NSNumber numberWithInteger:rootDepthInteger]];
+    
+    [fetchRequest setPredicate:predicate];
+    
     // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeStamp" ascending:NO];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"lastModifiedDate" ascending:NO];
     NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Master"];
+    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Notethread"];
     aFetchedResultsController.delegate = self;
     self.fetchedResultsController = aFetchedResultsController;
     
@@ -260,32 +272,55 @@
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    NSManagedObject *managedObject = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = [[managedObject valueForKey:@"timeStamp"] description];
+    Note *note = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    cell.textLabel.text = note.text;
 }
 
+//TODO - pop the "how" into a delegate call and put the contents of this method inside.. well. that method
+- (void)displayWriteView {
+    NTWriteViewController *writeViewController = [[NTWriteViewController alloc] initWithNibName:@"NTWriteViewController" bundle:nil];
+    writeViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    writeViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self presentModalViewController:writeViewController animated:YES];
+}
+
+/*
 - (void)insertNewObject
 {
     // Create a new instance of the entity managed by the fetched results controller.
     NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
-    NSEntityDescription *entity = [[self.fetchedResultsController fetchRequest] entity];
-    NSManagedObject *newManagedObject = [NSEntityDescription insertNewObjectForEntityForName:[entity name] inManagedObjectContext:context];
+    NSFetchRequest *fetchRequest = [self.fetchedResultsController fetchRequest];    
+    NSEntityDescription *entity = [fetchRequest entity];
+    Note *newNote = [NSEntityDescription insertNewObjectForEntityForName:[entity name] inManagedObjectContext:context];
     
     // If appropriate, configure the new managed object.
     // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
-    [newManagedObject setValue:[NSDate date] forKey:@"timeStamp"];
+    newNote.createdDate = [NSDate date];
+    newNote.lastModifiedDate = [NSDate date];
+    newNote.depth = [NSNumber numberWithInteger:rootDepthInteger];
+    newNote.text = @"Testing something else";
+    
+    Note *noteThread = [NSEntityDescription insertNewObjectForEntityForName:[entity name] inManagedObjectContext:context];
+    
+    noteThread.createdDate = [NSDate date];
+    noteThread.lastModifiedDate = [NSDate date];
+    noteThread.depth = [NSNumber numberWithInt:1];
+    noteThread.text = @"child thread with random text";
+    
+    [newNote addNoteThreadsObject:noteThread];
+    noteThread.parentNote = newNote;
     
     // Save the context.
     NSError *error = nil;
     if (![context save:&error]) {
-        /*
+        / *
          Replace this implementation with code to handle the error appropriately.
          
          abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-         */
+         * /
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
     }
-}
+}*/
 
 @end

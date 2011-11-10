@@ -15,7 +15,6 @@
 @property (nonatomic, retain) NSNumber * frequency;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSSet *notes;
-@property (nonatomic, retain) NSSet *pages;
 @end
 
 @interface Tag (CoreDataGeneratedAccessors)
@@ -24,10 +23,5 @@
 - (void)removeNotesObject:(NSManagedObject *)value;
 - (void)addNotes:(NSSet *)values;
 - (void)removeNotes:(NSSet *)values;
-
-- (void)addPagesObject:(NSManagedObject *)value;
-- (void)removePagesObject:(NSManagedObject *)value;
-- (void)addPages:(NSSet *)values;
-- (void)removePages:(NSSet *)values;
 
 @end

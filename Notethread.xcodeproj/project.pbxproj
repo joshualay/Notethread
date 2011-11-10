@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9800559C14680E50004C4802 /* Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = 9800559B14680E50004C4802 /* Tag.m */; };
+		9800559F146814A6004C4802 /* Note.m in Sources */ = {isa = PBXBuildFile; fileRef = 9800559E146814A6004C4802 /* Note.m */; };
+		980055A3146AB884004C4802 /* NTWriteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 980055A1146AB884004C4802 /* NTWriteViewController.m */; };
+		980055A4146AB884004C4802 /* NTWriteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 980055A2146AB884004C4802 /* NTWriteViewController.xib */; };
 		981821441468026D00DBC1D2 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981821431468026D00DBC1D2 /* UIKit.framework */; };
 		981821461468026D00DBC1D2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981821451468026D00DBC1D2 /* Foundation.framework */; };
 		981821481468026D00DBC1D2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981821471468026D00DBC1D2 /* CoreGraphics.framework */; };
@@ -25,8 +29,6 @@
 		981821701468026E00DBC1D2 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981821491468026D00DBC1D2 /* CoreData.framework */; };
 		981821781468026E00DBC1D2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 981821761468026E00DBC1D2 /* InfoPlist.strings */; };
 		9818217B1468026E00DBC1D2 /* NotethreadTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9818217A1468026E00DBC1D2 /* NotethreadTests.m */; };
-		981821861468066300DBC1D2 /* Note.m in Sources */ = {isa = PBXBuildFile; fileRef = 981821851468066300DBC1D2 /* Note.m */; };
-		98C3FF9A146806D800133628 /* Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = 98C3FF99146806D800133628 /* Tag.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +42,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9800559A14680E50004C4802 /* Tag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tag.h; sourceTree = "<group>"; };
+		9800559B14680E50004C4802 /* Tag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tag.m; sourceTree = "<group>"; };
+		9800559D146814A6004C4802 /* Note.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Note.h; sourceTree = "<group>"; };
+		9800559E146814A6004C4802 /* Note.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Note.m; sourceTree = "<group>"; };
+		980055A0146AB884004C4802 /* NTWriteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NTWriteViewController.h; sourceTree = "<group>"; };
+		980055A1146AB884004C4802 /* NTWriteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NTWriteViewController.m; sourceTree = "<group>"; };
+		980055A2146AB884004C4802 /* NTWriteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NTWriteViewController.xib; sourceTree = "<group>"; };
 		9818213F1468026D00DBC1D2 /* Notethread.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Notethread.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		981821431468026D00DBC1D2 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		981821451468026D00DBC1D2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -64,10 +73,6 @@
 		981821771468026E00DBC1D2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		981821791468026E00DBC1D2 /* NotethreadTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotethreadTests.h; sourceTree = "<group>"; };
 		9818217A1468026E00DBC1D2 /* NotethreadTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotethreadTests.m; sourceTree = "<group>"; };
-		981821841468066300DBC1D2 /* Note.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Note.h; sourceTree = "<group>"; };
-		981821851468066300DBC1D2 /* Note.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Note.m; sourceTree = "<group>"; };
-		98C3FF98146806D800133628 /* Tag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tag.h; sourceTree = "<group>"; };
-		98C3FF99146806D800133628 /* Tag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tag.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +101,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		980055A5146AB89F004C4802 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				980055A2146AB884004C4802 /* NTWriteViewController.xib */,
+				981821601468026D00DBC1D2 /* MasterViewController.xib */,
+				981821631468026D00DBC1D2 /* DetailViewController.xib */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
 		981821341468026D00DBC1D2 = {
 			isa = PBXGroup;
 			children = (
@@ -136,8 +151,9 @@
 				9818215B1468026D00DBC1D2 /* MasterViewController.m */,
 				9818215D1468026D00DBC1D2 /* DetailViewController.h */,
 				9818215E1468026D00DBC1D2 /* DetailViewController.m */,
-				981821601468026D00DBC1D2 /* MasterViewController.xib */,
-				981821631468026D00DBC1D2 /* DetailViewController.xib */,
+				980055A0146AB884004C4802 /* NTWriteViewController.h */,
+				980055A1146AB884004C4802 /* NTWriteViewController.m */,
+				980055A5146AB89F004C4802 /* Views */,
 				98C3FF9B146806E100133628 /* Models */,
 				9818214C1468026D00DBC1D2 /* Supporting Files */,
 			);
@@ -178,10 +194,10 @@
 			isa = PBXGroup;
 			children = (
 				981821571468026D00DBC1D2 /* Notethread.xcdatamodeld */,
-				981821841468066300DBC1D2 /* Note.h */,
-				981821851468066300DBC1D2 /* Note.m */,
-				98C3FF98146806D800133628 /* Tag.h */,
-				98C3FF99146806D800133628 /* Tag.m */,
+				9800559D146814A6004C4802 /* Note.h */,
+				9800559E146814A6004C4802 /* Note.m */,
+				9800559A14680E50004C4802 /* Tag.h */,
+				9800559B14680E50004C4802 /* Tag.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -260,6 +276,7 @@
 				981821501468026D00DBC1D2 /* InfoPlist.strings in Resources */,
 				981821621468026D00DBC1D2 /* MasterViewController.xib in Resources */,
 				981821651468026D00DBC1D2 /* DetailViewController.xib in Resources */,
+				980055A4146AB884004C4802 /* NTWriteViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -299,8 +316,9 @@
 				981821591468026D00DBC1D2 /* Notethread.xcdatamodeld in Sources */,
 				9818215C1468026D00DBC1D2 /* MasterViewController.m in Sources */,
 				9818215F1468026D00DBC1D2 /* DetailViewController.m in Sources */,
-				981821861468066300DBC1D2 /* Note.m in Sources */,
-				98C3FF9A146806D800133628 /* Tag.m in Sources */,
+				9800559C14680E50004C4802 /* Tag.m in Sources */,
+				9800559F146814A6004C4802 /* Note.m in Sources */,
+				980055A3146AB884004C4802 /* NTWriteViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

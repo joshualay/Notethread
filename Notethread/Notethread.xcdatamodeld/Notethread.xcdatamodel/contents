@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="872" systemVersion="11C74" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <entity name="Note">
+    <entity name="Note" representedClassName="Note">
         <attribute name="createdDate" optional="YES" attributeType="Date"/>
+        <attribute name="depth" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="lastModifiedDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="noteThreads" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Note" syncable="YES"/>
+        <relationship name="noteThreads" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Note" inverseName="parentNote" inverseEntity="Note" syncable="YES"/>
+        <relationship name="parentNote" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Note" inverseName="noteThreads" inverseEntity="Note" syncable="YES"/>
         <relationship name="tags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" inverseName="notes" inverseEntity="Tag" syncable="YES"/>
     </entity>
     <entity name="Tag" representedClassName="Tag" syncable="YES">

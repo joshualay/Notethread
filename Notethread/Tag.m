@@ -14,6 +14,5 @@
 @dynamic frequency;
 @dynamic name;
 @dynamic notes;
-@dynamic pages;
 
 @end

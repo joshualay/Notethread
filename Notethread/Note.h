@@ -9,28 +9,29 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class Note;
+@class Note, Tag;
 
 @interface Note : NSManagedObject
 
 @property (nonatomic, retain) NSDate * createdDate;
+@property (nonatomic, retain) NSNumber * depth;
 @property (nonatomic, retain) NSDate * lastModifiedDate;
 @property (nonatomic, retain) NSString * text;
-@property (nonatomic, retain) NSSet *tags;
-@property (nonatomic, retain) NSManagedObject *page;
 @property (nonatomic, retain) NSSet *noteThreads;
+@property (nonatomic, retain) NSSet *tags;
+@property (nonatomic, retain) Note *parentNote;
 @end
 
 @interface Note (CoreDataGeneratedAccessors)
-
-- (void)addTagsObject:(NSManagedObject *)value;
-- (void)removeTagsObject:(NSManagedObject *)value;
-- (void)addTags:(NSSet *)values;
-- (void)removeTags:(NSSet *)values;
 
 - (void)addNoteThreadsObject:(Note *)value;
 - (void)removeNoteThreadsObject:(Note *)value;
 - (void)addNoteThreads:(NSSet *)values;
 - (void)removeNoteThreads:(NSSet *)values;
+
+- (void)addTagsObject:(Tag *)value;
+- (void)removeTagsObject:(Tag *)value;
+- (void)addTags:(NSSet *)values;
+- (void)removeTags:(NSSet *)values;
 
 @end

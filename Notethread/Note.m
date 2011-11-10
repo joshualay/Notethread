@@ -8,15 +8,17 @@
 
 #import "Note.h"
 #import "Note.h"
+#import "Tag.h"
 
 
 @implementation Note
 
 @dynamic createdDate;
+@dynamic depth;
 @dynamic lastModifiedDate;
 @dynamic text;
-@dynamic tags;
-@dynamic page;
 @dynamic noteThreads;
+@dynamic tags;
+@dynamic parentNote;
 
 @end
