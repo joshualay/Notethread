@@ -276,7 +276,6 @@ const NSInteger rootDepthInteger = 0;
     cell.textLabel.text = note.text;
 }
 
-//TODO - pop the "how" into a delegate call and put the contents of this method inside.. well. that method
 - (void)displayWriteView {
     NTWriteViewController *writeViewController = [[NTWriteViewController alloc] initWithDepth:0 parent:nil];
     writeViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;

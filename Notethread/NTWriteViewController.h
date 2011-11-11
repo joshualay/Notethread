@@ -9,15 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "Note.h"
 
-@protocol NTWriteDelegate
+@class NTWriteViewController;
 
-@required
-- (void)saveNoteAtDepth:(NSInteger)depth withParentNote:(Note *)parentNote;
-@end
-
-@interface NTWriteViewController : UIViewController <UITextViewDelegate, NTWriteDelegate>
-
-@property (weak, nonatomic) id <NTWriteDelegate> delegate;
+@interface NTWriteViewController : UIViewController <UITextViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextView *noteTextView;
 @property (strong, nonatomic) IBOutlet UINavigationBar *navigationBar;

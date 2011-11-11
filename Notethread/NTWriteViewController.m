@@ -8,12 +8,9 @@
 
 #import "NTWriteViewController.h"
 #import "AppDelegate.h"
-#import "Note.h"
 
-//TODO - reuse this class when we have a child - perhaps use a different delegate to save and load?
+
 @implementation NTWriteViewController
-
-@synthesize delegate = _delegate;
 
 @synthesize noteTextView  = _noteTextView;
 @synthesize navigationBar = _navigationBar;
@@ -51,19 +48,6 @@
 }
 
 - (IBAction)saveNote:(id)sender {
-    [self.delegate saveNoteAtDepth:self.noteDepth withParentNote:self.parentNote];
-    [self dismissModalViewControllerAnimated:YES];
-}
-
-#pragma UITextViewDelegate
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    self.navigationBar.topItem.title = textView.text;      
-    return YES;
-}
-
-
-#pragma NTWriteDelegate
-- (void)saveNoteAtDepth:(NSInteger)depth withParentNote:(Note *)parentNote {
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
     
@@ -71,19 +55,27 @@
     
     newNote.createdDate = [NSDate date];
     newNote.lastModifiedDate = [NSDate date];
-    newNote.depth = [NSNumber numberWithInteger:depth];
+    newNote.depth = [NSNumber numberWithInteger:self.noteDepth];
     newNote.text = self.noteTextView.text;
     
-    if (parentNote != nil) {
-        [parentNote addNoteThreadsObject:newNote];
-        newNote.parentNote = parentNote;
+    if (self.parentNote != nil) {
+        [self.parentNote addNoteThreadsObject:newNote];
+        newNote.parentNote = self.parentNote;
     }
     
     NSError *error = nil;
     if (![managedObjectContext save:&error]) {
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
-    }    
+    } 
+    
+    [self dismissModalViewControllerAnimated:YES];
 }
+
+#pragma UITextViewDelegate
+/*- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    self.navigationBar.topItem.title = textView.text;      
+    return YES;
+}*/
 
 @end
