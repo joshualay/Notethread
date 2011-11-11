@@ -278,7 +278,7 @@ const NSInteger rootDepthInteger = 0;
 
 //TODO - pop the "how" into a delegate call and put the contents of this method inside.. well. that method
 - (void)displayWriteView {
-    NTWriteViewController *writeViewController = [[NTWriteViewController alloc] initWithNibName:@"NTWriteViewController" bundle:nil];
+    NTWriteViewController *writeViewController = [[NTWriteViewController alloc] initWithDepth:0 parent:nil];
     writeViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     writeViewController.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentModalViewController:writeViewController animated:YES];

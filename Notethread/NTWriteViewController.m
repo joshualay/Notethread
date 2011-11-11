@@ -7,63 +7,83 @@
 //
 
 #import "NTWriteViewController.h"
+#import "AppDelegate.h"
+#import "Note.h"
 
+//TODO - reuse this class when we have a child - perhaps use a different delegate to save and load?
 @implementation NTWriteViewController
 
-@synthesize noteTextView = _noteTextView;
+@synthesize delegate = _delegate;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+@synthesize noteTextView  = _noteTextView;
+@synthesize navigationBar = _navigationBar;
+@synthesize noteDepth     = _noteDepth;
+@synthesize parentNote    = _parentNote;
+
+
+- (id)initWithDepth:(NSInteger)noteDepth parent:(Note *)note {
+    self = [super initWithNibName:@"NTWriteViewController" bundle:nil];
     if (self) {
-        _noteTextView.delegate = self;
-        [self becomeFirstResponder];
+        _noteDepth  = noteDepth;
+        _parentNote = note;
     }
     return self;
 }
 
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
 
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    [_noteTextView becomeFirstResponder];
+    
+    self.navigationBar.topItem.title = NSLocalizedString(@"Writing...", @"Writing...");
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
     return YES;
-    //return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+- (IBAction)cancelWriting:(id)sender {
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+- (IBAction)saveNote:(id)sender {
+    [self.delegate saveNoteAtDepth:self.noteDepth withParentNote:self.parentNote];
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 #pragma UITextViewDelegate
-/*
-- (BOOL)textViewShouldBeginEditing:(UITextView *)textView;
-- (BOOL)textViewShouldEndEditing:(UITextView *)textView;
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    self.navigationBar.topItem.title = textView.text;      
+    return YES;
+}
 
-- (void)textViewDidBeginEditing:(UITextView *)textView;
-- (void)textViewDidEndEditing:(UITextView *)textView;
 
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text;
-- (void)textViewDidChange:(UITextView *)textView;
-
-- (void)textViewDidChangeSelection:(UITextView *)textView;
-*/
+#pragma NTWriteDelegate
+- (void)saveNoteAtDepth:(NSInteger)depth withParentNote:(Note *)parentNote {
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
+    
+    Note *newNote = [NSEntityDescription insertNewObjectForEntityForName:@"Note" inManagedObjectContext:managedObjectContext];
+    
+    newNote.createdDate = [NSDate date];
+    newNote.lastModifiedDate = [NSDate date];
+    newNote.depth = [NSNumber numberWithInteger:depth];
+    newNote.text = self.noteTextView.text;
+    
+    if (parentNote != nil) {
+        [parentNote addNoteThreadsObject:newNote];
+        newNote.parentNote = parentNote;
+    }
+    
+    NSError *error = nil;
+    if (![managedObjectContext save:&error]) {
+        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        abort();
+    }    
+}
 
 @end
