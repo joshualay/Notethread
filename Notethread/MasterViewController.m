@@ -107,7 +107,7 @@ const NSInteger rootDepthInteger = 0;
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
 
@@ -271,9 +271,25 @@ const NSInteger rootDepthInteger = 0;
  */
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
-{
+{   
     Note *note = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = note.text;
+    
+    NSString *headingText = note.text;
+    NSString *detailText  = nil;
+
+     
+    NSRange newLineRange = [note.text rangeOfString:@"\n"];
+    if (newLineRange.location != NSNotFound) {
+        NSRange headingRange   = NSMakeRange(0, newLineRange.location);
+        headingText            = [headingText substringWithRange:headingRange];
+        
+        NSInteger detailLength = [note.text length] - newLineRange.location;
+        NSRange detailRange    = NSMakeRange(newLineRange.length - 1, detailLength);
+        detailText             = [note.text substringWithRange:detailRange];
+    }
+    
+    cell.textLabel.text       = headingText;
+    cell.detailTextLabel.text = detailText;
 }
 
 - (void)displayWriteView {
@@ -283,43 +299,5 @@ const NSInteger rootDepthInteger = 0;
     [self presentModalViewController:writeViewController animated:YES];
 }
 
-/*
-- (void)insertNewObject
-{
-    // Create a new instance of the entity managed by the fetched results controller.
-    NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
-    NSFetchRequest *fetchRequest = [self.fetchedResultsController fetchRequest];    
-    NSEntityDescription *entity = [fetchRequest entity];
-    Note *newNote = [NSEntityDescription insertNewObjectForEntityForName:[entity name] inManagedObjectContext:context];
-    
-    // If appropriate, configure the new managed object.
-    // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
-    newNote.createdDate = [NSDate date];
-    newNote.lastModifiedDate = [NSDate date];
-    newNote.depth = [NSNumber numberWithInteger:rootDepthInteger];
-    newNote.text = @"Testing something else";
-    
-    Note *noteThread = [NSEntityDescription insertNewObjectForEntityForName:[entity name] inManagedObjectContext:context];
-    
-    noteThread.createdDate = [NSDate date];
-    noteThread.lastModifiedDate = [NSDate date];
-    noteThread.depth = [NSNumber numberWithInt:1];
-    noteThread.text = @"child thread with random text";
-    
-    [newNote addNoteThreadsObject:noteThread];
-    noteThread.parentNote = newNote;
-    
-    // Save the context.
-    NSError *error = nil;
-    if (![context save:&error]) {
-        / *
-         Replace this implementation with code to handle the error appropriately.
-         
-         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-         * /
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }
-}*/
 
 @end
