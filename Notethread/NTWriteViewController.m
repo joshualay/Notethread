@@ -8,7 +8,7 @@
 
 #import "NTWriteViewController.h"
 #import "AppDelegate.h"
-
+#import "StyleApplicationService.h"
 
 @implementation NTWriteViewController
 
@@ -33,9 +33,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [_noteTextView becomeFirstResponder];
+    [self.noteTextView becomeFirstResponder];
     
     self.navigationBar.topItem.title = NSLocalizedString(@"Writing...", @"Writing...");
+    
+    StyleApplicationService *styleApplicationService = [StyleApplicationService sharedSingleton];
+    self.noteTextView.font = [styleApplicationService fontNoteWrite];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -73,9 +76,9 @@
 }
 
 #pragma UITextViewDelegate
-/*- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    self.navigationBar.topItem.title = textView.text;      
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    self.navigationBar.topItem.title = [NSString stringWithFormat:@"%@%@", textView.text, text];      
     return YES;
-}*/
+}
 
 @end

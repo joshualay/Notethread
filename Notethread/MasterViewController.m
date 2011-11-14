@@ -8,11 +8,10 @@
 
 #import "MasterViewController.h"
 
-#import "DetailViewController.h"
-
+#import "NTNoteViewController.h"
 #import "Note.h"
-
 #import "NTWriteViewController.h"
+#import "StyleApplicationService.h"
 
 @interface MasterViewController ()
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
@@ -21,9 +20,8 @@
 
 @implementation MasterViewController
 
-@synthesize detailViewController = _detailViewController;
 @synthesize fetchedResultsController = __fetchedResultsController;
-@synthesize managedObjectContext = __managedObjectContext;
+@synthesize managedObjectContext     = __managedObjectContext;
 
 const NSInteger rootDepthInteger = 0;
 
@@ -100,6 +98,16 @@ const NSInteger rootDepthInteger = 0;
     return [sectionInfo numberOfObjects];
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NTNoteViewController *noteViewController = [[NTNoteViewController alloc] init];
+    
+    Note *selectedNote           = (Note *)[[self fetchedResultsController] objectAtIndexPath:indexPath];
+    noteViewController.note = selectedNote;    
+    
+    [self.navigationController pushViewController:noteViewController animated:YES];
+}
+
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -151,15 +159,7 @@ const NSInteger rootDepthInteger = 0;
     return NO;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (!self.detailViewController) {
-        self.detailViewController = [[DetailViewController alloc] initWithNibName:@"DetailViewController" bundle:nil];
-    }
-    NSManagedObject *selectedObject = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-    self.detailViewController.detailItem = selectedObject;    
-    [self.navigationController pushViewController:self.detailViewController animated:YES];
-}
+
 
 #pragma mark - Fetched results controller
 
@@ -272,11 +272,13 @@ const NSInteger rootDepthInteger = 0;
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {   
+    cell.textLabel.text       = nil;
+    cell.detailTextLabel.text = nil;
+    
     Note *note = [self.fetchedResultsController objectAtIndexPath:indexPath];
     
     NSString *headingText = note.text;
     NSString *detailText  = nil;
-
      
     NSRange newLineRange = [note.text rangeOfString:@"\n"];
     if (newLineRange.location != NSNotFound) {
@@ -290,6 +292,10 @@ const NSInteger rootDepthInteger = 0;
     
     cell.textLabel.text       = headingText;
     cell.detailTextLabel.text = detailText;
+    
+    StyleApplicationService *styleApplicationService = [StyleApplicationService sharedSingleton];
+    cell.textLabel.font       = [styleApplicationService fontTextLabelPrimary];
+    cell.detailTextLabel.font = [styleApplicationService fontDetailTextLabelPrimary];
 }
 
 - (void)displayWriteView {
