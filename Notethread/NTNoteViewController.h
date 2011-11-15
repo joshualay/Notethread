@@ -10,10 +10,12 @@
 
 #import "Note.h"
 
-@interface NTNoteViewController : UIViewController
+@interface NTNoteViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
 @property (strong, nonatomic) Note *note;
 @property (strong, nonatomic) IBOutlet UILabel *noteLabel;
+@property (strong, nonatomic) UITableView *threadTableView;
+@property (strong, nonatomic) NSArray *noteThreads;
 
 - (id)initWithNote:(Note *)note;
 

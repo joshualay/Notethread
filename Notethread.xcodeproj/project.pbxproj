@@ -20,9 +20,7 @@
 		981821561468026D00DBC1D2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 981821551468026D00DBC1D2 /* AppDelegate.m */; };
 		981821591468026D00DBC1D2 /* Notethread.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 981821571468026D00DBC1D2 /* Notethread.xcdatamodeld */; };
 		9818215C1468026D00DBC1D2 /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9818215B1468026D00DBC1D2 /* MasterViewController.m */; };
-		9818215F1468026D00DBC1D2 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9818215E1468026D00DBC1D2 /* DetailViewController.m */; };
 		981821621468026D00DBC1D2 /* MasterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 981821601468026D00DBC1D2 /* MasterViewController.xib */; };
-		981821651468026D00DBC1D2 /* DetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 981821631468026D00DBC1D2 /* DetailViewController.xib */; };
 		9818216D1468026E00DBC1D2 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9818216C1468026E00DBC1D2 /* SenTestingKit.framework */; };
 		9818216E1468026E00DBC1D2 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981821431468026D00DBC1D2 /* UIKit.framework */; };
 		9818216F1468026E00DBC1D2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981821451468026D00DBC1D2 /* Foundation.framework */; };
@@ -66,10 +64,7 @@
 		981821581468026D00DBC1D2 /* Notethread.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Notethread.xcdatamodel; sourceTree = "<group>"; };
 		9818215A1468026D00DBC1D2 /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
 		9818215B1468026D00DBC1D2 /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
-		9818215D1468026D00DBC1D2 /* DetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
-		9818215E1468026D00DBC1D2 /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		981821611468026D00DBC1D2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MasterViewController.xib; sourceTree = "<group>"; };
-		981821641468026D00DBC1D2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DetailViewController.xib; sourceTree = "<group>"; };
 		9818216B1468026E00DBC1D2 /* NotethreadTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NotethreadTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9818216C1468026E00DBC1D2 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		981821751468026E00DBC1D2 /* NotethreadTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NotethreadTests-Info.plist"; sourceTree = "<group>"; };
@@ -115,7 +110,6 @@
 				9871256014700AA0007D56D6 /* NTNoteViewController.xib */,
 				980055A2146AB884004C4802 /* NTWriteViewController.xib */,
 				981821601468026D00DBC1D2 /* MasterViewController.xib */,
-				981821631468026D00DBC1D2 /* DetailViewController.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -158,8 +152,6 @@
 				981821551468026D00DBC1D2 /* AppDelegate.m */,
 				9818215A1468026D00DBC1D2 /* MasterViewController.h */,
 				9818215B1468026D00DBC1D2 /* MasterViewController.m */,
-				9818215D1468026D00DBC1D2 /* DetailViewController.h */,
-				9818215E1468026D00DBC1D2 /* DetailViewController.m */,
 				980055A0146AB884004C4802 /* NTWriteViewController.h */,
 				980055A1146AB884004C4802 /* NTWriteViewController.m */,
 				9871255E14700AA0007D56D6 /* NTNoteViewController.h */,
@@ -296,7 +288,6 @@
 			files = (
 				981821501468026D00DBC1D2 /* InfoPlist.strings in Resources */,
 				981821621468026D00DBC1D2 /* MasterViewController.xib in Resources */,
-				981821651468026D00DBC1D2 /* DetailViewController.xib in Resources */,
 				980055A4146AB884004C4802 /* NTWriteViewController.xib in Resources */,
 				9871256214700AA0007D56D6 /* NTNoteViewController.xib in Resources */,
 			);
@@ -337,7 +328,6 @@
 				981821561468026D00DBC1D2 /* AppDelegate.m in Sources */,
 				981821591468026D00DBC1D2 /* Notethread.xcdatamodeld in Sources */,
 				9818215C1468026D00DBC1D2 /* MasterViewController.m in Sources */,
-				9818215F1468026D00DBC1D2 /* DetailViewController.m in Sources */,
 				9800559C14680E50004C4802 /* Tag.m in Sources */,
 				9800559F146814A6004C4802 /* Note.m in Sources */,
 				980055A3146AB884004C4802 /* NTWriteViewController.m in Sources */,
@@ -379,14 +369,6 @@
 				981821611468026D00DBC1D2 /* en */,
 			);
 			name = MasterViewController.xib;
-			sourceTree = "<group>";
-		};
-		981821631468026D00DBC1D2 /* DetailViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				981821641468026D00DBC1D2 /* en */,
-			);
-			name = DetailViewController.xib;
 			sourceTree = "<group>";
 		};
 		981821761468026E00DBC1D2 /* InfoPlist.strings */ = {

@@ -27,6 +27,15 @@
     return self;
 }
 
+- (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note {
+    self = [super initWithNibName:@"NTWriteViewController" bundle:nil];
+    if (self) {
+        _noteDepth  = threadDepth;
+        _parentNote = note;
+    }
+    return self;
+}
+
 
 #pragma mark - View lifecycle
 

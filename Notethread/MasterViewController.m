@@ -23,7 +23,9 @@
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext     = __managedObjectContext;
 
-const NSInteger rootDepthInteger = 0;
+const NSInteger rootDepthInteger   = 0;
+const NSInteger threadDepthInteger = 1;
+const CGFloat   cellHeight         = 55.0f;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -102,8 +104,9 @@ const NSInteger rootDepthInteger = 0;
 {
     NTNoteViewController *noteViewController = [[NTNoteViewController alloc] init];
     
-    Note *selectedNote           = (Note *)[[self fetchedResultsController] objectAtIndexPath:indexPath];
-    noteViewController.note = selectedNote;    
+    Note *selectedNote             = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    noteViewController.note        = selectedNote;
+    noteViewController.noteThreads = [selectedNote.noteThreads allObjects];
     
     [self.navigationController pushViewController:noteViewController animated:YES];
 }
@@ -159,6 +162,9 @@ const NSInteger rootDepthInteger = 0;
     return NO;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return cellHeight;
+}
 
 
 #pragma mark - Fetched results controller
@@ -296,14 +302,43 @@ const NSInteger rootDepthInteger = 0;
     StyleApplicationService *styleApplicationService = [StyleApplicationService sharedSingleton];
     cell.textLabel.font       = [styleApplicationService fontTextLabelPrimary];
     cell.detailTextLabel.font = [styleApplicationService fontDetailTextLabelPrimary];
+       
+    UIButton *addThreadButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
+    addThreadButton.tag       = indexPath.row;
+    
+    UITapGestureRecognizer *threadGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(displayChildThreadWriteViewForActiveNote:)];
+    threadGesture.numberOfTapsRequired    = 1;
+    
+    [addThreadButton addGestureRecognizer:threadGesture];
+    
+    [cell addSubview:addThreadButton];
 }
 
+// Top level note: UIModalTransitionStyleCoverVertical
 - (void)displayWriteView {
     NTWriteViewController *writeViewController = [[NTWriteViewController alloc] initWithDepth:0 parent:nil];
-    writeViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    
+    writeViewController.modalTransitionStyle   = UIModalTransitionStyleCoverVertical;
     writeViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+    
     [self presentModalViewController:writeViewController animated:YES];
 }
 
+
+#pragma MasterViewControllerDelegate
+
+// Any thread created: UIModalTransitionStylePartialCurl
+- (void)displayChildThreadWriteViewForActiveNote:(UITapGestureRecognizer *)sender {
+    NSInteger indexRow     = [[sender view] tag];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:indexRow inSection:0];
+    
+    Note *activeNote = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    NTWriteViewController *threadWriteViewController = [[NTWriteViewController alloc] initWithThreadDepth:threadDepthInteger parent:activeNote];
+    
+    threadWriteViewController.modalTransitionStyle   = UIModalTransitionStylePartialCurl;
+    threadWriteViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+    
+    [self presentModalViewController:threadWriteViewController animated:YES];
+}
 
 @end

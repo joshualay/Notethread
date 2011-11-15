@@ -11,9 +11,15 @@
 @class NTNoteViewController;
 @class StyleApplicationService;
 
+#import "Note.h"
+
 #import <CoreData/CoreData.h>
 
-@interface MasterViewController : UITableViewController <NSFetchedResultsControllerDelegate>
+@protocol MasterViewControllerDelegate
+- (void)displayChildThreadWriteViewForActiveNote:(id)sender;
+@end
+
+@interface MasterViewController : UITableViewController <NSFetchedResultsControllerDelegate, MasterViewControllerDelegate>
 
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
