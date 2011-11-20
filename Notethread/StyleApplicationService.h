@@ -8,11 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
+#import "NTWriteViewController.h"
+
 @protocol StyleApplicationServiceDelegate <NSObject>
 - (UIFont *)fontNoteWrite;
 - (UIFont *)fontNoteView;
 - (UIFont *)fontTextLabelPrimary;
 - (UIFont *)fontDetailTextLabelPrimary;
+
+- (void)modalStyleForThreadWriteView:(NTWriteViewController *)threadWriteViewController;
+- (void)configureNoteTableCell:(UITableViewCell *)cell note:(Note *)note;
 @end
 
 @interface StyleApplicationService : NSObject <StyleApplicationServiceDelegate>

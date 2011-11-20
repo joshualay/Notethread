@@ -11,6 +11,10 @@
 #import "StyleApplicationService.h"
 #import "AppDelegate.h"
 
+@interface NTNoteViewController()
+- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
+@end
+
 @implementation NTNoteViewController
 
 @synthesize note            = _note;
@@ -18,23 +22,18 @@
 @synthesize threadTableView = _threadTableView;
 @synthesize noteThreads     = _noteThreads;
 
+@synthesize styleApplicationService = _styleApplicationService;
+
 
 - (id)init {
     self = [super initWithNibName:@"NTNoteViewController" bundle:nil];
     if (self) {
-        _noteThreads = nil;
+        self.noteThreads = nil;
+        self.styleApplicationService = [StyleApplicationService sharedSingleton];
     }
     return self;  
 }
 
-// Not used
-- (id)initWithNote:(Note *)note {
-    self = [super initWithNibName:@"NTNoteViewController" bundle:nil];
-    if (self) {
-        _note = note;
-    }
-    return self;  
-}
 
 #pragma mark - View lifecycle
 - (void)viewDidLoad
@@ -51,8 +50,7 @@
     
     [self.noteLabel sizeToFit];
     
-    StyleApplicationService *styleApplicationService = [StyleApplicationService sharedSingleton];
-    self.noteLabel.font = [styleApplicationService fontNoteView];
+    self.noteLabel.font = [self.styleApplicationService fontNoteView];
     
     CGRect noteLabelRect = self.noteLabel.frame;
     CGFloat tableHeight  = self.view.frame.size.height - noteLabelRect.size.height;
@@ -116,13 +114,16 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
-    
-    Note *note = [self.noteThreads objectAtIndex:indexPath.row];
-    
-    cell.textLabel.text = note.text;
-    
+           
+    [self configureCell:cell atIndexPath:indexPath];
     return cell;    
 }
+
+- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+    Note *note = [self.noteThreads objectAtIndex:indexPath.row];
+    [self.styleApplicationService configureNoteTableCell:cell note:note];
+}
+
 
 #pragma UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -142,8 +143,7 @@
     
     NTWriteViewController *threadWriteViewController = [[NTWriteViewController alloc] initWithThreadDepth:threadDepthInteger parent:self.note];
     
-    threadWriteViewController.modalTransitionStyle   = UIModalTransitionStyleCoverVertical;
-    threadWriteViewController.modalPresentationStyle = UIModalPresentationFullScreen;
+    [self.styleApplicationService modalStyleForThreadWriteView:threadWriteViewController];
     
     [self presentModalViewController:threadWriteViewController animated:YES];    
 }

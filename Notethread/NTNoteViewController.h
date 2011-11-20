@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @class NTWriteViewController;
+@class StyleApplicationService;
 
 #import "Note.h"
 #import "NTThreadWriteViewDelegate.h"
@@ -20,6 +21,6 @@
 @property (strong, nonatomic) UITableView *threadTableView;
 @property (strong, nonatomic) NSArray *noteThreads;
 
-- (id)initWithNote:(Note *)note;
+@property (strong, nonatomic) StyleApplicationService *styleApplicationService;
 
 @end

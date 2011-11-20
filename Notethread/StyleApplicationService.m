@@ -40,12 +40,41 @@
 }
 
 - (UIFont *)fontTextLabelPrimary {
-    return [UIFont systemFontOfSize:14.0f];
+    return [UIFont systemFontOfSize:16.0f];
 }
 
 - (UIFont *)fontDetailTextLabelPrimary {
-    return [UIFont systemFontOfSize:9.0f];
+    return [UIFont systemFontOfSize:10.0f];
 }
 
+
+- (void)modalStyleForThreadWriteView:(NTWriteViewController *)threadWriteViewController {
+    threadWriteViewController.modalTransitionStyle   = UIModalTransitionStyleCoverVertical;
+    threadWriteViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+}
+
+- (void)configureNoteTableCell:(UITableViewCell *)cell note:(Note *)note {
+    cell.textLabel.text       = nil;
+    cell.detailTextLabel.text = nil;
+       
+    NSString *headingText = note.text;
+    NSString *detailText  = @"";
+    
+    NSRange newLineRange = [note.text rangeOfString:@"\n"];
+    if (newLineRange.location != NSNotFound) {
+        NSRange headingRange   = NSMakeRange(0, newLineRange.location);
+        headingText            = [headingText substringWithRange:headingRange];
+        
+        NSInteger detailLength = [note.text length] - newLineRange.location;
+        NSRange detailRange    = NSMakeRange(newLineRange.location, detailLength);
+        detailText             = [note.text substringWithRange:detailRange];
+    }
+    
+    cell.textLabel.text       = headingText;
+    cell.detailTextLabel.text = detailText;
+    
+    cell.textLabel.font       = [self fontTextLabelPrimary];
+    cell.detailTextLabel.font = [self fontDetailTextLabelPrimary];    
+}
 
 @end

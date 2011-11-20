@@ -22,6 +22,7 @@
 
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext     = __managedObjectContext;
+@synthesize styleApplicationService  = _styleApplicationService;
 
 const NSInteger rootDepthInteger   = 0;
 const NSInteger threadDepthInteger = 1;
@@ -32,15 +33,11 @@ const CGFloat   cellHeight         = 55.0f;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = NSLocalizedString(@"Notethread", @"Notethread");
+        self.styleApplicationService = [StyleApplicationService sharedSingleton];
     }
     return self;
 }
 							
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Release any cached data, images, etc that aren't in use.
-}
 
 #pragma mark - View lifecycle
 
@@ -53,33 +50,6 @@ const CGFloat   cellHeight         = 55.0f;
 
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(displayWriteView)];
     self.navigationItem.rightBarButtonItem = addButton;
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-	[super viewWillDisappear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -277,44 +247,9 @@ const CGFloat   cellHeight         = 55.0f;
  */
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
-{   
-    cell.textLabel.text       = nil;
-    cell.detailTextLabel.text = nil;
-    
+{     
     Note *note = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    
-    NSString *headingText = note.text;
-    NSString *detailText  = @"";
-     
-    NSRange newLineRange = [note.text rangeOfString:@"\n"];
-    if (newLineRange.location != NSNotFound) {
-        NSRange headingRange   = NSMakeRange(0, newLineRange.location);
-        headingText            = [headingText substringWithRange:headingRange];
-        
-        NSInteger detailLength = [note.text length] - newLineRange.location;
-        NSRange detailRange    = NSMakeRange(newLineRange.location, detailLength);
-        detailText             = [note.text substringWithRange:detailRange];
-    }
-    
-    cell.textLabel.text       = headingText;
-    cell.detailTextLabel.text = detailText;
-    
-    StyleApplicationService *styleApplicationService = [StyleApplicationService sharedSingleton];
-    cell.textLabel.font       = [styleApplicationService fontTextLabelPrimary];
-    cell.detailTextLabel.font = [styleApplicationService fontDetailTextLabelPrimary];
-    
-    /* Taking this out for now. I don't believe it really works in the interface. You want to jump into
-        your note before you starting threading
-    UIButton *addThreadButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
-    addThreadButton.tag       = indexPath.row;
-    
-    UITapGestureRecognizer *threadGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(displayChildThreadWriteViewForActiveNote:)];
-    threadGesture.numberOfTapsRequired    = 1;
-    
-    [addThreadButton addGestureRecognizer:threadGesture];
-    
-    [cell addSubview:addThreadButton];
-     */
+    [self.styleApplicationService configureNoteTableCell:cell note:note];
 }
 
 // Top level note: UIModalTransitionStyleCoverVertical
@@ -338,9 +273,8 @@ const CGFloat   cellHeight         = 55.0f;
     
     Note *activeNote = [self.fetchedResultsController objectAtIndexPath:indexPath];
     NTWriteViewController *threadWriteViewController = [[NTWriteViewController alloc] initWithThreadDepth:threadDepthInteger parent:activeNote];
-    
-    threadWriteViewController.modalTransitionStyle   = UIModalTransitionStyleCoverVertical;
-    threadWriteViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+
+    [self.styleApplicationService modalStyleForThreadWriteView:threadWriteViewController];
     
     [self presentModalViewController:threadWriteViewController animated:YES];
 }
