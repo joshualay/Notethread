@@ -12,14 +12,11 @@
 @class StyleApplicationService;
 
 #import "Note.h"
-
+#import "NTThreadWriteViewDelegate.h"
 #import <CoreData/CoreData.h>
 
-@protocol MasterViewControllerDelegate
-- (void)displayChildThreadWriteViewForActiveNote:(id)sender;
-@end
 
-@interface MasterViewController : UITableViewController <NSFetchedResultsControllerDelegate, MasterViewControllerDelegate>
+@interface MasterViewController : UITableViewController <NSFetchedResultsControllerDelegate, NTThreadWriteViewDelegate>
 
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;

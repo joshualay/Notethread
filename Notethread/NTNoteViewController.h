@@ -8,9 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-#import "Note.h"
+@class NTWriteViewController;
 
-@interface NTNoteViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+#import "Note.h"
+#import "NTThreadWriteViewDelegate.h"
+
+@interface NTNoteViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NTThreadWriteViewDelegate>
 
 @property (strong, nonatomic) Note *note;
 @property (strong, nonatomic) IBOutlet UILabel *noteLabel;

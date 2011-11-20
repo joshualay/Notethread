@@ -7,7 +7,9 @@
 //
 
 #import "NTNoteViewController.h"
+#import "NTWriteViewController.h"
 #import "StyleApplicationService.h"
+#import "AppDelegate.h"
 
 @implementation NTNoteViewController
 
@@ -35,12 +37,14 @@
 }
 
 #pragma mark - View lifecycle
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    self.title          = self.note.text;
     self.noteLabel.text = self.note.text;
+    
+    //self.noteLabel.frame = self.view.frame;
     
     self.noteLabel.numberOfLines = 0;
     self.noteLabel.lineBreakMode = UILineBreakModeCharacterWrap;
@@ -52,23 +56,42 @@
     
     CGRect noteLabelRect = self.noteLabel.frame;
     CGFloat tableHeight  = self.view.frame.size.height - noteLabelRect.size.height;
-    CGRect tableRect     = CGRectMake(noteLabelRect.origin.x, noteLabelRect.size.height, noteLabelRect.size.width, tableHeight);
+    CGFloat tableWidth   = self.view.frame.size.width;
+    CGRect tableRect     = CGRectMake(0, noteLabelRect.size.height + 44.0f, tableWidth, tableHeight);
     
     self.threadTableView = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
     
     self.threadTableView.delegate   = self;
     self.threadTableView.dataSource = self;
-    
-    [self.threadTableView reloadData];
-    
+        
     [self.view addSubview:self.threadTableView];
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemReply target:self action:@selector(displayChildThreadWriteViewForActiveNote:)];
 }
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
+    [managedObjectContext refreshObject:self.note mergeChanges:YES];
+    
+    [self.threadTableView reloadData];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
+    [managedObjectContext refreshObject:self.note mergeChanges:YES];
+    
+    self.noteThreads = nil;
+    
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"createdDate" ascending:FALSE];
+    self.noteThreads = [[self.note.noteThreads allObjects] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+    
+    [self.threadTableView reloadData];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -99,6 +122,30 @@
     cell.textLabel.text = note.text;
     
     return cell;    
+}
+
+#pragma UITableViewDelegate
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NTNoteViewController *noteViewController = [[NTNoteViewController alloc] init];
+    
+    Note *selectedNote             = [self.noteThreads objectAtIndex:indexPath.row];
+    noteViewController.note        = selectedNote;
+    noteViewController.noteThreads = [selectedNote.noteThreads allObjects];
+    
+    [self.navigationController pushViewController:noteViewController animated:YES];
+}
+
+#pragma NTThreadWriteViewDelegate
+- (void)displayChildThreadWriteViewForActiveNote:(id)sender {
+    NSInteger threadDepthInteger = [self.note.depth integerValue] + 1;
+    
+    NTWriteViewController *threadWriteViewController = [[NTWriteViewController alloc] initWithThreadDepth:threadDepthInteger parent:self.note];
+    
+    threadWriteViewController.modalTransitionStyle   = UIModalTransitionStyleCoverVertical;
+    threadWriteViewController.modalPresentationStyle = UIModalPresentationFullScreen;
+    
+    [self presentModalViewController:threadWriteViewController animated:YES];    
 }
 
 @end

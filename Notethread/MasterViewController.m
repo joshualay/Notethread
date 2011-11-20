@@ -284,7 +284,7 @@ const CGFloat   cellHeight         = 55.0f;
     Note *note = [self.fetchedResultsController objectAtIndexPath:indexPath];
     
     NSString *headingText = note.text;
-    NSString *detailText  = nil;
+    NSString *detailText  = @"";
      
     NSRange newLineRange = [note.text rangeOfString:@"\n"];
     if (newLineRange.location != NSNotFound) {
@@ -292,7 +292,7 @@ const CGFloat   cellHeight         = 55.0f;
         headingText            = [headingText substringWithRange:headingRange];
         
         NSInteger detailLength = [note.text length] - newLineRange.location;
-        NSRange detailRange    = NSMakeRange(newLineRange.length - 1, detailLength);
+        NSRange detailRange    = NSMakeRange(newLineRange.location, detailLength);
         detailText             = [note.text substringWithRange:detailRange];
     }
     
@@ -302,7 +302,9 @@ const CGFloat   cellHeight         = 55.0f;
     StyleApplicationService *styleApplicationService = [StyleApplicationService sharedSingleton];
     cell.textLabel.font       = [styleApplicationService fontTextLabelPrimary];
     cell.detailTextLabel.font = [styleApplicationService fontDetailTextLabelPrimary];
-       
+    
+    /* Taking this out for now. I don't believe it really works in the interface. You want to jump into
+        your note before you starting threading
     UIButton *addThreadButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
     addThreadButton.tag       = indexPath.row;
     
@@ -312,6 +314,7 @@ const CGFloat   cellHeight         = 55.0f;
     [addThreadButton addGestureRecognizer:threadGesture];
     
     [cell addSubview:addThreadButton];
+     */
 }
 
 // Top level note: UIModalTransitionStyleCoverVertical
@@ -327,7 +330,8 @@ const CGFloat   cellHeight         = 55.0f;
 
 #pragma MasterViewControllerDelegate
 
-// Any thread created: UIModalTransitionStylePartialCurl
+// Any thread created: UIModalTransitionStyleCoverVertical
+// Reason we use this is the partial curl does not trigger -(void)viewDidAppear; so we cannot reload the data
 - (void)displayChildThreadWriteViewForActiveNote:(UITapGestureRecognizer *)sender {
     NSInteger indexRow     = [[sender view] tag];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:indexRow inSection:0];
@@ -335,7 +339,7 @@ const CGFloat   cellHeight         = 55.0f;
     Note *activeNote = [self.fetchedResultsController objectAtIndexPath:indexPath];
     NTWriteViewController *threadWriteViewController = [[NTWriteViewController alloc] initWithThreadDepth:threadDepthInteger parent:activeNote];
     
-    threadWriteViewController.modalTransitionStyle   = UIModalTransitionStylePartialCurl;
+    threadWriteViewController.modalTransitionStyle   = UIModalTransitionStyleCoverVertical;
     threadWriteViewController.modalPresentationStyle = UIModalPresentationFormSheet;
     
     [self presentModalViewController:threadWriteViewController animated:YES];

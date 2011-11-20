@@ -76,6 +76,7 @@
 		9871256014700AA0007D56D6 /* NTNoteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NTNoteViewController.xib; sourceTree = "<group>"; };
 		9871256E14713310007D56D6 /* StyleApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StyleApplicationService.h; sourceTree = "<group>"; };
 		9871256F14713310007D56D6 /* StyleApplicationService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StyleApplicationService.m; sourceTree = "<group>"; };
+		987125711473D881007D56D6 /* NTThreadWriteViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NTThreadWriteViewDelegate.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,6 +149,7 @@
 		9818214B1468026D00DBC1D2 /* Notethread */ = {
 			isa = PBXGroup;
 			children = (
+				987125711473D881007D56D6 /* NTThreadWriteViewDelegate.h */,
 				981821541468026D00DBC1D2 /* AppDelegate.h */,
 				981821551468026D00DBC1D2 /* AppDelegate.m */,
 				9818215A1468026D00DBC1D2 /* MasterViewController.h */,
