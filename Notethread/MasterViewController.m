@@ -54,8 +54,7 @@ const CGFloat   cellHeight         = 55.0f;
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    return YES;
 }
 
 // Customize the number of sections in the table view.

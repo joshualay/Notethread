@@ -14,13 +14,15 @@
 #import "Note.h"
 #import "NTThreadWriteViewDelegate.h"
 
-@interface NTNoteViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NTThreadWriteViewDelegate>
+@interface NTNoteViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NTThreadWriteViewDelegate, UITextViewDelegate>
 
 @property (strong, nonatomic) Note *note;
-@property (strong, nonatomic) IBOutlet UILabel *noteLabel;
+@property (strong, nonatomic) IBOutlet UITextView *noteTextView;
 @property (strong, nonatomic) UITableView *threadTableView;
 @property (strong, nonatomic) NSArray *noteThreads;
 
 @property (strong, nonatomic) StyleApplicationService *styleApplicationService;
+
+@property (strong, nonatomic) UIBarButtonItem *backButton;
 
 @end

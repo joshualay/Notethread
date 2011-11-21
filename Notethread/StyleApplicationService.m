@@ -7,6 +7,7 @@
 //
 
 #import "StyleApplicationService.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface StyleApplicationService()
 - (UIFont *)fontDefault;
@@ -40,11 +41,11 @@
 }
 
 - (UIFont *)fontTextLabelPrimary {
-    return [UIFont systemFontOfSize:16.0f];
+    return [UIFont systemFontOfSize:15.0f];
 }
 
 - (UIFont *)fontDetailTextLabelPrimary {
-    return [UIFont systemFontOfSize:10.0f];
+    return [UIFont systemFontOfSize:11.0f];
 }
 
 
@@ -74,7 +75,22 @@
     cell.detailTextLabel.text = detailText;
     
     cell.textLabel.font       = [self fontTextLabelPrimary];
-    cell.detailTextLabel.font = [self fontDetailTextLabelPrimary];    
+    cell.textLabel.textColor  = [UIColor blackColor];
+    
+    cell.detailTextLabel.font      = [self fontDetailTextLabelPrimary];    
+    cell.detailTextLabel.textColor = [UIColor lightGrayColor];
+    
+    cell.textLabel.layer.shadowOffset  = CGSizeMake(1.0f, 1.0f);
+    cell.textLabel.layer.shadowColor   = [[UIColor whiteColor] CGColor];
+    cell.textLabel.layer.shadowOpacity = 1.0f;
+    cell.textLabel.layer.shadowRadius  = 1.0f;
+    
+    cell.detailTextLabel.layer.shadowOffset  = CGSizeMake(1.0f, 1.0f);
+    cell.detailTextLabel.layer.shadowColor   = [[UIColor blackColor] CGColor];
+    cell.detailTextLabel.layer.shadowOpacity = 1.0f;
+    cell.detailTextLabel.layer.shadowRadius  = 1.0f;
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleGray;
 }
 
 @end
