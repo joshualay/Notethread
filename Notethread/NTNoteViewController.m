@@ -109,7 +109,8 @@
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
     
-    self.note.text = self.noteTextView.text;
+    self.note.text             = self.noteTextView.text;
+    self.note.lastModifiedDate = [NSDate date];
 
     NSError *error = nil;
     if (![managedObjectContext save:&error]) {

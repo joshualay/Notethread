@@ -74,6 +74,7 @@
     if (self.parentNote != nil) {
         [self.parentNote addNoteThreadsObject:newNote];
         newNote.parentNote = self.parentNote;
+        self.parentNote.lastModifiedDate = [NSDate date];
     }
     
     NSError *error = nil;
