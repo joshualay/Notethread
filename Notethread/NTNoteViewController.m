@@ -18,6 +18,8 @@
 - (void)editingNoteCancel:(id)sender;
 - (void)resetNavigationItemFromEditing;
 - (void)setSortedNoteThreads;
+
+- (void)resize;
 @end
 
 @implementation NTNoteViewController
@@ -42,6 +44,24 @@
 
 
 #pragma mark - View lifecycle
+- (void)resize {
+    CGRect viewRect      = self.view.frame;
+    self.noteTextView.frame = CGRectMake(viewRect.origin.x, viewRect.origin.y, viewRect.size.width, viewRect.size.height / 2.1);
+    self.noteTextView.font = [self.styleApplicationService fontNoteView];
+    
+    CGFloat heightOffset = 11.0f;
+    
+    CGRect noteLabelRect = self.noteTextView.frame;
+    CGFloat tableHeight  = self.view.frame.size.height - noteLabelRect.size.height - heightOffset;
+    CGFloat tableWidth   = self.view.frame.size.width;
+    CGRect tableRect     = CGRectMake(0, noteLabelRect.size.height + heightOffset, tableWidth, tableHeight);
+    
+    self.threadTableView = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
+    
+    self.threadTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.noteTextView.autoresizingMask    = UIViewAutoresizingFlexibleWidth;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -49,20 +69,11 @@
     self.title             = self.note.text;
     self.noteTextView.text = self.note.text;
     
-    CGRect viewRect      = self.view.frame;
-    self.noteTextView.frame = CGRectMake(viewRect.origin.x, viewRect.origin.y, viewRect.size.width, viewRect.size.height / 2.1);
-    self.noteTextView.font = [self.styleApplicationService fontNoteView];
-    
-    CGRect noteLabelRect = self.noteTextView.frame;
-    CGFloat tableHeight  = self.view.frame.size.height - noteLabelRect.size.height;
-    CGFloat tableWidth   = self.view.frame.size.width;
-    CGRect tableRect     = CGRectMake(0, noteLabelRect.size.height + 11.0f, tableWidth, tableHeight);
-    
-    self.threadTableView = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
+    [self resize];
     
     self.threadTableView.delegate   = self;
     self.threadTableView.dataSource = self;
-        
+            
     [self.view addSubview:self.threadTableView];
     
     self.navigationItem.rightBarButtonItem = [self defaultRightBarButtonItem];
@@ -105,6 +116,7 @@
 }
 
 - (void)editingNoteCancel:(id)sender {
+    self.noteTextView.text = self.note.text;
     [self resetNavigationItemFromEditing];
 }
 
@@ -135,7 +147,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"Cell Small";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {

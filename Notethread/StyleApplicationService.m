@@ -7,7 +7,6 @@
 //
 
 #import "StyleApplicationService.h"
-#import <QuartzCore/QuartzCore.h>
 
 @interface StyleApplicationService()
 - (UIFont *)fontDefault;
@@ -54,7 +53,7 @@
     threadWriteViewController.modalPresentationStyle = UIModalPresentationFormSheet;
 }
 
-- (void)configureNoteTableCell:(UITableViewCell *)cell note:(Note *)note {
+- (void)configureNoteTableCell:(UITableViewCell *)cell note:(Note *)note {   
     cell.textLabel.text       = nil;
     cell.detailTextLabel.text = nil;
        
@@ -79,18 +78,17 @@
     
     cell.detailTextLabel.font      = [self fontDetailTextLabelPrimary];    
     cell.detailTextLabel.textColor = [UIColor lightGrayColor];
-    
-    cell.textLabel.layer.shadowOffset  = CGSizeMake(1.0f, 1.0f);
-    cell.textLabel.layer.shadowColor   = [[UIColor whiteColor] CGColor];
-    cell.textLabel.layer.shadowOpacity = 1.0f;
-    cell.textLabel.layer.shadowRadius  = 1.0f;
-    
-    cell.detailTextLabel.layer.shadowOffset  = CGSizeMake(1.0f, 1.0f);
-    cell.detailTextLabel.layer.shadowColor   = [[UIColor blackColor] CGColor];
-    cell.detailTextLabel.layer.shadowOpacity = 1.0f;
-    cell.detailTextLabel.layer.shadowRadius  = 1.0f;
+    cell.detailTextLabel.backgroundColor = [UIColor clearColor];
     
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
+    
+    /*
+    CGFloat threadCountLabelOriginX = cell.contentView.frame.size.width - 44.0f;
+    CGFloat threadCountLabelOriginY = cell.contentView.frame.size.height / 2.0f;
+    UILabel *threadCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(threadCountLabelOriginX, threadCountLabelOriginY, 12.0f, 12.0f)];
+    threadCountLabel.text = [NSString stringWithFormat:@"%i", [note.noteThreads count]];
+    
+    [cell.contentView addSubview:threadCountLabel];*/
 }
 
 @end
