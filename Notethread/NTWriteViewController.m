@@ -9,6 +9,7 @@
 #import "NTWriteViewController.h"
 #import "AppDelegate.h"
 #import "StyleApplicationService.h"
+#import "AlertApplicationService.h"
 
 @implementation NTWriteViewController
 
@@ -77,8 +78,7 @@
     
     NSError *error = nil;
     if (![managedObjectContext save:&error]) {
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
+        [AlertApplicationService alertViewForCoreDataError:nil];
     } 
     
     [self dismissModalViewControllerAnimated:YES];

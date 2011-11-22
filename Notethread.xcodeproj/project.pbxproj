@@ -30,6 +30,8 @@
 		9871256114700AA0007D56D6 /* NTNoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9871255F14700AA0007D56D6 /* NTNoteViewController.m */; };
 		9871256214700AA0007D56D6 /* NTNoteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9871256014700AA0007D56D6 /* NTNoteViewController.xib */; };
 		9871257014713310007D56D6 /* StyleApplicationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 9871256F14713310007D56D6 /* StyleApplicationService.m */; };
+		98EB1EF6147BBA440018FF08 /* polaroid.png in Resources */ = {isa = PBXBuildFile; fileRef = 98EB1EF5147BBA440018FF08 /* polaroid.png */; };
+		98EB1EF9147BBF160018FF08 /* AlertApplicationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 98EB1EF8147BBF160018FF08 /* AlertApplicationService.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +79,9 @@
 		9871256E14713310007D56D6 /* StyleApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StyleApplicationService.h; sourceTree = "<group>"; };
 		9871256F14713310007D56D6 /* StyleApplicationService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StyleApplicationService.m; sourceTree = "<group>"; };
 		987125711473D881007D56D6 /* NTThreadWriteViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NTThreadWriteViewDelegate.h; sourceTree = "<group>"; };
+		98EB1EF5147BBA440018FF08 /* polaroid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = polaroid.png; sourceTree = "<group>"; };
+		98EB1EF7147BBF160018FF08 /* AlertApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertApplicationService.h; sourceTree = "<group>"; };
+		98EB1EF8147BBF160018FF08 /* AlertApplicationService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlertApplicationService.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,6 +174,7 @@
 		9818214C1468026D00DBC1D2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				98EB1EF5147BBA440018FF08 /* polaroid.png */,
 				9818214D1468026D00DBC1D2 /* Notethread-Info.plist */,
 				9818214E1468026D00DBC1D2 /* InfoPlist.strings */,
 				981821511468026D00DBC1D2 /* main.m */,
@@ -201,6 +207,8 @@
 			children = (
 				9871256E14713310007D56D6 /* StyleApplicationService.h */,
 				9871256F14713310007D56D6 /* StyleApplicationService.m */,
+				98EB1EF7147BBF160018FF08 /* AlertApplicationService.h */,
+				98EB1EF8147BBF160018FF08 /* AlertApplicationService.m */,
 			);
 			name = ApplicationServices;
 			sourceTree = "<group>";
@@ -292,6 +300,7 @@
 				981821621468026D00DBC1D2 /* MasterViewController.xib in Resources */,
 				980055A4146AB884004C4802 /* NTWriteViewController.xib in Resources */,
 				9871256214700AA0007D56D6 /* NTNoteViewController.xib in Resources */,
+				98EB1EF6147BBA440018FF08 /* polaroid.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,6 +344,7 @@
 				980055A3146AB884004C4802 /* NTWriteViewController.m in Sources */,
 				9871256114700AA0007D56D6 /* NTNoteViewController.m in Sources */,
 				9871257014713310007D56D6 /* StyleApplicationService.m in Sources */,
+				98EB1EF9147BBF160018FF08 /* AlertApplicationService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

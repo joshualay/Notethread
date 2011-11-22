@@ -9,6 +9,7 @@
 #import "NTNoteViewController.h"
 #import "NTWriteViewController.h"
 #import "StyleApplicationService.h"
+#import "AlertApplicationService.h"
 #import "AppDelegate.h"
 
 @interface NTNoteViewController()
@@ -46,10 +47,10 @@
 #pragma mark - View lifecycle
 - (void)resize {
     CGRect viewRect      = self.view.frame;
-    self.noteTextView.frame = CGRectMake(viewRect.origin.x, viewRect.origin.y, viewRect.size.width, viewRect.size.height / 2.1);
+    self.noteTextView.frame = CGRectMake(viewRect.origin.x, viewRect.origin.y, viewRect.size.width, viewRect.size.height / 1.8);
     self.noteTextView.font = [self.styleApplicationService fontNoteView];
     
-    CGFloat heightOffset = 11.0f;
+    CGFloat heightOffset = 8.0f;
     
     CGRect noteLabelRect = self.noteTextView.frame;
     CGFloat tableHeight  = self.view.frame.size.height - noteLabelRect.size.height - heightOffset;
@@ -66,11 +67,13 @@
 {
     [super viewDidLoad];
     
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"polaroid.png"]];
+    
     self.title             = self.note.text;
     self.noteTextView.text = self.note.text;
     
     [self resize];
-    
+        
     self.threadTableView.delegate   = self;
     self.threadTableView.dataSource = self;
             
@@ -110,6 +113,7 @@
 
     NSError *error = nil;
     if (![managedObjectContext save:&error]) {
+        [AlertApplicationService alertViewForCoreDataError:nil];
     }
     
     [self resetNavigationItemFromEditing];
@@ -154,8 +158,11 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
-           
+    
     [self configureCell:cell atIndexPath:indexPath];
+    
+    cell.textLabel.textColor = [UIColor lightGrayColor];
+    
     return cell;    
 }
 
@@ -180,13 +187,7 @@
                 
         NSError *error = nil;
         if (![managedObjectContext save:&error]) {
-            /*
-             Replace this implementation with code to handle the error appropriately.
-             
-             abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-             */
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
+            [AlertApplicationService alertViewForCoreDataError:nil];
         }
     }   
 }
@@ -233,6 +234,10 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(editingNoteDone:)];
     self.navigationItem.leftBarButtonItem  = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(editingNoteCancel:)];
     return YES;
+}
+
+- (void)textViewDidChange:(UITextView *)textView {
+    self.title = textView.text;
 }
 
 @end

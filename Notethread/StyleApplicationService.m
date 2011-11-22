@@ -27,7 +27,7 @@
 }
 
 - (UIFont *)fontDefault {
-    return [UIFont fontWithName:@"Georgia" size:17.0f];
+    return [UIFont fontWithName:@"Georgia" size:18.0f];
 }
 
 #pragma StyleApplicationServiceDelegate
