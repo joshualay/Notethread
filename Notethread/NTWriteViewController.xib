@@ -44,7 +44,6 @@
 						<string key="NSFrame">{{5, 49}, {310, 180}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:639</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
@@ -86,6 +85,7 @@
 								<string key="IBUITitle"/>
 								<object class="IBUIBarButtonItem" key="IBUILeftBarButtonItem" id="812752452">
 									<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+									<int key="IBUIStyle">1</int>
 									<reference key="IBUINavigationItem" ref="6024811"/>
 									<int key="IBUISystemItemIdentifier">1</int>
 								</object>

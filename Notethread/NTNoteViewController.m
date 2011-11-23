@@ -149,7 +149,7 @@ const CGFloat threadCellRowHeight = 36.0f;
 - (void)setSortedNoteThreads {
     self.noteThreads = nil;
     
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"createdDate" ascending:FALSE];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"lastModifiedDate" ascending:FALSE];
     self.noteThreads = [[self.note.noteThreads allObjects] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
 }
 

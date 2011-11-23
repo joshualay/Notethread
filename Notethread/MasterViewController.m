@@ -13,10 +13,12 @@
 #import "NTWriteViewController.h"
 #import "StyleApplicationService.h"
 #import "AlertApplicationService.h"
+#import "SettingsViewController.h"
 
 @interface MasterViewController ()
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 - (void)displayWriteView;
+- (void)displaySettingsView;
 @end
 
 @implementation MasterViewController
@@ -40,14 +42,21 @@ const CGFloat   cellHeight         = 55.0f;
 }
 							
 
+- (void)displaySettingsView {
+    SettingsViewController *settingsViewController = [[SettingsViewController alloc] initWithNibName:@"SettingsViewController" bundle:nil];
+    
+    settingsViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    
+    [self presentModalViewController:settingsViewController animated:YES];
+}
+
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-    // Set up the edit and add buttons.
-    //self.navigationItem.leftBarButtonItem = self.editButtonItem;
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"settings" style:UIBarButtonItemStyleBordered target:self action:@selector(displaySettingsView)];
 
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(displayWriteView)];
     self.navigationItem.rightBarButtonItem = addButton;
