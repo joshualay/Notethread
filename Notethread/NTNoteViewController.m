@@ -11,6 +11,7 @@
 #import "StyleApplicationService.h"
 #import "AlertApplicationService.h"
 #import "AppDelegate.h"
+#import "UserSettingsConstants.h"
 
 @interface NTNoteViewController()
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
@@ -34,6 +35,8 @@
 
 @synthesize backButton = _backButton;
 
+const CGFloat threadCellRowHeight = 36.0f;
+
 - (id)init {
     self = [super initWithNibName:@"NTNoteViewController" bundle:nil];
     if (self) {
@@ -46,11 +49,23 @@
 
 #pragma mark - View lifecycle
 - (void)resize {
-    CGRect viewRect      = self.view.frame;
-    self.noteTextView.frame = CGRectMake(viewRect.origin.x, viewRect.origin.y, viewRect.size.width, viewRect.size.height / 1.8);
-    self.noteTextView.font = [self.styleApplicationService fontNoteView];
+    NSInteger rowsDisplayed;
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    rowsDisplayed = [userDefaults integerForKey:ThreadRowsDisplayedKey];
+    
+    if (!rowsDisplayed) {
+        rowsDisplayed = ThreadRowsDisplayedDefault;
+        [userDefaults setInteger:rowsDisplayed forKey:ThreadRowsDisplayedKey];
+    }
     
     CGFloat heightOffset = 8.0f;
+    CGFloat threadTableHeightOffset = ((CGFloat)rowsDisplayed * threadCellRowHeight) + heightOffset;
+    
+    CGRect viewRect      = self.view.frame;
+    self.noteTextView.frame = CGRectMake(viewRect.origin.x, viewRect.origin.y, viewRect.size.width, viewRect.size.height - threadTableHeightOffset);
+    self.noteTextView.font = [self.styleApplicationService fontNoteView];
+    
     
     CGRect noteLabelRect = self.noteTextView.frame;
     CGFloat tableHeight  = self.view.frame.size.height - noteLabelRect.size.height - heightOffset;
@@ -102,7 +117,7 @@
 }
 
 - (UIBarButtonItem *)defaultRightBarButtonItem {
-    return [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemReply target:self action:@selector(displayChildThreadWriteViewForActiveNote:)];
+    return [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(displayChildThreadWriteViewForActiveNote:)];
 }
 
 - (void)editingNoteDone:(id)sender {
@@ -148,7 +163,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 36.0f;
+    return threadCellRowHeight;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -162,7 +177,7 @@
     
     [self configureCell:cell atIndexPath:indexPath];
     
-    cell.textLabel.textColor = [UIColor lightGrayColor];
+    cell.textLabel.textColor = [UIColor darkGrayColor];
     
     return cell;    
 }

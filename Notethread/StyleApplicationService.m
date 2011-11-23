@@ -40,7 +40,7 @@
 }
 
 - (UIFont *)fontTextLabelPrimary {
-    return [UIFont systemFontOfSize:15.0f];
+    return [UIFont fontWithName:@"Georgia" size:15.0f];
 }
 
 - (UIFont *)fontDetailTextLabelPrimary {
