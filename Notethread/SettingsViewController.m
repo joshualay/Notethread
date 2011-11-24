@@ -42,6 +42,7 @@
         [self.userDefaults setInteger:ThreadRowsDisplayedDefault forKey:ThreadRowsDisplayedKey];
     
     [self.threadRowSlider setValue:(float)[self.userDefaults integerForKey:ThreadRowsDisplayedKey]];
+    self.threadRowSlider.maximumValue = ThreadRowsDisplayedMaxRows;
 }
 
 
@@ -71,7 +72,7 @@
     self.threadRowSlider.frame = CGRectMake(60.0f, 12.0f, 220.0f, 20.0f);
     [cell.contentView addSubview:self.threadRowSlider];
     
-    self.threadCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0f, 12.0f, 20.0f, 20.0f)];
+    self.threadCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0f, 12.0f, 30.0f, 20.0f)];
     
     self.threadCountLabel.backgroundColor = [UIColor clearColor];
     self.threadCountLabel.font            = [UIFont systemFontOfSize:22.0f];

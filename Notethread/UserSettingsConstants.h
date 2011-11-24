@@ -8,3 +8,4 @@
 
 extern NSString * const ThreadRowsDisplayedKey;
 extern NSInteger const  ThreadRowsDisplayedDefault;
+extern NSInteger const  ThreadRowsDisplayedMaxRows;

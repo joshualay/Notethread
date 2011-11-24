@@ -35,7 +35,7 @@
 
 @synthesize backButton = _backButton;
 
-const CGFloat threadCellRowHeight = 36.0f;
+const CGFloat threadCellRowHeight = 40.0f;
 
 - (id)init {
     self = [super initWithNibName:@"NTNoteViewController" bundle:nil];
@@ -64,8 +64,7 @@ const CGFloat threadCellRowHeight = 36.0f;
     
     CGRect viewRect      = self.view.frame;
     self.noteTextView.frame = CGRectMake(viewRect.origin.x, viewRect.origin.y, viewRect.size.width, viewRect.size.height - threadTableHeightOffset);
-    self.noteTextView.font = [self.styleApplicationService fontNoteView];
-    
+    self.noteTextView.font = [self.styleApplicationService fontNoteView];    
     
     CGRect noteLabelRect = self.noteTextView.frame;
     CGFloat tableHeight  = self.view.frame.size.height - noteLabelRect.size.height - heightOffset;
@@ -249,11 +248,13 @@ const CGFloat threadCellRowHeight = 36.0f;
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(editingNoteDone:)];
     self.navigationItem.leftBarButtonItem  = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(editingNoteCancel:)];
+
     return YES;
 }
 
 - (void)textViewDidChange:(UITextView *)textView {
     self.title = textView.text;
 }
+
 
 @end

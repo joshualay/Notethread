@@ -10,3 +10,4 @@
 
 NSString * const ThreadRowsDisplayedKey = @"ThreadRowsDisplayed";
 NSInteger const ThreadRowsDisplayedDefault = 5;
+NSInteger const ThreadRowsDisplayedMaxRows = 9;
