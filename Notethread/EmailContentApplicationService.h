@@ -16,4 +16,6 @@
 
 @interface EmailContentApplicationService : NSObject <EmailContentApplicationServiceDelegate>
 
++ (EmailContentApplicationService *)sharedSingleton;
+
 @end

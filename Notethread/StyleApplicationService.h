@@ -18,6 +18,8 @@
 
 - (void)modalStyleForThreadWriteView:(NTWriteViewController *)threadWriteViewController;
 - (void)configureNoteTableCell:(UITableViewCell *)cell note:(Note *)note;
+
+- (NSString *)cssForEmail;
 @end
 
 @interface StyleApplicationService : NSObject <StyleApplicationServiceDelegate>

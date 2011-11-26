@@ -91,4 +91,8 @@
     [cell.contentView addSubview:threadCountLabel];*/
 }
 
+- (NSString *)cssForEmail {
+    return @"<style>body { font-family: Georgia, 'Times New Roman', serif; }</style>";
+}
+
 @end

@@ -28,6 +28,8 @@
 		981821781468026E00DBC1D2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 981821761468026E00DBC1D2 /* InfoPlist.strings */; };
 		9818217B1468026E00DBC1D2 /* NotethreadTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9818217A1468026E00DBC1D2 /* NotethreadTests.m */; };
 		986E806C147E3C06004645CF /* EmailContentApplicationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 986E806B147E3C06004645CF /* EmailContentApplicationService.m */; };
+		986E8072147E90EC004645CF /* EmailApplicationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 986E8071147E90EC004645CF /* EmailApplicationService.m */; };
+		986E8074147E98C5004645CF /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 986E8073147E98C5004645CF /* MessageUI.framework */; };
 		9871256114700AA0007D56D6 /* NTNoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9871255F14700AA0007D56D6 /* NTNoteViewController.m */; };
 		9871256214700AA0007D56D6 /* NTNoteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9871256014700AA0007D56D6 /* NTNoteViewController.xib */; };
 		9871257014713310007D56D6 /* StyleApplicationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 9871256F14713310007D56D6 /* StyleApplicationService.m */; };
@@ -81,6 +83,9 @@
 		9818217A1468026E00DBC1D2 /* NotethreadTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotethreadTests.m; sourceTree = "<group>"; };
 		986E806A147E3C06004645CF /* EmailContentApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailContentApplicationService.h; sourceTree = "<group>"; };
 		986E806B147E3C06004645CF /* EmailContentApplicationService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailContentApplicationService.m; sourceTree = "<group>"; };
+		986E8070147E90EC004645CF /* EmailApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailApplicationService.h; sourceTree = "<group>"; };
+		986E8071147E90EC004645CF /* EmailApplicationService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailApplicationService.m; sourceTree = "<group>"; };
+		986E8073147E98C5004645CF /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		9871255E14700AA0007D56D6 /* NTNoteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NTNoteViewController.h; sourceTree = "<group>"; };
 		9871255F14700AA0007D56D6 /* NTNoteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NTNoteViewController.m; sourceTree = "<group>"; };
 		9871256014700AA0007D56D6 /* NTNoteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NTNoteViewController.xib; sourceTree = "<group>"; };
@@ -105,6 +110,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				986E8074147E98C5004645CF /* MessageUI.framework in Frameworks */,
 				981821441468026D00DBC1D2 /* UIKit.framework in Frameworks */,
 				981821461468026D00DBC1D2 /* Foundation.framework in Frameworks */,
 				981821481468026D00DBC1D2 /* CoreGraphics.framework in Frameworks */,
@@ -141,6 +147,7 @@
 		981821341468026D00DBC1D2 = {
 			isa = PBXGroup;
 			children = (
+				986E8073147E98C5004645CF /* MessageUI.framework */,
 				9818214B1468026D00DBC1D2 /* Notethread */,
 				981821731468026E00DBC1D2 /* NotethreadTests */,
 				981821421468026D00DBC1D2 /* Frameworks */,
@@ -234,6 +241,8 @@
 				98EB1EF8147BBF160018FF08 /* AlertApplicationService.m */,
 				986E806A147E3C06004645CF /* EmailContentApplicationService.h */,
 				986E806B147E3C06004645CF /* EmailContentApplicationService.m */,
+				986E8070147E90EC004645CF /* EmailApplicationService.h */,
+				986E8071147E90EC004645CF /* EmailApplicationService.m */,
 			);
 			name = ApplicationServices;
 			sourceTree = "<group>";
@@ -385,6 +394,7 @@
 				98EB1F05147D0CB70018FF08 /* SettingsViewController.m in Sources */,
 				98EB1F0A147D35340018FF08 /* AboutMeViewController.m in Sources */,
 				986E806C147E3C06004645CF /* EmailContentApplicationService.m in Sources */,
+				986E8072147E90EC004645CF /* EmailApplicationService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,6 +12,8 @@
 #import "AlertApplicationService.h"
 #import "AppDelegate.h"
 #import "UserSettingsConstants.h"
+#import "EmailApplicationService.h"
+
 
 @interface NTNoteViewController()
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
@@ -28,6 +30,7 @@
 
 @synthesize note            = _note;
 @synthesize noteTextView    = _noteTextView;
+@synthesize emailNoteButton = _emailNoteButton;
 @synthesize threadTableView = _threadTableView;
 @synthesize noteThreads     = _noteThreads;
 
@@ -59,7 +62,8 @@ const CGFloat threadCellRowHeight = 40.0f;
         [userDefaults setInteger:rowsDisplayed forKey:ThreadRowsDisplayedKey];
     }
     
-    CGFloat heightOffset = 8.0f;
+//    CGFloat heightOffset = 8.0f;
+    CGFloat heightOffset = 22.0f;
     CGFloat threadTableHeightOffset = ((CGFloat)rowsDisplayed * threadCellRowHeight) + heightOffset;
     
     CGRect viewRect      = self.view.frame;
@@ -75,6 +79,8 @@ const CGFloat threadCellRowHeight = 40.0f;
     
     self.threadTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.noteTextView.autoresizingMask    = UIViewAutoresizingFlexibleWidth;
+    
+    self.emailNoteButton.frame = CGRectMake(viewRect.origin.x, noteLabelRect.size.height, tableWidth, heightOffset);
 }
 
 - (void)viewDidLoad
@@ -232,19 +238,6 @@ const CGFloat threadCellRowHeight = 40.0f;
 }
 
 #pragma UITextViewDelegate
-/*
- - (BOOL)textViewShouldBeginEditing:(UITextView *)textView;
- - (BOOL)textViewShouldEndEditing:(UITextView *)textView;
- 
- - (void)textViewDidBeginEditing:(UITextView *)textView;
- - (void)textViewDidEndEditing:(UITextView *)textView;
- 
- - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text;
- - (void)textViewDidChange:(UITextView *)textView;
- 
- - (void)textViewDidChangeSelection:(UITextView *)textView;
- */
-
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(editingNoteDone:)];
     self.navigationItem.leftBarButtonItem  = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(editingNoteCancel:)];
@@ -254,6 +247,39 @@ const CGFloat threadCellRowHeight = 40.0f;
 
 - (void)textViewDidChange:(UITextView *)textView {
     self.title = textView.text;
+}
+
+#pragma MFMailComposeViewControllerDelegate
+// Dismisses the email composition interface when users tap Cancel or Send. Proceeds to update the message field with the result of the operation.
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error 
+{   
+    [self dismissModalViewControllerAnimated:YES];
+    
+   /* message.hidden = NO;
+   
+    switch (result)
+    {
+        case MFMailComposeResultCancelled:
+            message.text = @"Result: canceled";
+            break;
+        case MFMailComposeResultSaved:
+            message.text = @"Result: saved";
+            break;
+        case MFMailComposeResultSent:
+            message.text = @"Result: sent";
+            break;
+        case MFMailComposeResultFailed:
+            message.text = @"Result: failed";
+            break;
+        default:
+            message.text = @"Result: not sent";
+            break;
+    }*/
+}
+
+- (IBAction)emailNotethread:(id)sender {
+    EmailApplicationService *emailService = [EmailApplicationService sharedSingleton];
+    [emailService presentMailComposeViewWithNote:self.note forObject:self];
 }
 
 
