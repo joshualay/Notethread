@@ -131,7 +131,7 @@ const CGFloat threadCellRowHeight = 40.0f;
         [userDefaults setInteger:rowsDisplayed forKey:ThreadRowsDisplayedKey];
     }
     
-    CGFloat heightOffset = 22.0f;
+    CGFloat heightOffset = 28.0f;
     CGFloat threadTableHeightOffset = ((CGFloat)rowsDisplayed * threadCellRowHeight) + heightOffset;
     
     CGRect viewRect      = self.view.frame;
@@ -164,7 +164,7 @@ const CGFloat threadCellRowHeight = 40.0f;
 }
 
 - (IBAction)presentActionSheetForNote:(id)sender {
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"Email", nil];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Email", nil];
     [actionSheet showInView:self.view];
 }
 

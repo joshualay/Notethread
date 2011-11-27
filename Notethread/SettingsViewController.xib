@@ -129,7 +129,7 @@ AAgACAAIAAEAAQABAAE</bytes>
 						<array key="IBUIItems">
 							<object class="IBUINavigationItem" id="633875501">
 								<reference key="IBUINavigationBar" ref="18185011"/>
-								<string key="IBUITitle">Settings</string>
+								<string key="IBUITitle">Info</string>
 								<object class="IBUIBarButtonItem" key="IBUILeftBarButtonItem" id="124822903">
 									<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 									<int key="IBUIStyle">1</int>
