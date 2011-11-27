@@ -26,7 +26,6 @@
 @property (strong, nonatomic) Note *note;
 
 @property (strong, nonatomic) IBOutlet UITextView *noteTextView;
-@property (strong, nonatomic) IBOutlet UIButton   *emailNoteButton;
 
 @property (strong, nonatomic) UITableView *threadTableView;
 @property (strong, nonatomic) NSArray *noteThreads;

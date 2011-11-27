@@ -30,7 +30,6 @@
 
 @synthesize note            = _note;
 @synthesize noteTextView    = _noteTextView;
-@synthesize emailNoteButton = _emailNoteButton;
 @synthesize threadTableView = _threadTableView;
 @synthesize noteThreads     = _noteThreads;
 
@@ -62,7 +61,6 @@ const CGFloat threadCellRowHeight = 40.0f;
         [userDefaults setInteger:rowsDisplayed forKey:ThreadRowsDisplayedKey];
     }
     
-//    CGFloat heightOffset = 8.0f;
     CGFloat heightOffset = 22.0f;
     CGFloat threadTableHeightOffset = ((CGFloat)rowsDisplayed * threadCellRowHeight) + heightOffset;
     
@@ -75,12 +73,24 @@ const CGFloat threadCellRowHeight = 40.0f;
     CGFloat tableWidth   = self.view.frame.size.width;
     CGRect tableRect     = CGRectMake(0, noteLabelRect.size.height + heightOffset, tableWidth, tableHeight);
     
+
     self.threadTableView = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
+
+    UIToolbar *actionToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(viewRect.origin.x, noteLabelRect.size.height, tableWidth, heightOffset)];
     
+    actionToolbar.tintColor   = [UIColor lightGrayColor];
+    actionToolbar.translucent = YES;
+    
+    UIBarButtonItem *actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(emailNotethread:)];
+    UIBarButtonItem *flexible = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    actionButton.style = UIBarButtonItemStylePlain;
+    [actionToolbar setItems:[NSArray arrayWithObjects:flexible,actionButton,flexible, nil]];
+    [self.view addSubview:actionToolbar];
+    
+    
+    actionToolbar.autoresizingMask        = UIViewAutoresizingFlexibleWidth;
     self.threadTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.noteTextView.autoresizingMask    = UIViewAutoresizingFlexibleWidth;
-    
-    self.emailNoteButton.frame = CGRectMake(viewRect.origin.x, noteLabelRect.size.height, tableWidth, heightOffset);
 }
 
 - (void)viewDidLoad
