@@ -39,6 +39,8 @@
 		98EB1F06147D0CB70018FF08 /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98EB1F04147D0CB70018FF08 /* SettingsViewController.xib */; };
 		98EB1F0A147D35340018FF08 /* AboutMeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98EB1F08147D35340018FF08 /* AboutMeViewController.m */; };
 		98EB1F0B147D35340018FF08 /* AboutMeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98EB1F09147D35340018FF08 /* AboutMeViewController.xib */; };
+		98F911361482066300D421B0 /* icon57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 98F91134148203FC00D421B0 /* icon57x57.png */; };
+		98F911381482066600D421B0 /* icon114x114.png in Resources */ = {isa = PBXBuildFile; fileRef = 98F911371482066600D421B0 /* icon114x114.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,6 +104,8 @@
 		98EB1F08147D35340018FF08 /* AboutMeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutMeViewController.m; sourceTree = "<group>"; };
 		98EB1F09147D35340018FF08 /* AboutMeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutMeViewController.xib; sourceTree = "<group>"; };
 		98F911321481EF3200D421B0 /* NTThreadViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NTThreadViewDelegate.h; sourceTree = "<group>"; };
+		98F91134148203FC00D421B0 /* icon57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon57x57.png; sourceTree = "<group>"; };
+		98F911371482066600D421B0 /* icon114x114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon114x114.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +150,8 @@
 		981821341468026D00DBC1D2 = {
 			isa = PBXGroup;
 			children = (
+				98F911371482066600D421B0 /* icon114x114.png */,
+				98F91134148203FC00D421B0 /* icon57x57.png */,
 				986E8073147E98C5004645CF /* MessageUI.framework */,
 				9818214B1468026D00DBC1D2 /* Notethread */,
 				981821731468026E00DBC1D2 /* NotethreadTests */,
@@ -344,6 +350,8 @@
 				9871256214700AA0007D56D6 /* NTNoteViewController.xib in Resources */,
 				98EB1F06147D0CB70018FF08 /* SettingsViewController.xib in Resources */,
 				98EB1F0B147D35340018FF08 /* AboutMeViewController.xib in Resources */,
+				98F911361482066300D421B0 /* icon57x57.png in Resources */,
+				98F911381482066600D421B0 /* icon114x114.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
