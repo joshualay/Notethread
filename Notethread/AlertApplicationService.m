@@ -36,4 +36,12 @@ NSString *defaultErrorMessage = @"To revive please push your iPhone's home butto
     [alert show];
 }
 
++ (void)alertViewForEmailFailure {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Sending the email failed!" 
+                                                    message:@"The emailers must be on strike. Please try again later."
+                                                   delegate:nil 
+                                          cancelButtonTitle:nil otherButtonTitles:@"Ok", nil];
+    [alert show];
+}
+
 @end

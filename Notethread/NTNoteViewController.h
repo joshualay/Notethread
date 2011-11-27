@@ -15,13 +15,16 @@
 
 #import "Note.h"
 #import "NTThreadWriteViewDelegate.h"
+#import "NTThreadViewDelegate.h"
 
 @interface NTNoteViewController : UIViewController 
                                                     <UITableViewDelegate, 
                                                      UITableViewDataSource, 
                                                      NTThreadWriteViewDelegate, 
                                                      UITextViewDelegate,
-                                                     MFMailComposeViewControllerDelegate>
+                                                     MFMailComposeViewControllerDelegate,
+                                                     NTThreadViewDelegate,
+                                                     UIActionSheetDelegate>
 
 @property (strong, nonatomic) Note *note;
 
@@ -33,7 +36,5 @@
 @property (strong, nonatomic) StyleApplicationService *styleApplicationService;
 
 @property (strong, nonatomic) UIBarButtonItem *backButton;
-
-- (IBAction)emailNotethread:(id)sender;
 
 @end

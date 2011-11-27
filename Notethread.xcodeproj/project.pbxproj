@@ -33,7 +33,6 @@
 		9871256114700AA0007D56D6 /* NTNoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9871255F14700AA0007D56D6 /* NTNoteViewController.m */; };
 		9871256214700AA0007D56D6 /* NTNoteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9871256014700AA0007D56D6 /* NTNoteViewController.xib */; };
 		9871257014713310007D56D6 /* StyleApplicationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 9871256F14713310007D56D6 /* StyleApplicationService.m */; };
-		98EB1EF6147BBA440018FF08 /* polaroid.png in Resources */ = {isa = PBXBuildFile; fileRef = 98EB1EF5147BBA440018FF08 /* polaroid.png */; };
 		98EB1EF9147BBF160018FF08 /* AlertApplicationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 98EB1EF8147BBF160018FF08 /* AlertApplicationService.m */; };
 		98EB1F01147CE9930018FF08 /* UserSettingsConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 98EB1F00147CE9930018FF08 /* UserSettingsConstants.m */; };
 		98EB1F05147D0CB70018FF08 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98EB1F03147D0CB70018FF08 /* SettingsViewController.m */; };
@@ -92,7 +91,6 @@
 		9871256E14713310007D56D6 /* StyleApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StyleApplicationService.h; sourceTree = "<group>"; };
 		9871256F14713310007D56D6 /* StyleApplicationService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StyleApplicationService.m; sourceTree = "<group>"; };
 		987125711473D881007D56D6 /* NTThreadWriteViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NTThreadWriteViewDelegate.h; sourceTree = "<group>"; };
-		98EB1EF5147BBA440018FF08 /* polaroid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = polaroid.png; sourceTree = "<group>"; };
 		98EB1EF7147BBF160018FF08 /* AlertApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertApplicationService.h; sourceTree = "<group>"; };
 		98EB1EF8147BBF160018FF08 /* AlertApplicationService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlertApplicationService.m; sourceTree = "<group>"; };
 		98EB1EFF147CE9930018FF08 /* UserSettingsConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserSettingsConstants.h; sourceTree = "<group>"; };
@@ -103,6 +101,7 @@
 		98EB1F07147D35330018FF08 /* AboutMeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutMeViewController.h; sourceTree = "<group>"; };
 		98EB1F08147D35340018FF08 /* AboutMeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutMeViewController.m; sourceTree = "<group>"; };
 		98EB1F09147D35340018FF08 /* AboutMeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutMeViewController.xib; sourceTree = "<group>"; };
+		98F911321481EF3200D421B0 /* NTThreadViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NTThreadViewDelegate.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +178,7 @@
 		9818214B1468026D00DBC1D2 /* Notethread */ = {
 			isa = PBXGroup;
 			children = (
+				98F911321481EF3200D421B0 /* NTThreadViewDelegate.h */,
 				987125711473D881007D56D6 /* NTThreadWriteViewDelegate.h */,
 				981821541468026D00DBC1D2 /* AppDelegate.h */,
 				981821551468026D00DBC1D2 /* AppDelegate.m */,
@@ -204,7 +204,6 @@
 		9818214C1468026D00DBC1D2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				98EB1EF5147BBA440018FF08 /* polaroid.png */,
 				9818214D1468026D00DBC1D2 /* Notethread-Info.plist */,
 				9818214E1468026D00DBC1D2 /* InfoPlist.strings */,
 				981821511468026D00DBC1D2 /* main.m */,
@@ -343,7 +342,6 @@
 				981821621468026D00DBC1D2 /* MasterViewController.xib in Resources */,
 				980055A4146AB884004C4802 /* NTWriteViewController.xib in Resources */,
 				9871256214700AA0007D56D6 /* NTNoteViewController.xib in Resources */,
-				98EB1EF6147BBA440018FF08 /* polaroid.png in Resources */,
 				98EB1F06147D0CB70018FF08 /* SettingsViewController.xib in Resources */,
 				98EB1F0B147D35340018FF08 /* AboutMeViewController.xib in Resources */,
 			);

@@ -18,12 +18,8 @@
 @interface NTNoteViewController()
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 - (UIBarButtonItem *)defaultRightBarButtonItem;
-- (void)editingNoteDone:(id)sender;
-- (void)editingNoteCancel:(id)sender;
 - (void)resetNavigationItemFromEditing;
 - (void)setSortedNoteThreads;
-
-- (void)resize;
 @end
 
 @implementation NTNoteViewController
@@ -50,59 +46,14 @@ const CGFloat threadCellRowHeight = 40.0f;
 
 
 #pragma mark - View lifecycle
-- (void)resize {
-    NSInteger rowsDisplayed;
-    
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    rowsDisplayed = [userDefaults integerForKey:ThreadRowsDisplayedKey];
-    
-    if (!rowsDisplayed) {
-        rowsDisplayed = ThreadRowsDisplayedDefault;
-        [userDefaults setInteger:rowsDisplayed forKey:ThreadRowsDisplayedKey];
-    }
-    
-    CGFloat heightOffset = 22.0f;
-    CGFloat threadTableHeightOffset = ((CGFloat)rowsDisplayed * threadCellRowHeight) + heightOffset;
-    
-    CGRect viewRect      = self.view.frame;
-    self.noteTextView.frame = CGRectMake(viewRect.origin.x, viewRect.origin.y, viewRect.size.width, viewRect.size.height - threadTableHeightOffset);
-    self.noteTextView.font = [self.styleApplicationService fontNoteView];    
-    
-    CGRect noteLabelRect = self.noteTextView.frame;
-    CGFloat tableHeight  = self.view.frame.size.height - noteLabelRect.size.height - heightOffset;
-    CGFloat tableWidth   = self.view.frame.size.width;
-    CGRect tableRect     = CGRectMake(0, noteLabelRect.size.height + heightOffset, tableWidth, tableHeight);
-    
-
-    self.threadTableView = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
-
-    UIToolbar *actionToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(viewRect.origin.x, noteLabelRect.size.height, tableWidth, heightOffset)];
-    
-    actionToolbar.tintColor   = [UIColor lightGrayColor];
-    actionToolbar.translucent = YES;
-    
-    UIBarButtonItem *actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(emailNotethread:)];
-    UIBarButtonItem *flexible = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    actionButton.style = UIBarButtonItemStylePlain;
-    [actionToolbar setItems:[NSArray arrayWithObjects:flexible,actionButton,flexible, nil]];
-    [self.view addSubview:actionToolbar];
-    
-    
-    actionToolbar.autoresizingMask        = UIViewAutoresizingFlexibleWidth;
-    self.threadTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    self.noteTextView.autoresizingMask    = UIViewAutoresizingFlexibleWidth;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"polaroid.png"]];
-    
+        
     self.title             = self.note.text;
     self.noteTextView.text = self.note.text;
     
-    [self resize];
+    [self viewForNoteThread];
         
     self.threadTableView.delegate   = self;
     self.threadTableView.dataSource = self;
@@ -135,26 +86,6 @@ const CGFloat threadCellRowHeight = 40.0f;
     return [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(displayChildThreadWriteViewForActiveNote:)];
 }
 
-- (void)editingNoteDone:(id)sender {
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
-    
-    self.note.text             = self.noteTextView.text;
-    self.note.lastModifiedDate = [NSDate date];
-
-    NSError *error = nil;
-    if (![managedObjectContext save:&error]) {
-        [AlertApplicationService alertViewForCoreDataError:nil];
-    }
-    
-    [self resetNavigationItemFromEditing];
-}
-
-- (void)editingNoteCancel:(id)sender {
-    self.noteTextView.text = self.note.text;
-    [self resetNavigationItemFromEditing];
-}
-
 - (void)resetNavigationItemFromEditing {
     self.navigationItem.rightBarButtonItem = [self defaultRightBarButtonItem];
     self.navigationItem.leftBarButtonItem  = self.backButton;
@@ -168,6 +99,79 @@ const CGFloat threadCellRowHeight = 40.0f;
     self.noteThreads = [[self.note.noteThreads allObjects] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
 }
 
+#pragma NTThreadViewDelegate
+- (void)editingNoteDone:(id)sender {
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
+    
+    self.note.text             = self.noteTextView.text;
+    self.note.lastModifiedDate = [NSDate date];
+    
+    NSError *error = nil;
+    if (![managedObjectContext save:&error]) {
+        [AlertApplicationService alertViewForCoreDataError:nil];
+    }
+    
+    [self resetNavigationItemFromEditing];
+}
+
+- (void)editingNoteCancel:(id)sender {
+    self.noteTextView.text = self.note.text;
+    [self resetNavigationItemFromEditing];
+}
+
+- (void)viewForNoteThread {
+    NSInteger rowsDisplayed;
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    rowsDisplayed = [userDefaults integerForKey:ThreadRowsDisplayedKey];
+    
+    if (!rowsDisplayed) {
+        rowsDisplayed = ThreadRowsDisplayedDefault;
+        [userDefaults setInteger:rowsDisplayed forKey:ThreadRowsDisplayedKey];
+    }
+    
+    CGFloat heightOffset = 22.0f;
+    CGFloat threadTableHeightOffset = ((CGFloat)rowsDisplayed * threadCellRowHeight) + heightOffset;
+    
+    CGRect viewRect      = self.view.frame;
+    self.noteTextView.frame = CGRectMake(viewRect.origin.x, viewRect.origin.y, viewRect.size.width, viewRect.size.height - threadTableHeightOffset);
+    self.noteTextView.font = [self.styleApplicationService fontNoteView];    
+    
+    CGRect noteLabelRect = self.noteTextView.frame;
+    CGFloat tableHeight  = self.view.frame.size.height - noteLabelRect.size.height - heightOffset;
+    CGFloat tableWidth   = self.view.frame.size.width;
+    CGRect tableRect     = CGRectMake(0, noteLabelRect.size.height + heightOffset, tableWidth, tableHeight);
+    
+    
+    self.threadTableView = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
+    
+    UIToolbar *actionToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(viewRect.origin.x, noteLabelRect.size.height, tableWidth, heightOffset)];
+    
+    actionToolbar.tintColor   = [UIColor lightGrayColor];
+    actionToolbar.translucent = YES;
+    
+    UIBarButtonItem *actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(presentActionSheetForNote:)];
+    UIBarButtonItem *flexible = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    actionButton.style = UIBarButtonItemStylePlain;
+    [actionToolbar setItems:[NSArray arrayWithObjects:flexible,actionButton,flexible, nil]];
+    [self.view addSubview:actionToolbar];
+    
+    
+    actionToolbar.autoresizingMask        = UIViewAutoresizingFlexibleWidth;
+    self.threadTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.noteTextView.autoresizingMask    = UIViewAutoresizingFlexibleWidth;
+}
+
+- (IBAction)presentActionSheetForNote:(id)sender {
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"Email", nil];
+    [actionSheet showInView:self.view];
+}
+
+- (void)emailNotethread {
+    EmailApplicationService *emailService = [EmailApplicationService sharedSingleton];
+    [emailService presentMailComposeViewWithNote:self.note forObject:self];
+}
 
 #pragma UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -264,33 +268,24 @@ const CGFloat threadCellRowHeight = 40.0f;
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error 
 {   
     [self dismissModalViewControllerAnimated:YES];
-    
-   /* message.hidden = NO;
-   
+      
     switch (result)
     {
-        case MFMailComposeResultCancelled:
-            message.text = @"Result: canceled";
-            break;
-        case MFMailComposeResultSaved:
-            message.text = @"Result: saved";
-            break;
-        case MFMailComposeResultSent:
-            message.text = @"Result: sent";
-            break;
         case MFMailComposeResultFailed:
-            message.text = @"Result: failed";
+            [AlertApplicationService alertViewForEmailFailure];
             break;
         default:
-            message.text = @"Result: not sent";
             break;
-    }*/
+    }
 }
 
-- (IBAction)emailNotethread:(id)sender {
-    EmailApplicationService *emailService = [EmailApplicationService sharedSingleton];
-    [emailService presentMailComposeViewWithNote:self.note forObject:self];
+#pragma UIActionSheetDelegate
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 0) {
+        [self emailNotethread];
+    }
 }
+
 
 
 @end

@@ -11,6 +11,7 @@
 @protocol AlertApplicationServiceDelegate <NSObject>
 
 + (void)alertViewForCoreDataError:(NSString *)messageOrNil;
++ (void)alertViewForEmailFailure;
 
 @end
 
