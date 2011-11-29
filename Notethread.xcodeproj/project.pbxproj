@@ -11,6 +11,7 @@
 		9800559F146814A6004C4802 /* Note.m in Sources */ = {isa = PBXBuildFile; fileRef = 9800559E146814A6004C4802 /* Note.m */; };
 		980055A3146AB884004C4802 /* NTWriteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 980055A1146AB884004C4802 /* NTWriteViewController.m */; };
 		980055A4146AB884004C4802 /* NTWriteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 980055A2146AB884004C4802 /* NTWriteViewController.xib */; };
+		9801C7AA1484DE83005138A7 /* Release-Goals in Resources */ = {isa = PBXBuildFile; fileRef = 9801C7A91484DE83005138A7 /* Release-Goals */; };
 		981821441468026D00DBC1D2 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981821431468026D00DBC1D2 /* UIKit.framework */; };
 		981821461468026D00DBC1D2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981821451468026D00DBC1D2 /* Foundation.framework */; };
 		981821481468026D00DBC1D2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981821471468026D00DBC1D2 /* CoreGraphics.framework */; };
@@ -61,6 +62,7 @@
 		980055A0146AB884004C4802 /* NTWriteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NTWriteViewController.h; sourceTree = "<group>"; };
 		980055A1146AB884004C4802 /* NTWriteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NTWriteViewController.m; sourceTree = "<group>"; };
 		980055A2146AB884004C4802 /* NTWriteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NTWriteViewController.xib; sourceTree = "<group>"; };
+		9801C7A91484DE83005138A7 /* Release-Goals */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Release-Goals"; sourceTree = "<group>"; };
 		9818213F1468026D00DBC1D2 /* Notethread.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Notethread.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		981821431468026D00DBC1D2 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		981821451468026D00DBC1D2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -150,6 +152,7 @@
 		981821341468026D00DBC1D2 = {
 			isa = PBXGroup;
 			children = (
+				9801C7A91484DE83005138A7 /* Release-Goals */,
 				98F911371482066600D421B0 /* icon114x114.png */,
 				98F91134148203FC00D421B0 /* icon57x57.png */,
 				986E8073147E98C5004645CF /* MessageUI.framework */,
@@ -352,6 +355,7 @@
 				98EB1F0B147D35340018FF08 /* AboutMeViewController.xib in Resources */,
 				98F911361482066300D421B0 /* icon57x57.png in Resources */,
 				98F911381482066600D421B0 /* icon114x114.png in Resources */,
+				9801C7AA1484DE83005138A7 /* Release-Goals in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
