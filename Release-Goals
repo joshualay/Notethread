@@ -9,6 +9,11 @@ Version 1.1
 * Search functionality
 * Edit threads
 * UI improvements
+  - Action bar height; added a black bar to separate from thread table view
+  - Action bar now has two buttons - action & compose
+  - Compose removed from the top of the note view
+  - Changed the height of the main view cell and the primary font
+  - Set the title in the note view to match what is shown on the cell
 
 
 
