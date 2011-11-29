@@ -40,7 +40,7 @@
 }
 
 - (UIFont *)fontTextLabelPrimary {
-    return [UIFont fontWithName:@"Georgia" size:15.0f];
+    return [UIFont fontWithName:@"Georgia" size:16.0f];
 }
 
 - (UIFont *)fontDetailTextLabelPrimary {
@@ -75,13 +75,14 @@
     
     cell.textLabel.font       = [self fontTextLabelPrimary];
     cell.textLabel.textColor  = [UIColor blackColor];
+    cell.textLabel.backgroundColor = [UIColor clearColor];
     
     cell.detailTextLabel.font      = [self fontDetailTextLabelPrimary];    
     cell.detailTextLabel.textColor = [UIColor lightGrayColor];
     cell.detailTextLabel.backgroundColor = [UIColor clearColor];
     
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
-    
+        
     /*
     CGFloat threadCountLabelOriginX = cell.contentView.frame.size.width - 44.0f;
     CGFloat threadCountLabelOriginY = cell.contentView.frame.size.height / 2.0f;

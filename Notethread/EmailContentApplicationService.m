@@ -32,8 +32,11 @@
     StyleApplicationService *styleService = [StyleApplicationService sharedSingleton];
     NSString *css  = [styleService cssForEmail];
     NSString *html = [NSString stringWithFormat:@"<html><head>%@</head><body>", css];
-       
-    html = [NSString stringWithFormat:@"%@<p>%@</p>", html, note.text];
+    
+    NSString *trimmedString = [note.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *text          = [trimmedString stringByReplacingOccurrencesOfString:@"\n" withString:@"<p></p>"];
+    
+    html = [NSString stringWithFormat:@"%@<p>%@</p>", html, text];
     html = [self htmlNoteThread:note currentHtml:html];
     
     html = [NSString stringWithFormat:@"%@</body></html>", html];

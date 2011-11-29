@@ -29,7 +29,7 @@
 
 const NSInteger rootDepthInteger   = 0;
 const NSInteger threadDepthInteger = 1;
-const CGFloat   cellHeight         = 55.0f;
+const CGFloat   cellHeight         = 51.0f;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -105,6 +105,7 @@ const CGFloat   cellHeight         = 55.0f;
     }
 
     [self configureCell:cell atIndexPath:indexPath];
+    
     return cell;
 }
 

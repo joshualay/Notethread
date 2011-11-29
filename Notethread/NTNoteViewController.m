@@ -20,6 +20,7 @@
 - (UIBarButtonItem *)defaultRightBarButtonItem;
 - (void)resetNavigationItemFromEditing;
 - (void)setSortedNoteThreads;
+- (NSString *)titleForNote:(NSString *)text;
 @end
 
 @implementation NTNoteViewController
@@ -44,13 +45,23 @@ const CGFloat threadCellRowHeight = 40.0f;
     return self;  
 }
 
+- (NSString *)titleForNote:(NSString *)text {
+    NSRange newLineRange = [text rangeOfString:@"\n"];
+    if (newLineRange.location != NSNotFound) {
+        NSRange headingRange   = NSMakeRange(0, newLineRange.location);
+        
+        return [text substringWithRange:headingRange];
+    }
+    
+    return text;
+}
 
 #pragma mark - View lifecycle
 - (void)viewDidLoad
 {
     [super viewDidLoad];
         
-    self.title             = self.note.text;
+    self.title             = [self titleForNote:self.note.text];
     self.noteTextView.text = self.note.text;
     
     [self viewForNoteThread];
@@ -83,7 +94,8 @@ const CGFloat threadCellRowHeight = 40.0f;
 }
 
 - (UIBarButtonItem *)defaultRightBarButtonItem {
-    return [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(displayChildThreadWriteViewForActiveNote:)];
+    return nil;
+//    return [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(displayChildThreadWriteViewForActiveNote:)];
 }
 
 - (void)resetNavigationItemFromEditing {
@@ -121,6 +133,8 @@ const CGFloat threadCellRowHeight = 40.0f;
 }
 
 - (void)viewForNoteThread {
+    self.view.backgroundColor = [UIColor blackColor];
+    
     NSInteger rowsDisplayed;
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
@@ -146,15 +160,18 @@ const CGFloat threadCellRowHeight = 40.0f;
     
     self.threadTableView = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
     
-    UIToolbar *actionToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(viewRect.origin.x, noteLabelRect.size.height, tableWidth, heightOffset)];
+    UIToolbar *actionToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(viewRect.origin.x, noteLabelRect.size.height, tableWidth, heightOffset - 1)];
     
     actionToolbar.tintColor   = [UIColor lightGrayColor];
     actionToolbar.translucent = YES;
     
     UIBarButtonItem *actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(presentActionSheetForNote:)];
     UIBarButtonItem *flexible = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    
+    UIBarButtonItem *addNoteThreadButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(displayChildThreadWriteViewForActiveNote:)];
+    
     actionButton.style = UIBarButtonItemStylePlain;
-    [actionToolbar setItems:[NSArray arrayWithObjects:flexible,actionButton,flexible, nil]];
+    [actionToolbar setItems:[NSArray arrayWithObjects:actionButton,flexible,addNoteThreadButton,nil]];
     [self.view addSubview:actionToolbar];
     
     
@@ -260,7 +277,7 @@ const CGFloat threadCellRowHeight = 40.0f;
 }
 
 - (void)textViewDidChange:(UITextView *)textView {
-    self.title = textView.text;
+    self.title = [self titleForNote:textView.text];
 }
 
 #pragma MFMailComposeViewControllerDelegate
