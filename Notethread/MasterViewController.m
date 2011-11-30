@@ -88,7 +88,7 @@ const CGFloat   cellHeight         = 51.0f;
     
     Note *selectedNote             = [self.fetchedResultsController objectAtIndexPath:indexPath];
     noteViewController.note        = selectedNote;
-    noteViewController.noteThreads = [selectedNote.noteThreads allObjects];
+    noteViewController.noteThreads = [selectedNote.noteThreads array];
     
     [self.navigationController pushViewController:noteViewController animated:YES];
 }

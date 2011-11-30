@@ -6,7 +6,6 @@ Version 1.1
 ----------------
 
 * Any bug fixes
-* Search functionality
 * Edit threads
 * UI improvements
   - Action bar height; added a black bar to separate from thread table view
@@ -24,6 +23,7 @@ FUTURE RELEASE
 Version 1.2
 ----------------
 
+* Search functionality
 * Any bug fixes
 * Tags
 * Tag searching / full text search

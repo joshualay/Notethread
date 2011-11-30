@@ -72,7 +72,11 @@
     newNote.text = self.noteTextView.text;
     
     if (self.parentNote != nil) {
-        [self.parentNote addNoteThreadsObject:newNote];
+        NSMutableArray *noteThreads = [[self.parentNote.noteThreads array] mutableCopy];
+        [noteThreads addObject:newNote];
+        
+        [self.parentNote setNoteThreads:[NSOrderedSet orderedSetWithArray:noteThreads]];
+        
         newNote.parentNote = self.parentNote;
         self.parentNote.lastModifiedDate = [NSDate date];
     }

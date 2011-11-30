@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		9800559C14680E50004C4802 /* Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = 9800559B14680E50004C4802 /* Tag.m */; };
-		9800559F146814A6004C4802 /* Note.m in Sources */ = {isa = PBXBuildFile; fileRef = 9800559E146814A6004C4802 /* Note.m */; };
 		980055A3146AB884004C4802 /* NTWriteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 980055A1146AB884004C4802 /* NTWriteViewController.m */; };
 		980055A4146AB884004C4802 /* NTWriteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 980055A2146AB884004C4802 /* NTWriteViewController.xib */; };
 		9801C7AA1484DE83005138A7 /* Release-Goals in Resources */ = {isa = PBXBuildFile; fileRef = 9801C7A91484DE83005138A7 /* Release-Goals */; };
+		9801C7B0148645CF005138A7 /* Note.m in Sources */ = {isa = PBXBuildFile; fileRef = 9801C7AF148645CF005138A7 /* Note.m */; };
 		981821441468026D00DBC1D2 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981821431468026D00DBC1D2 /* UIKit.framework */; };
 		981821461468026D00DBC1D2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981821451468026D00DBC1D2 /* Foundation.framework */; };
 		981821481468026D00DBC1D2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981821471468026D00DBC1D2 /* CoreGraphics.framework */; };
@@ -57,12 +57,12 @@
 /* Begin PBXFileReference section */
 		9800559A14680E50004C4802 /* Tag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tag.h; sourceTree = "<group>"; };
 		9800559B14680E50004C4802 /* Tag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tag.m; sourceTree = "<group>"; };
-		9800559D146814A6004C4802 /* Note.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Note.h; sourceTree = "<group>"; };
-		9800559E146814A6004C4802 /* Note.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Note.m; sourceTree = "<group>"; };
 		980055A0146AB884004C4802 /* NTWriteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NTWriteViewController.h; sourceTree = "<group>"; };
 		980055A1146AB884004C4802 /* NTWriteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NTWriteViewController.m; sourceTree = "<group>"; };
 		980055A2146AB884004C4802 /* NTWriteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NTWriteViewController.xib; sourceTree = "<group>"; };
 		9801C7A91484DE83005138A7 /* Release-Goals */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Release-Goals"; sourceTree = "<group>"; };
+		9801C7AE148645CF005138A7 /* Note.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Note.h; path = ../Note.h; sourceTree = "<group>"; };
+		9801C7AF148645CF005138A7 /* Note.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Note.m; path = ../Note.m; sourceTree = "<group>"; };
 		9818213F1468026D00DBC1D2 /* Notethread.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Notethread.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		981821431468026D00DBC1D2 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		981821451468026D00DBC1D2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -259,8 +259,8 @@
 			isa = PBXGroup;
 			children = (
 				981821571468026D00DBC1D2 /* Notethread.xcdatamodeld */,
-				9800559D146814A6004C4802 /* Note.h */,
-				9800559E146814A6004C4802 /* Note.m */,
+				9801C7AE148645CF005138A7 /* Note.h */,
+				9801C7AF148645CF005138A7 /* Note.m */,
 				9800559A14680E50004C4802 /* Tag.h */,
 				9800559B14680E50004C4802 /* Tag.m */,
 			);
@@ -395,7 +395,6 @@
 				981821591468026D00DBC1D2 /* Notethread.xcdatamodeld in Sources */,
 				9818215C1468026D00DBC1D2 /* MasterViewController.m in Sources */,
 				9800559C14680E50004C4802 /* Tag.m in Sources */,
-				9800559F146814A6004C4802 /* Note.m in Sources */,
 				980055A3146AB884004C4802 /* NTWriteViewController.m in Sources */,
 				9871256114700AA0007D56D6 /* NTNoteViewController.m in Sources */,
 				9871257014713310007D56D6 /* StyleApplicationService.m in Sources */,
@@ -405,6 +404,7 @@
 				98EB1F0A147D35340018FF08 /* AboutMeViewController.m in Sources */,
 				986E806C147E3C06004645CF /* EmailContentApplicationService.m in Sources */,
 				986E8072147E90EC004645CF /* EmailApplicationService.m in Sources */,
+				9801C7B0148645CF005138A7 /* Note.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

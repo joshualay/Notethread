@@ -19,8 +19,10 @@
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 - (UIBarButtonItem *)defaultRightBarButtonItem;
 - (void)resetNavigationItemFromEditing;
-- (void)setSortedNoteThreads;
 - (NSString *)titleForNote:(NSString *)text;
+- (IBAction)presentActionSheetForNote:(id)sender;
+- (void)willEditNoteTextView:(id)sender;
+- (void)navigationBarForNoteEditing;
 @end
 
 @implementation NTNoteViewController
@@ -74,8 +76,6 @@ const CGFloat threadCellRowHeight = 40.0f;
     
     self.navigationItem.rightBarButtonItem = [self defaultRightBarButtonItem];
     self.backButton = self.navigationItem.leftBarButtonItem;
-    
-    [self setSortedNoteThreads];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -85,7 +85,8 @@ const CGFloat threadCellRowHeight = 40.0f;
     NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
     [managedObjectContext refreshObject:self.note mergeChanges:YES];
     
-    [self setSortedNoteThreads];
+    self.noteThreads = nil;
+    self.noteThreads = [self.note.noteThreads array];
     [self.threadTableView reloadData];
 }
 
@@ -95,8 +96,7 @@ const CGFloat threadCellRowHeight = 40.0f;
 }
 
 - (UIBarButtonItem *)defaultRightBarButtonItem {
-    return nil;
-//    return [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(displayChildThreadWriteViewForActiveNote:)];
+    return [[UIBarButtonItem alloc] initWithTitle:@"Edit Note" style:UIBarButtonItemStylePlain target:self action:@selector(willEditNoteTextView:)];
 }
 
 - (void)resetNavigationItemFromEditing {
@@ -105,11 +105,26 @@ const CGFloat threadCellRowHeight = 40.0f;
     [self.noteTextView resignFirstResponder];     
 }
 
-- (void)setSortedNoteThreads {
-    self.noteThreads = nil;
-    
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"lastModifiedDate" ascending:FALSE];
-    self.noteThreads = [[self.note.noteThreads allObjects] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+- (IBAction)presentActionSheetForNote:(id)sender {
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Email", nil];
+    [actionSheet showInView:self.view];
+}
+
+#pragma override
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
+    [super setEditing:editing animated:animated];
+    [self.threadTableView setEditing:editing];
+}
+
+
+- (void)willEditNoteTextView:(id)sender {
+    [self.noteTextView becomeFirstResponder];
+    [self navigationBarForNoteEditing];
+}
+
+- (void)navigationBarForNoteEditing {
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(editingNoteDone:)];
+    self.navigationItem.leftBarButtonItem  = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(editingNoteCancel:)];
 }
 
 #pragma NTThreadViewDelegate
@@ -140,8 +155,8 @@ const CGFloat threadCellRowHeight = 40.0f;
 }
 
 - (CGRect)frameForThreadViewTable:(CGRect)viewRect noteFrame:(CGRect)noteViewRect withRows:(NSInteger)rowsDisplayed toolBarHeight:(CGFloat)height {
-    CGFloat tableHeight  = self.view.frame.size.height - noteViewRect.size.height - height;
-    CGFloat tableWidth   = self.view.frame.size.width;
+    CGFloat tableHeight  = viewRect.size.height - noteViewRect.size.height - height;
+    CGFloat tableWidth   = viewRect.size.width;
     
     return CGRectMake(0, noteViewRect.size.height + height, tableWidth, tableHeight);    
 }
@@ -157,6 +172,17 @@ const CGFloat threadCellRowHeight = 40.0f;
     return CGRectMake(viewRect.origin.x, noteViewRect.size.height, tableWidth, height - 1);
 }
 
+- (NSArray *)barButtonsForActionToolbar {
+    UIBarButtonItem *actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(presentActionSheetForNote:)];
+    actionButton.style = UIBarButtonItemStylePlain; 
+    
+    UIBarButtonItem *flexible = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    
+    UIBarButtonItem *addNoteThreadButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(displayChildThreadWriteViewForActiveNote:)];
+        
+    return [NSArray arrayWithObjects:self.editButtonItem,flexible, actionButton, flexible, addNoteThreadButton, nil];
+}
+
 - (void)viewForNoteThread {
     self.view.backgroundColor = [UIColor blackColor];
     
@@ -165,15 +191,12 @@ const CGFloat threadCellRowHeight = 40.0f;
     
     CGRect viewRect     = self.view.frame;
     CGRect noteViewRect = [self frameForNoteView:viewRect threadTableOffset:threadTableHeightOffset];
-    CGRect tableRect    = [self frameForThreadViewTable:viewRect noteFrame:self.noteTextView.frame withRows:rowsDisplayed toolBarHeight:NoteThreadActionToolbarHeight];
+    CGRect tableRect    = [self frameForThreadViewTable:viewRect noteFrame:noteViewRect withRows:rowsDisplayed toolBarHeight:NoteThreadActionToolbarHeight];
     CGRect actionRect   = [self frameForActionToolbar:viewRect noteFrame:noteViewRect toolBarHeight:NoteThreadActionToolbarHeight];
 
     self.noteTextView.frame = noteViewRect;
     
-    self.threadTableView = nil;
     self.threadTableView = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
-    
-    self.actionToolbar = nil;
     self.actionToolbar = [[UIToolbar alloc] initWithFrame:actionRect];
     
     
@@ -181,25 +204,12 @@ const CGFloat threadCellRowHeight = 40.0f;
     self.actionToolbar.tintColor   = [UIColor lightGrayColor];
     self.actionToolbar.translucent = YES;
     
-    
-    UIBarButtonItem *actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(presentActionSheetForNote:)];
-    UIBarButtonItem *flexible = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    
-    UIBarButtonItem *addNoteThreadButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(displayChildThreadWriteViewForActiveNote:)];
-    
-    actionButton.style = UIBarButtonItemStylePlain;
-    [self.actionToolbar setItems:[NSArray arrayWithObjects:actionButton,flexible,addNoteThreadButton,nil]];
+    [self.actionToolbar setItems:[self barButtonsForActionToolbar]];
     [self.view addSubview:self.actionToolbar];
-    
     
     self.actionToolbar.autoresizingMask   = UIViewAutoresizingFlexibleWidth;
     self.threadTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.noteTextView.autoresizingMask    = UIViewAutoresizingFlexibleWidth;
-}
-
-- (IBAction)presentActionSheetForNote:(id)sender {
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Email", nil];
-    [actionSheet showInView:self.view];
 }
 
 - (void)emailNotethread {
@@ -247,8 +257,12 @@ const CGFloat threadCellRowHeight = 40.0f;
         NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
         
         Note *noteThread = [self.noteThreads objectAtIndex:indexPath.row];
-        [self.note removeNoteThreadsObject:noteThread];
-        [self setSortedNoteThreads];
+        NSMutableArray *noteThreads = [[self.note.noteThreads array] mutableCopy];
+        [noteThreads removeObject:noteThread];
+        
+        [self.note setNoteThreads:[NSOrderedSet orderedSetWithArray:noteThreads]];
+        
+        self.noteThreads = [noteThreads copy];
 
         [self.threadTableView beginUpdates];
         [self.threadTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -261,6 +275,30 @@ const CGFloat threadCellRowHeight = 40.0f;
     }   
 }
 
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
+    
+    NSUInteger toRow   = destinationIndexPath.row;
+    NSUInteger fromRow = sourceIndexPath.row;
+    
+    NSMutableArray *threadsMutableArray = [self.noteThreads mutableCopy];
+    [threadsMutableArray exchangeObjectAtIndex:fromRow withObjectAtIndex:toRow];
+    
+    self.noteThreads = [threadsMutableArray copy];
+    [self.note setNoteThreads:[NSOrderedSet orderedSetWithArray:self.noteThreads]];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
+    
+    NSError *error = nil;
+    if (![managedObjectContext save:&error]) {
+        [AlertApplicationService alertViewForCoreDataError:nil];
+    }
+}
 
 #pragma UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -269,10 +307,11 @@ const CGFloat threadCellRowHeight = 40.0f;
     
     Note *selectedNote             = [self.noteThreads objectAtIndex:indexPath.row];
     noteViewController.note        = selectedNote;
-    noteViewController.noteThreads = [selectedNote.noteThreads allObjects];
+    noteViewController.noteThreads = [selectedNote.noteThreads array];
     
     [self.navigationController pushViewController:noteViewController animated:YES];
 }
+
 
 #pragma NTThreadWriteViewDelegate
 - (void)displayChildThreadWriteViewForActiveNote:(id)sender {
@@ -300,9 +339,7 @@ const CGFloat threadCellRowHeight = 40.0f;
 
 #pragma UITextViewDelegate
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(editingNoteDone:)];
-    self.navigationItem.leftBarButtonItem  = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(editingNoteCancel:)];
-
+    [self navigationBarForNoteEditing];
     return YES;
 }
 
