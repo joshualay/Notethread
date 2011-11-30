@@ -5,14 +5,12 @@ ACTIVE RELEASE
 Version 1.1
 ----------------
 
+* Search functionality
 * Any bug fixes
-* Edit threads
-* UI improvements
-  - Action bar height; added a black bar to separate from thread table view
-  - Action bar now has two buttons - action & compose
-  - Compose removed from the top of the note view
-  - Changed the height of the main view cell and the primary font
-  - Set the title in the note view to match what is shown on the cell
+* Tags
+* Tag searching / full text search
+* Style customisation 
+* UX improvements
 
 
 
@@ -23,11 +21,9 @@ FUTURE RELEASE
 Version 1.2
 ----------------
 
-* Search functionality
-* Any bug fixes
-* Tags
-* Tag searching / full text search
 * Heirachy view mode
+* Style and brand reassessment
+
 
 
 ===============
@@ -43,3 +39,13 @@ Version 1.0
 * Editing note
 * Deletion of notes
 * Settings for number of threads
+
+
+* Any bug fixes
+* Edit threads
+* UI improvements
+  - Action bar height; added a black bar to separate from thread table view
+  - Action bar now has two buttons - action & compose
+  - Compose removed from the top of the note view
+  - Changed the height of the main view cell and the primary font
+  - Set the title in the note view to match what is shown on the cell

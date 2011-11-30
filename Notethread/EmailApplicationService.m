@@ -36,9 +36,10 @@
         
         [sender presentModalViewController:mailController animated:YES];
     }
-    else {
-        NSLog(@"Error");
-    }
+}
+
+- (BOOL)deviceCanSendEmail {
+    return [MFMailComposeViewController canSendMail];
 }
 
 @end

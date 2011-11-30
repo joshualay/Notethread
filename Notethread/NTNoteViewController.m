@@ -179,7 +179,11 @@ const CGFloat threadCellRowHeight = 40.0f;
     UIBarButtonItem *flexible = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     
     UIBarButtonItem *addNoteThreadButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(displayChildThreadWriteViewForActiveNote:)];
-        
+    
+    EmailApplicationService *emailService = [EmailApplicationService sharedSingleton];
+    if (![emailService deviceCanSendEmail])
+        actionButton = flexible;
+    
     return [NSArray arrayWithObjects:self.editButtonItem,flexible, actionButton, flexible, addNoteThreadButton, nil];
 }
 
