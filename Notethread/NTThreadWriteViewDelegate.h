@@ -10,4 +10,7 @@
 
 @protocol NTThreadWriteViewDelegate
 - (void)displayChildThreadWriteViewForActiveNote:(id)sender;
+
+@optional
+- (IBAction)saveNote:(id)sender;
 @end

@@ -27,6 +27,7 @@
 
 @synthesize note            = _note;
 @synthesize noteTextView    = _noteTextView;
+@synthesize actionToolbar   = _actionToolbar;
 @synthesize threadTableView = _threadTableView;
 @synthesize noteThreads     = _noteThreads;
 
@@ -113,16 +114,8 @@ const CGFloat threadCellRowHeight = 40.0f;
 
 #pragma NTThreadViewDelegate
 - (void)editingNoteDone:(id)sender {
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
-    
-    self.note.text             = self.noteTextView.text;
-    self.note.lastModifiedDate = [NSDate date];
-    
-    NSError *error = nil;
-    if (![managedObjectContext save:&error]) {
-        [AlertApplicationService alertViewForCoreDataError:nil];
-    }
+    if ([self respondsToSelector:@selector(saveNote:)])
+        [self saveNote:sender];
     
     [self resetNavigationItemFromEditing];
 }
@@ -132,9 +125,7 @@ const CGFloat threadCellRowHeight = 40.0f;
     [self resetNavigationItemFromEditing];
 }
 
-- (void)viewForNoteThread {
-    self.view.backgroundColor = [UIColor blackColor];
-    
+- (NSInteger)rowsForThreadTableView {
     NSInteger rowsDisplayed;
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
@@ -145,25 +136,51 @@ const CGFloat threadCellRowHeight = 40.0f;
         [userDefaults setInteger:rowsDisplayed forKey:ThreadRowsDisplayedKey];
     }
     
-    CGFloat heightOffset = 28.0f;
-    CGFloat threadTableHeightOffset = ((CGFloat)rowsDisplayed * threadCellRowHeight) + heightOffset;
-    
-    CGRect viewRect      = self.view.frame;
-    self.noteTextView.frame = CGRectMake(viewRect.origin.x, viewRect.origin.y, viewRect.size.width, viewRect.size.height - threadTableHeightOffset);
-    self.noteTextView.font = [self.styleApplicationService fontNoteView];    
-    
-    CGRect noteLabelRect = self.noteTextView.frame;
-    CGFloat tableHeight  = self.view.frame.size.height - noteLabelRect.size.height - heightOffset;
+    return rowsDisplayed;
+}
+
+- (CGRect)frameForThreadViewTable:(CGRect)viewRect noteFrame:(CGRect)noteViewRect withRows:(NSInteger)rowsDisplayed toolBarHeight:(CGFloat)height {
+    CGFloat tableHeight  = self.view.frame.size.height - noteViewRect.size.height - height;
     CGFloat tableWidth   = self.view.frame.size.width;
-    CGRect tableRect     = CGRectMake(0, noteLabelRect.size.height + heightOffset, tableWidth, tableHeight);
     
+    return CGRectMake(0, noteViewRect.size.height + height, tableWidth, tableHeight);    
+}
+
+- (CGRect)frameForNoteView:(CGRect)viewRect threadTableOffset:(CGFloat)threadTableHeightOffset {
+     return CGRectMake(viewRect.origin.x, viewRect.origin.y, viewRect.size.width, viewRect.size.height - threadTableHeightOffset);
+}
+
+- (CGRect)frameForActionToolbar:(CGRect)viewRect noteFrame:(CGRect)noteViewRect toolBarHeight:(CGFloat)height {
+    CGFloat tableWidth   = self.view.frame.size.width;
     
+    // The - 1 is so we get a black line to separate from the thread table view
+    return CGRectMake(viewRect.origin.x, noteViewRect.size.height, tableWidth, height - 1);
+}
+
+- (void)viewForNoteThread {
+    self.view.backgroundColor = [UIColor blackColor];
+    
+    NSInteger rowsDisplayed = [self rowsForThreadTableView];
+    CGFloat threadTableHeightOffset = ((CGFloat)rowsDisplayed * threadCellRowHeight) + NoteThreadActionToolbarHeight;
+    
+    CGRect viewRect     = self.view.frame;
+    CGRect noteViewRect = [self frameForNoteView:viewRect threadTableOffset:threadTableHeightOffset];
+    CGRect tableRect    = [self frameForThreadViewTable:viewRect noteFrame:self.noteTextView.frame withRows:rowsDisplayed toolBarHeight:NoteThreadActionToolbarHeight];
+    CGRect actionRect   = [self frameForActionToolbar:viewRect noteFrame:noteViewRect toolBarHeight:NoteThreadActionToolbarHeight];
+
+    self.noteTextView.frame = noteViewRect;
+    
+    self.threadTableView = nil;
     self.threadTableView = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
     
-    UIToolbar *actionToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(viewRect.origin.x, noteLabelRect.size.height, tableWidth, heightOffset - 1)];
+    self.actionToolbar = nil;
+    self.actionToolbar = [[UIToolbar alloc] initWithFrame:actionRect];
     
-    actionToolbar.tintColor   = [UIColor lightGrayColor];
-    actionToolbar.translucent = YES;
+    
+    self.noteTextView.font         = [self.styleApplicationService fontNoteView];    
+    self.actionToolbar.tintColor   = [UIColor lightGrayColor];
+    self.actionToolbar.translucent = YES;
+    
     
     UIBarButtonItem *actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(presentActionSheetForNote:)];
     UIBarButtonItem *flexible = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -171,11 +188,11 @@ const CGFloat threadCellRowHeight = 40.0f;
     UIBarButtonItem *addNoteThreadButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(displayChildThreadWriteViewForActiveNote:)];
     
     actionButton.style = UIBarButtonItemStylePlain;
-    [actionToolbar setItems:[NSArray arrayWithObjects:actionButton,flexible,addNoteThreadButton,nil]];
-    [self.view addSubview:actionToolbar];
+    [self.actionToolbar setItems:[NSArray arrayWithObjects:actionButton,flexible,addNoteThreadButton,nil]];
+    [self.view addSubview:self.actionToolbar];
     
     
-    actionToolbar.autoresizingMask        = UIViewAutoresizingFlexibleWidth;
+    self.actionToolbar.autoresizingMask   = UIViewAutoresizingFlexibleWidth;
     self.threadTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.noteTextView.autoresizingMask    = UIViewAutoresizingFlexibleWidth;
 }
@@ -266,6 +283,19 @@ const CGFloat threadCellRowHeight = 40.0f;
     [self.styleApplicationService modalStyleForThreadWriteView:threadWriteViewController];
     
     [self presentModalViewController:threadWriteViewController animated:YES];    
+}
+
+- (IBAction)saveNote:(id)sender {
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
+    
+    self.note.text             = self.noteTextView.text;
+    self.note.lastModifiedDate = [NSDate date];
+    
+    NSError *error = nil;
+    if (![managedObjectContext save:&error]) {
+        [AlertApplicationService alertViewForCoreDataError:nil];
+    }    
 }
 
 #pragma UITextViewDelegate

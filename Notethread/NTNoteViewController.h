@@ -29,7 +29,7 @@
 @property (strong, nonatomic) Note *note;
 
 @property (strong, nonatomic) IBOutlet UITextView *noteTextView;
-
+@property (strong, nonatomic) UIToolbar *actionToolbar;
 @property (strong, nonatomic) UITableView *threadTableView;
 @property (strong, nonatomic) NSArray *noteThreads;
 

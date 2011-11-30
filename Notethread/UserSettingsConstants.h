@@ -9,3 +9,5 @@
 extern NSString * const ThreadRowsDisplayedKey;
 extern NSInteger const  ThreadRowsDisplayedDefault;
 extern NSInteger const  ThreadRowsDisplayedMaxRows;
+
+extern CGFloat const NoteThreadActionToolbarHeight;
