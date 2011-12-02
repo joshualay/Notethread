@@ -53,7 +53,7 @@
     self.noteTextView.inputAccessoryView = [styleApplicationService inputAccessoryViewForTextView:self.noteTextView];
     
     self.noteTextView.backgroundColor = [UIColor clearColor];
-    self.view.backgroundColor = [styleApplicationService paperColor];
+    self.view.backgroundColor = [styleApplicationService paperColor];    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

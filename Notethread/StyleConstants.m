@@ -10,3 +10,4 @@
 
 CGFloat const NoteThreadActionToolbarHeight = 30.0f;
 CGFloat const InputAccessoryViewForTextViewHeight = 28.0f;
+CGFloat const NoteTextViewLandscapeViewOffset = 190.0f;

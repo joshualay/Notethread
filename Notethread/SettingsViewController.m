@@ -48,8 +48,7 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return YES;
 }
 
 #pragma mark - Table view data source
@@ -70,6 +69,7 @@
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     
     self.threadRowSlider.frame = CGRectMake(60.0f, 12.0f, 220.0f, 20.0f);
+    self.threadRowSlider.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [cell.contentView addSubview:self.threadRowSlider];
     
     self.threadCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0f, 12.0f, 30.0f, 20.0f)];

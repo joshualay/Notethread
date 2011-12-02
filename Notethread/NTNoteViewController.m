@@ -154,6 +154,16 @@ const CGFloat threadCellRowHeight = 40.0f;
     return YES;
 }
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    if (UIInterfaceOrientationIsPortrait(fromInterfaceOrientation)) {
+        CGRect viewFrame = self.view.frame;
+        [UIView animateWithDuration:0.3f 
+                         animations:^{
+                            self.noteTextView.frame = CGRectMake(viewFrame.origin.x, viewFrame.origin.y, viewFrame.size.width, viewFrame.size.height - NoteTextViewLandscapeViewOffset);
+        }];
+    }
+}
+
 - (UIBarButtonItem *)defaultRightBarButtonItem {
     return [[UIBarButtonItem alloc] initWithTitle:@"Edit Note" style:UIBarButtonItemStylePlain target:self action:@selector(willEditNoteTextView:)];
 }
