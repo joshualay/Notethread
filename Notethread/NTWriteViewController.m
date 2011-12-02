@@ -15,6 +15,7 @@
 
 @synthesize noteTextView  = _noteTextView;
 @synthesize navigationBar = _navigationBar;
+@synthesize saveButton    = _saveButton;
 @synthesize noteDepth     = _noteDepth;
 @synthesize parentNote    = _parentNote;
 
@@ -53,7 +54,9 @@
     self.noteTextView.inputAccessoryView = [styleApplicationService inputAccessoryViewForTextView:self.noteTextView];
     
     self.noteTextView.backgroundColor = [UIColor clearColor];
-    self.view.backgroundColor = [styleApplicationService paperColor];    
+    self.view.backgroundColor = [styleApplicationService paperColor];
+
+    self.saveButton.enabled = ([self.noteTextView.text length]) ? YES : NO;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -96,7 +99,12 @@
 
 #pragma UITextViewDelegate
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    self.navigationBar.topItem.title = [NSString stringWithFormat:@"%@%@", textView.text, text];      
+    self.navigationBar.topItem.title = [NSString stringWithFormat:@"%@%@", textView.text, text];
+    self.saveButton.enabled = ([textView.text length]) ? YES : NO;
+    
+    if (range.location == 0 && [text isEqualToString:@""])
+        self.saveButton.enabled = NO;
+    
     return YES;
 }
 

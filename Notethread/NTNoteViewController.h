@@ -37,4 +37,6 @@
 
 @property (strong, nonatomic) UIBarButtonItem *backButton;
 
+@property (assign) BOOL keyboardIsDisplayed;
+
 @end

@@ -15,6 +15,7 @@
 
 @property (strong, nonatomic) IBOutlet UITextView *noteTextView;
 @property (strong, nonatomic) IBOutlet UINavigationBar *navigationBar;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *saveButton;
 
 @property (assign, nonatomic) NSInteger noteDepth;
 @property (strong, nonatomic) Note *parentNote;

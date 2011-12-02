@@ -26,6 +26,7 @@
 - (IBAction)presentActionSheetForNote:(id)sender;
 - (void)willEditNoteTextView:(id)sender;
 - (void)navigationBarForNoteEditing;
+- (CGRect)frameForNoteTextViewLandscapeWithViewFrame:(CGRect)viewFrame;
 @end
 
 @implementation NTNoteViewController
@@ -40,6 +41,8 @@
 
 @synthesize backButton = _backButton;
 
+@synthesize keyboardIsDisplayed = _keyboardIsDisplayed;
+
 const CGFloat threadCellRowHeight = 40.0f;
 
 - (id)init {
@@ -48,6 +51,7 @@ const CGFloat threadCellRowHeight = 40.0f;
         self.noteThreads = nil;
         self.styleApplicationService = [StyleApplicationService sharedSingleton];
         
+        self.keyboardIsDisplayed = NO;
         
         __block id keyboardDidDisplay;
         keyboardDidDisplay = [[NSNotificationCenter defaultCenter] 
@@ -55,6 +59,8 @@ const CGFloat threadCellRowHeight = 40.0f;
                                   object:self.noteTextView 
                                    queue:nil 
                               usingBlock:^(NSNotification *notification) {
+                                  self.keyboardIsDisplayed = YES;
+                                  
                                   NSValue *value = [[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey];
                                   
                                   CGRect keyboardRect = [value CGRectValue];
@@ -62,6 +68,11 @@ const CGFloat threadCellRowHeight = 40.0f;
                                   CGFloat adjustedHeight = self.view.frame.size.height - keyboardRect.size.height;
                                   
                                   CGRect adjustedNoteRect = CGRectMake(self.noteTextView.frame.origin.x, self.noteTextView.frame.origin.y, self.noteTextView.frame.size.width, adjustedHeight);
+                                  
+                                  UIInterfaceOrientation deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+                                  if (UIDeviceOrientationIsLandscape(deviceOrientation)) {
+                                      adjustedNoteRect = [self frameForNoteTextViewLandscapeWithViewFrame:self.view.frame];
+                                  }
                                   
                                   [UIView animateWithDuration:1.0f 
                                                    animations:^{
@@ -82,6 +93,8 @@ const CGFloat threadCellRowHeight = 40.0f;
                               object:self.noteTextView 
                               queue:nil 
                               usingBlock:^(NSNotification *notification) {
+                                  self.keyboardIsDisplayed = NO;
+                                  
                                   CGRect noteRect = [self frameForNoteView:self.view.frame threadTableOffset:threadCellRowHeight];
                                   noteRect.size.height = self.actionToolbar.frame.origin.y;
                                   
@@ -159,7 +172,11 @@ const CGFloat threadCellRowHeight = 40.0f;
         CGRect viewFrame = self.view.frame;
         [UIView animateWithDuration:0.3f 
                          animations:^{
-                            self.noteTextView.frame = CGRectMake(viewFrame.origin.x, viewFrame.origin.y, viewFrame.size.width, viewFrame.size.height - NoteTextViewLandscapeViewOffset);
+                             CGRect noteFrame = [self frameForNoteTextViewLandscapeWithViewFrame:viewFrame];
+                             if (self.keyboardIsDisplayed == NO)
+                                 noteFrame.size.height -= (NoteTextViewLandscapeViewOffset - NoteThreadActionToolbarHeight);
+                             
+                             self.noteTextView.frame = noteFrame;
         }];
     }
 }
@@ -196,16 +213,23 @@ const CGFloat threadCellRowHeight = 40.0f;
     self.navigationItem.leftBarButtonItem  = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(editingNoteCancel:)];
 }
 
+- (CGRect)frameForNoteTextViewLandscapeWithViewFrame:(CGRect)viewFrame {
+    CGFloat offset = (self.keyboardIsDisplayed) ? NoteTextViewLandscapeViewOffset : 0.0;
+    return CGRectMake(viewFrame.origin.x, viewFrame.origin.y, viewFrame.size.width, viewFrame.size.height - offset);   
+}
+
 #pragma NTThreadViewDelegate
 - (void)editingNoteDone:(id)sender {
     if ([self respondsToSelector:@selector(saveNote:)])
         [self saveNote:sender];
-    
+
+    self.title = [self titleForNote:self.noteTextView.text];
     [self resetNavigationItemFromEditing];
 }
 
 - (void)editingNoteCancel:(id)sender {
     self.noteTextView.text = self.note.text;
+    self.title = [self titleForNote:self.noteTextView.text];
     [self resetNavigationItemFromEditing];
 }
 
@@ -424,6 +448,8 @@ const CGFloat threadCellRowHeight = 40.0f;
 
 - (void)textViewDidChange:(UITextView *)textView {
     self.title = [self titleForNote:textView.text];
+    
+    self.navigationItem.rightBarButtonItem.enabled =  ([textView.text length]) ? YES : NO;
 }
 
 #pragma MFMailComposeViewControllerDelegate
