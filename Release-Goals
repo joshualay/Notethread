@@ -7,10 +7,16 @@ Version 1.1
 
 * Search functionality
 * Any bug fixes
+  - Prevent the user from being able to save an empty note
 * Tags
 * Tag searching / full text search
 * Style customisation 
+  - Background textures for the table views, note view background, note text view background and table cells on the main page
+  - Adjusted the height of the action toolbar, made it slightly higher
 * UX improvements
+  - Animations: When editing and saving, the movement of the note view
+  - Animations: Fade out toolbar and thread table view when adjusting note view
+  - Landscape modes for all views -- settings page didn't have this
 
 
 
