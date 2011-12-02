@@ -63,6 +63,10 @@ const CGFloat   cellHeight         = 51.0f;
 
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(displayWriteView)];
     self.navigationItem.rightBarButtonItem = addButton;
+    
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:self.tableView.frame];
+    self.tableView.tableFooterView.backgroundColor = [self.styleApplicationService colorForTableFooter];
+    self.tableView.backgroundColor = [self.styleApplicationService paperColor];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

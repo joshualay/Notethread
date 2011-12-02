@@ -7,6 +7,8 @@
 //
 
 #import "StyleApplicationService.h"
+#import "UserSettingsConstants.h"
+#import "StyleConstants.h"
 
 @interface StyleApplicationService()
 - (UIFont *)fontDefault;
@@ -94,6 +96,31 @@
 
 - (NSString *)cssForEmail {
     return @"<style>body { font-family: Georgia, 'Times New Roman', serif; }</style>";
+}
+
+- (UIToolbar *)inputAccessoryViewForTextView:(UITextView *)textView {
+    UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, textView.frame.origin.y, textView.frame.size.width, InputAccessoryViewForTextViewHeight)];
+    
+    toolbar.tintColor   = [UIColor lightGrayColor];
+    //toolbar.translucent = YES;
+
+    /*
+    UIBarButtonItem *addTagButton = [[UIBarButtonItem alloc] initWithTitle:@"tag note" style:UIBarButtonItemStyleBordered target:self action:@selector(willTagNote:)];
+    
+    UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    
+    [toolbar setItems:[NSArray arrayWithObjects:addTagButton, flexibleSpace , nil]];
+    */
+     
+    return toolbar;
+}
+
+- (UIColor *)colorForTableFooter {
+    return [UIColor colorWithPatternImage:[UIImage imageNamed:@"handmadepaper.png"]];
+}
+
+- (UIColor *)paperColor {
+    return [UIColor colorWithPatternImage:[UIImage imageNamed:@"fabric_1.png"]];
 }
 
 @end

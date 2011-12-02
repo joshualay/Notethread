@@ -6,12 +6,15 @@
 //  Copyright (c) 2011 Joshua Lay. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
+
 #import "NTNoteViewController.h"
 #import "NTWriteViewController.h"
 #import "StyleApplicationService.h"
 #import "AlertApplicationService.h"
 #import "AppDelegate.h"
 #import "UserSettingsConstants.h"
+#import "StyleConstants.h"
 #import "EmailApplicationService.h"
 
 
@@ -44,6 +47,60 @@ const CGFloat threadCellRowHeight = 40.0f;
     if (self) {
         self.noteThreads = nil;
         self.styleApplicationService = [StyleApplicationService sharedSingleton];
+        
+        
+        __block id keyboardDidDisplay;
+        keyboardDidDisplay = [[NSNotificationCenter defaultCenter] 
+                      addObserverForName:UIKeyboardWillShowNotification 
+                                  object:self.noteTextView 
+                                   queue:nil 
+                              usingBlock:^(NSNotification *notification) {
+                                  NSValue *value = [[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey];
+                                  
+                                  CGRect keyboardRect = [value CGRectValue];
+                                  
+                                  CGFloat adjustedHeight = self.view.frame.size.height - keyboardRect.size.height;
+                                  
+                                  CGRect adjustedNoteRect = CGRectMake(self.noteTextView.frame.origin.x, self.noteTextView.frame.origin.y, self.noteTextView.frame.size.width, adjustedHeight);
+                                  
+                                  [UIView animateWithDuration:1.0f 
+                                                   animations:^{
+                                                       self.noteTextView.frame = adjustedNoteRect;
+                                                       self.actionToolbar.layer.opacity = 0.0f;
+                                                       self.threadTableView.layer.opacity = 0.0f;
+                                                   }
+                                                   completion:^(BOOL finished) {                                                       
+                                                       self.actionToolbar.hidden = YES;
+                                                       self.threadTableView.hidden = YES;
+                                                   }
+                                   ];
+                              }];
+         
+        __block id keyboardWillDisappear;
+        keyboardWillDisappear = [[NSNotificationCenter defaultCenter] 
+                              addObserverForName:UIKeyboardDidHideNotification
+                              object:self.noteTextView 
+                              queue:nil 
+                              usingBlock:^(NSNotification *notification) {
+                                  CGRect noteRect = [self frameForNoteView:self.view.frame threadTableOffset:threadCellRowHeight];
+                                  noteRect.size.height = self.actionToolbar.frame.origin.y;
+                                  
+                                  [UIView animateWithDuration:0.2f 
+                                                   animations:^{
+                                                       self.noteTextView.frame = noteRect;
+                                                   }
+                                                   completion:^(BOOL finished) {
+                                                       self.actionToolbar.hidden = NO;
+                                                       self.threadTableView.hidden = NO;
+                                                       
+                                                       [UIView animateWithDuration:0.8f animations:^{
+                                                           self.actionToolbar.layer.opacity = 1.0f;
+                                                           self.threadTableView.layer.opacity = 1.0f;
+                                                       }];
+                                                   }
+                                   ]; 
+                                  
+                              }];
     }
     return self;  
 }
@@ -66,6 +123,8 @@ const CGFloat threadCellRowHeight = 40.0f;
         
     self.title             = [self titleForNote:self.note.text];
     self.noteTextView.text = self.note.text;
+    
+    self.noteTextView.inputAccessoryView = [self.styleApplicationService inputAccessoryViewForTextView:self.noteTextView];
     
     [self viewForNoteThread];
         
@@ -188,7 +247,7 @@ const CGFloat threadCellRowHeight = 40.0f;
 }
 
 - (void)viewForNoteThread {
-    self.view.backgroundColor = [UIColor blackColor];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"black-Linen.png"]];
     
     NSInteger rowsDisplayed = [self rowsForThreadTableView];
     CGFloat threadTableHeightOffset = ((CGFloat)rowsDisplayed * threadCellRowHeight) + NoteThreadActionToolbarHeight;
@@ -203,8 +262,12 @@ const CGFloat threadCellRowHeight = 40.0f;
     self.threadTableView = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
     self.actionToolbar = [[UIToolbar alloc] initWithFrame:actionRect];
     
+    self.threadTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(viewRect.origin.x, tableRect.origin.y, tableRect.size.width, tableRect.size.height)];
+    self.threadTableView.tableFooterView.backgroundColor = [self.styleApplicationService colorForTableFooter];
     
     self.noteTextView.font         = [self.styleApplicationService fontNoteView];    
+    self.noteTextView.backgroundColor = [self.styleApplicationService paperColor];
+    
     self.actionToolbar.tintColor   = [UIColor lightGrayColor];
     self.actionToolbar.translucent = YES;
     
@@ -252,6 +315,8 @@ const CGFloat threadCellRowHeight = 40.0f;
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     Note *note = [self.noteThreads objectAtIndex:indexPath.row];
     [self.styleApplicationService configureNoteTableCell:cell note:note];
+    
+    cell.contentView.backgroundColor   = [UIColor whiteColor];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath

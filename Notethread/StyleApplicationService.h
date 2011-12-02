@@ -20,6 +20,11 @@
 - (void)configureNoteTableCell:(UITableViewCell *)cell note:(Note *)note;
 
 - (NSString *)cssForEmail;
+
+- (UIToolbar *)inputAccessoryViewForTextView:(UITextView *)textView;
+
+- (UIColor *)colorForTableFooter;
+- (UIColor *)paperColor;
 @end
 
 @interface StyleApplicationService : NSObject <StyleApplicationServiceDelegate>

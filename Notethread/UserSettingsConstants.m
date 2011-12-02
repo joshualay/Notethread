@@ -11,5 +11,3 @@
 NSString * const ThreadRowsDisplayedKey = @"ThreadRowsDisplayed";
 NSInteger const ThreadRowsDisplayedDefault = 5;
 NSInteger const ThreadRowsDisplayedMaxRows = 7;
-
-CGFloat const NoteThreadActionToolbarHeight = 28.0f;
