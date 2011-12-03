@@ -82,7 +82,7 @@ const CGFloat threadCellRowHeight = 40.0f;
                                   adjustedNoteRect = [self frameForNoteTextViewLandscapeWithViewFrame:self.view.frame];
                               }
                               
-                              [UIView animateWithDuration:1.0f 
+                              [UIView animateWithDuration:0.5f 
                                                animations:^{
                                                    self.noteTextView.frame = adjustedNoteRect;
                                                    self.actionToolbar.layer.opacity = 0.0f;
@@ -103,20 +103,35 @@ const CGFloat threadCellRowHeight = 40.0f;
                              usingBlock:^(NSNotification *notification) {
                                  self.keyboardIsDisplayed = NO;
                                  
+                                 CGRect noteRectAdjusted = self.noteTextView.frame;
+                                 CGFloat heightAnimatedOffset = 2.5f;
+                                 if (noteRectAdjusted.size.height > self.actionToolbar.frame.origin.y)
+                                     noteRectAdjusted.size.height += heightAnimatedOffset;
+                                 else 
+                                     noteRectAdjusted.size.height -= heightAnimatedOffset;
+                                 
                                  CGRect noteRect = [self frameForNoteView:self.view.frame threadTableOffset:threadCellRowHeight];
                                  noteRect.size.height = self.actionToolbar.frame.origin.y;
                                  
-                                 [UIView animateWithDuration:0.2f 
+                                 [UIView animateWithDuration:0.3f 
                                                   animations:^{
-                                                      self.noteTextView.frame = noteRect;
+                                                      self.noteTextView.frame = noteRectAdjusted;
                                                   }
                                                   completion:^(BOOL finished) {
-                                                      self.actionToolbar.hidden = NO;
-                                                      self.threadTableView.hidden = NO;
+                                                      [UIView animateWithDuration:0.3f 
+                                                                       animations:^{
+                                                                           self.noteTextView.frame = noteRect;
+                                                                       }
+                                                                       completion:^(BOOL finished) {
+                                                                           self.actionToolbar.hidden = NO;
+                                                                           self.threadTableView.hidden = NO;
                                                       
-                                                      [UIView animateWithDuration:0.8f animations:^{
-                                                          self.actionToolbar.layer.opacity = 1.0f;
-                                                          self.threadTableView.layer.opacity = 1.0f;
+                                                                           [UIView animateWithDuration:0.6f 
+                                                                                            animations:^{
+                                                                                                self.actionToolbar.layer.opacity = 1.0f;
+                                                                                                self.threadTableView.layer.opacity = 1.0f;
+                                                                                            }
+                                                                            ];
                                                       }];
                                                   }
                                   ]; 
