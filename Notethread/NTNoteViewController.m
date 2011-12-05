@@ -126,7 +126,7 @@ const CGFloat threadCellRowHeight = 40.0f;
                                                                            self.actionToolbar.hidden = NO;
                                                                            self.threadTableView.hidden = NO;
                                                       
-                                                                           [UIView animateWithDuration:0.6f 
+                                                                           [UIView animateWithDuration:0.5f 
                                                                                             animations:^{
                                                                                                 self.actionToolbar.layer.opacity = 1.0f;
                                                                                                 self.threadTableView.layer.opacity = 1.0f;
@@ -315,7 +315,7 @@ const CGFloat threadCellRowHeight = 40.0f;
 }
 
 - (void)viewForNoteThread {
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"black-Linen.png"]];
+    self.view.backgroundColor = [self.styleApplicationService blackLinenColor];
     
     NSInteger rowsDisplayed = [self rowsForThreadTableView];
     CGFloat threadTableHeightOffset = ((CGFloat)rowsDisplayed * threadCellRowHeight) + NoteThreadActionToolbarHeight;

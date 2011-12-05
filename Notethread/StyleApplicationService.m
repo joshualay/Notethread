@@ -84,14 +84,6 @@
     cell.detailTextLabel.backgroundColor = [UIColor clearColor];
     
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
-        
-    /*
-    CGFloat threadCountLabelOriginX = cell.contentView.frame.size.width - 44.0f;
-    CGFloat threadCountLabelOriginY = cell.contentView.frame.size.height / 2.0f;
-    UILabel *threadCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(threadCountLabelOriginX, threadCountLabelOriginY, 12.0f, 12.0f)];
-    threadCountLabel.text = [NSString stringWithFormat:@"%i", [note.noteThreads count]];
-    
-    [cell.contentView addSubview:threadCountLabel];*/
 }
 
 - (NSString *)cssForEmail {
@@ -99,9 +91,9 @@
 }
 
 - (UIToolbar *)inputAccessoryViewForTextView:(UITextView *)textView {
-    UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, textView.frame.origin.y, textView.frame.size.width, InputAccessoryViewForTextViewHeight)];
+    /*UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, textView.frame.origin.y, textView.frame.size.width, InputAccessoryViewForTextViewHeight)];
     
-    toolbar.tintColor   = [UIColor lightGrayColor];
+    toolbar.tintColor   = [UIColor lightGrayColor];*/
     //toolbar.translucent = YES;
 
     /*
@@ -111,7 +103,8 @@
     
     [toolbar setItems:[NSArray arrayWithObjects:addTagButton, flexibleSpace , nil]];
     */
-     
+    //FIXME -- remove when ready for tags
+    UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
     return toolbar;
 }
 
@@ -121,6 +114,10 @@
 
 - (UIColor *)paperColor {
     return [UIColor colorWithPatternImage:[UIImage imageNamed:@"fabric_1.png"]];
+}
+
+- (UIColor *)blackLinenColor {
+    return [UIColor colorWithPatternImage:[UIImage imageNamed:@"black-Linen.png"]];
 }
 
 @end

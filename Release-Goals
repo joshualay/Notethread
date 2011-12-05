@@ -8,8 +8,6 @@ Version 1.1
 * Search functionality
 * Any bug fixes
   - Prevent the user from being able to save an empty note
-* Tags
-* Tag searching / full text search
 * Style customisation 
   - Background textures for the table views, note view background, note text view background and table cells on the main page
   - Adjusted the height of the action toolbar, made it slightly higher
@@ -27,6 +25,8 @@ FUTURE RELEASE
 Version 1.2
 ----------------
 
+* Tags
+* Tag searching / full text search
 * Heirachy view mode
 * Style and brand reassessment
 

@@ -25,6 +25,7 @@
 
 - (UIColor *)colorForTableFooter;
 - (UIColor *)paperColor;
+- (UIColor *)blackLinenColor;
 @end
 
 @interface StyleApplicationService : NSObject <StyleApplicationServiceDelegate>
