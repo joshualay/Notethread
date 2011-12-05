@@ -16,9 +16,10 @@
 #import "SettingsViewController.h"
 
 @interface MasterViewController ()
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
+- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath inTableView:(UITableView *)tableView;
 - (void)displayWriteView;
 - (void)displaySettingsView;
+- (void)initFilteredListContentArrayCapacity;
 @end
 
 @implementation MasterViewController
@@ -26,6 +27,8 @@
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext     = __managedObjectContext;
 @synthesize styleApplicationService  = _styleApplicationService;
+
+@synthesize filteredListContent, savedSearchTerm, savedScopeButtonIndex, searchWasActive;
 
 const NSInteger rootDepthInteger   = 0;
 const NSInteger threadDepthInteger = 1;
@@ -36,7 +39,18 @@ const CGFloat   cellHeight         = 51.0f;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = NSLocalizedString(@"Notethread", @"Notethread");
-        self.styleApplicationService = [StyleApplicationService sharedSingleton];
+        self.styleApplicationService = [StyleApplicationService sharedSingleton];       
+
+        // restore search settings if they were saved in didReceiveMemoryWarning.
+        if (self.savedSearchTerm)
+        {
+            [self.searchDisplayController setActive:self.searchWasActive];
+            //[self.searchDisplayController.searchBar setSelectedScopeButtonIndex:self.savedScopeButtonIndex];
+            self.searchDisplayController.searchBar.scopeButtonTitles = nil;
+            [self.searchDisplayController.searchBar setText:savedSearchTerm];
+            
+            self.savedSearchTerm = nil;
+        }
     }
     return self;
 }
@@ -48,6 +62,16 @@ const CGFloat   cellHeight         = 51.0f;
     settingsViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     
     [self presentModalViewController:settingsViewController animated:YES];
+}
+
+- (void)initFilteredListContentArrayCapacity {
+    self.filteredListContent = nil;
+    
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:0];
+    NSInteger count = [sectionInfo numberOfObjects];
+    
+    // create a filtered list that will contain products for the search results table.
+    self.filteredListContent = [NSMutableArray arrayWithCapacity:count];    
 }
 
 #pragma mark - View lifecycle
@@ -66,13 +90,30 @@ const CGFloat   cellHeight         = 51.0f;
     
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:self.tableView.frame];
     self.tableView.tableFooterView.backgroundColor = [self.styleApplicationService colorForTableFooter];
-    self.tableView.backgroundColor = [self.styleApplicationService paperColor];
+    self.tableView.backgroundColor = [self.styleApplicationService paperColor];    
+    
+    [self.tableView setContentOffset:CGPointMake(0,self.searchDisplayController.searchBar.frame.size.height)];
+    
+    [self initFilteredListContentArrayCapacity];
+}
+
+- (void)viewDidUnload {
+    self.filteredListContent = nil;
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    // save the state of the search UI so that it can be restored if the view is re-created
+    self.searchWasActive = [self.searchDisplayController isActive];
+    self.savedSearchTerm = [self.searchDisplayController.searchBar text];
+    self.savedScopeButtonIndex = [self.searchDisplayController.searchBar selectedScopeButtonIndex];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
 }
+
 
 // Customize the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -82,6 +123,9 @@ const CGFloat   cellHeight         = 51.0f;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if (tableView == self.searchDisplayController.searchResultsTableView)
+        return [self.filteredListContent count];
+    
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
     return [sectionInfo numberOfObjects];
 }
@@ -90,7 +134,12 @@ const CGFloat   cellHeight         = 51.0f;
 {
     NTNoteViewController *noteViewController = [[NTNoteViewController alloc] init];
     
-    Note *selectedNote             = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    Note *selectedNote = nil;
+    if (tableView == self.searchDisplayController.searchResultsTableView)
+        selectedNote = [self.filteredListContent objectAtIndex:indexPath.row];
+    else
+        selectedNote = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    
     noteViewController.note        = selectedNote;
     noteViewController.noteThreads = [selectedNote.noteThreads array];
     
@@ -108,7 +157,7 @@ const CGFloat   cellHeight         = 51.0f;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
 
-    [self configureCell:cell atIndexPath:indexPath];
+    [self configureCell:cell atIndexPath:indexPath inTableView:tableView];
     
     return cell;
 }
@@ -211,6 +260,7 @@ const CGFloat   cellHeight         = 51.0f;
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [self initFilteredListContentArrayCapacity];
             break;
             
         case NSFetchedResultsChangeDelete:
@@ -218,7 +268,7 @@ const CGFloat   cellHeight         = 51.0f;
             break;
             
         case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath inTableView:tableView];
             break;
             
         case NSFetchedResultsChangeMove:
@@ -234,9 +284,15 @@ const CGFloat   cellHeight         = 51.0f;
 }
 
 
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath inTableView:(UITableView *)tableView
 {     
-    Note *note = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    Note *note = nil;
+    if (tableView == self.searchDisplayController.searchResultsTableView)
+        note = [self.filteredListContent objectAtIndex:indexPath.row];
+    else 
+        note = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    
+    [self.fetchedResultsController objectAtIndexPath:indexPath];
     [self.styleApplicationService configureNoteTableCell:cell note:note];
 }
 
@@ -265,6 +321,46 @@ const CGFloat   cellHeight         = 51.0f;
     [self.styleApplicationService modalStyleForThreadWriteView:threadWriteViewController];
     
     [self presentModalViewController:threadWriteViewController animated:YES];
+}
+
+#pragma mark -
+#pragma mark Content Filtering
+
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
+{
+	[self.filteredListContent removeAllObjects]; // First clear the filtered array.
+	
+    NSArray *listContent = [self.fetchedResultsController fetchedObjects];
+	for (Note *note in listContent)
+	{
+        NSRange result = [note.text rangeOfString:searchText options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+        if (result.location != NSNotFound)
+        {
+            [self.filteredListContent addObject:note];
+        }
+	}
+}
+
+#pragma mark -
+#pragma mark UISearchDisplayController Delegate Methods
+
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
+{
+    [self filterContentForSearchText:searchString scope:
+     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
+    
+    // Return YES to cause the search result table view to be reloaded.
+    return YES;
+}
+
+
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption
+{
+    [self filterContentForSearchText:[self.searchDisplayController.searchBar text] scope:
+     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:searchOption]];
+    
+    // Return YES to cause the search result table view to be reloaded.
+    return YES;
 }
 
 @end

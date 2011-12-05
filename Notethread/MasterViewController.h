@@ -16,11 +16,17 @@
 #import <CoreData/CoreData.h>
 
 
-@interface MasterViewController : UITableViewController <NSFetchedResultsControllerDelegate, NTThreadWriteViewDelegate>
+@interface MasterViewController : UITableViewController 
+<NSFetchedResultsControllerDelegate, NTThreadWriteViewDelegate,UISearchDisplayDelegate, UISearchBarDelegate>
 
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) StyleApplicationService *styleApplicationService;
 
+@property (nonatomic, retain) NSMutableArray *filteredListContent;
+
+@property (nonatomic, copy) NSString *savedSearchTerm;
+@property (nonatomic) NSInteger savedScopeButtonIndex;
+@property (nonatomic) BOOL searchWasActive;
 
 @end
