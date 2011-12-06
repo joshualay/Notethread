@@ -20,6 +20,8 @@
 - (void)displayWriteView;
 - (void)displaySettingsView;
 - (void)initFilteredListContentArrayCapacity;
+- (NSMutableArray *)arrayOfNotesMatchingSearch:(NSString *)search inNote:(Note *)note;
+- (BOOL)isSearch:(NSString *)term inString:(NSString *)searchingIn;
 @end
 
 @implementation MasterViewController
@@ -41,6 +43,7 @@ const CGFloat   cellHeight         = 51.0f;
         self.title = NSLocalizedString(@"Notethread", @"Notethread");
         self.styleApplicationService = [StyleApplicationService sharedSingleton];       
 
+        [self initFilteredListContentArrayCapacity];
         // restore search settings if they were saved in didReceiveMemoryWarning.
         if (self.savedSearchTerm)
         {
@@ -65,13 +68,7 @@ const CGFloat   cellHeight         = 51.0f;
 }
 
 - (void)initFilteredListContentArrayCapacity {
-    self.filteredListContent = nil;
-    
-    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:0];
-    NSInteger count = [sectionInfo numberOfObjects];
-    
-    // create a filtered list that will contain products for the search results table.
-    self.filteredListContent = [NSMutableArray arrayWithCapacity:count];    
+    self.filteredListContent = [[NSMutableArray alloc] init]; 
 }
 
 #pragma mark - View lifecycle
@@ -92,9 +89,7 @@ const CGFloat   cellHeight         = 51.0f;
     self.tableView.tableFooterView.backgroundColor = [self.styleApplicationService colorForTableFooter];
     self.tableView.backgroundColor = [self.styleApplicationService paperColor];    
     
-    [self.tableView setContentOffset:CGPointMake(0,self.searchDisplayController.searchBar.frame.size.height)];
-    
-    [self initFilteredListContentArrayCapacity];
+    [self.tableView setContentOffset:CGPointMake(0,self.searchDisplayController.searchBar.frame.size.height)];    
 }
 
 - (void)viewDidUnload {
@@ -292,7 +287,6 @@ const CGFloat   cellHeight         = 51.0f;
     else 
         note = [self.fetchedResultsController objectAtIndexPath:indexPath];
     
-    [self.fetchedResultsController objectAtIndexPath:indexPath];
     [self.styleApplicationService configureNoteTableCell:cell note:note];
 }
 
@@ -333,12 +327,31 @@ const CGFloat   cellHeight         = 51.0f;
     NSArray *listContent = [self.fetchedResultsController fetchedObjects];
 	for (Note *note in listContent)
 	{
-        NSRange result = [note.text rangeOfString:searchText options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
-        if (result.location != NSNotFound)
-        {
-            [self.filteredListContent addObject:note];
-        }
+        NSMutableArray *result = [self arrayOfNotesMatchingSearch:searchText inNote:note];
+        if ([result count])
+            [self.filteredListContent addObjectsFromArray:result];
 	}
+}
+
+- (NSMutableArray *)arrayOfNotesMatchingSearch:(NSString *)search inNote:(Note *)note {
+    NSMutableArray *matchResults = [[NSMutableArray alloc] init];
+    if ([self isSearch:search inString:note.text])
+        [matchResults addObject:note];
+    
+    if ([note.noteThreads count]) {
+        for (Note *childNote in note.noteThreads) {
+            NSMutableArray *childResult = [self arrayOfNotesMatchingSearch:search inNote:childNote];
+            if ([childResult count])
+                [matchResults addObjectsFromArray:childResult];
+        }
+    }
+    
+    return matchResults;
+}
+
+- (BOOL)isSearch:(NSString *)term inString:(NSString *)searchingIn {
+    NSRange result = [searchingIn rangeOfString:term options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+    return result.location != NSNotFound;
 }
 
 #pragma mark -
@@ -348,16 +361,6 @@ const CGFloat   cellHeight         = 51.0f;
 {
     [self filterContentForSearchText:searchString scope:
      [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
-    
-    // Return YES to cause the search result table view to be reloaded.
-    return YES;
-}
-
-
-- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption
-{
-    [self filterContentForSearchText:[self.searchDisplayController.searchBar text] scope:
-     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:searchOption]];
     
     // Return YES to cause the search result table view to be reloaded.
     return YES;
