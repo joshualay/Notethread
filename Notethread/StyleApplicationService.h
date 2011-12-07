@@ -19,8 +19,6 @@
 - (void)modalStyleForThreadWriteView:(NTWriteViewController *)threadWriteViewController;
 - (void)configureNoteTableCell:(UITableViewCell *)cell note:(Note *)note;
 
-- (NSString *)cssForEmail;
-
 - (UIToolbar *)inputAccessoryViewForTextView:(UITextView *)textView;
 
 - (UIColor *)colorForTableFooter;

@@ -96,6 +96,10 @@ const CGFloat   cellHeight         = 51.0f;
     self.filteredListContent = nil;
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [self.tableView reloadData];
+}
+
 - (void)viewDidDisappear:(BOOL)animated
 {
     // save the state of the search UI so that it can be restored if the view is re-created

@@ -29,7 +29,11 @@
 }
 
 - (UIFont *)fontDefault {
-    return [UIFont fontWithName:@"Georgia" size:18.0f];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    if (![userDefaults stringForKey:FontFamilyNameDefaultKey])
+        [userDefaults setValue:FontFamilyNameDefault forKey:FontFamilyNameDefaultKey];
+    
+    return [UIFont fontWithName:[userDefaults stringForKey:FontFamilyNameDefaultKey] size:18.0f];
 }
 
 #pragma StyleApplicationServiceDelegate
@@ -42,7 +46,11 @@
 }
 
 - (UIFont *)fontTextLabelPrimary {
-    return [UIFont fontWithName:@"Georgia" size:16.0f];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    if (![userDefaults stringForKey:FontFamilyNameDefaultKey])
+        [userDefaults setValue:FontFamilyNameDefault forKey:FontFamilyNameDefaultKey];
+    
+    return [UIFont fontWithName:[userDefaults stringForKey:FontFamilyNameDefaultKey] size:16.0f];
 }
 
 - (UIFont *)fontDetailTextLabelPrimary {
@@ -84,10 +92,6 @@
     cell.detailTextLabel.backgroundColor = [UIColor clearColor];
     
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
-}
-
-- (NSString *)cssForEmail {
-    return @"<style>body { font-family: Georgia, 'Times New Roman', serif; }</style>";
 }
 
 - (UIToolbar *)inputAccessoryViewForTextView:(UITextView *)textView {

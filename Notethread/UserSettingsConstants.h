@@ -9,3 +9,7 @@
 extern NSString * const ThreadRowsDisplayedKey;
 extern NSInteger const  ThreadRowsDisplayedDefault;
 extern NSInteger const  ThreadRowsDisplayedMaxRows;
+extern NSString *const  FontFamilyNameDefaultKey;
+extern NSString *const  FontFamilyNameDefault;
+extern NSString *const  FontFamilySerif;
+extern NSString *const  FontFamilySansSerif;

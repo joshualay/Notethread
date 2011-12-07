@@ -202,7 +202,8 @@ const CGFloat threadCellRowHeight = 40.0f;
     }
     else {
         NSInteger rowsDisplayed = [self rowsForThreadTableView];
-        CGFloat threadTableHeightOffset = ((CGFloat)rowsDisplayed * threadCellRowHeight) + NoteThreadActionToolbarHeight;
+        //CGFloat threadTableHeightOffset = ((CGFloat)rowsDisplayed * threadCellRowHeight) + NoteThreadActionToolbarHeight;
+        CGFloat threadTableHeightOffset = ((CGFloat)rowsDisplayed * threadCellRowHeight);
         noteFrame = [self frameForNoteView:viewFrame threadTableOffset:threadTableHeightOffset];                            
     }
     

@@ -17,7 +17,18 @@ Version 1.1
   - Animations: When editing and saving, the movement of the note view
   - Animations: Fade out toolbar and thread table view when adjusting note view
   - Landscape modes for all views -- settings page didn't have this
-
+  
+Checklist:
+[x] Can create new top level note
+[x] Can delete top level note
+[x] Can navigate to note thread
+[x] Can edit note
+[x] Can add note thread
+[x] Can edit (move and delete) note threads
+[x] Can search for notes
+[x] Cancelling editing a note will not save changes or remain in the text view
+[ ] Rotating does not result in a malformed interface
+[x] Can change between serif and sans serif fonts
 
 
 ===============

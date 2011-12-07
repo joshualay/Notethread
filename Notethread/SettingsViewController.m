@@ -55,11 +55,14 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if (section == 1)
+        return 2;
+    
     return 1;
 }
 
@@ -68,23 +71,77 @@
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     
-    self.threadRowSlider.frame = CGRectMake(60.0f, 12.0f, 220.0f, 20.0f);
-    self.threadRowSlider.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    [cell.contentView addSubview:self.threadRowSlider];
-    
-    self.threadCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0f, 12.0f, 30.0f, 20.0f)];
-    
-    self.threadCountLabel.backgroundColor = [UIColor clearColor];
-    self.threadCountLabel.font            = [UIFont systemFontOfSize:22.0f];
-    self.threadCountLabel.text            = [NSString stringWithFormat:@"%i", (NSInteger)self.threadRowSlider.value];
-    
-    [cell.contentView addSubview:self.threadCountLabel];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    if (indexPath.section == 0) {
+        self.threadRowSlider.frame = CGRectMake(60.0f, 12.0f, 220.0f, 20.0f);
+        self.threadRowSlider.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        [cell.contentView addSubview:self.threadRowSlider];
+        
+        self.threadCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0f, 12.0f, 30.0f, 20.0f)];
+        
+        self.threadCountLabel.backgroundColor = [UIColor clearColor];
+        self.threadCountLabel.font            = [UIFont systemFontOfSize:22.0f];
+        self.threadCountLabel.text            = [NSString stringWithFormat:@"%i", (NSInteger)self.threadRowSlider.value];
+                
+        [cell.contentView addSubview:self.threadCountLabel];
+    }
+    else if (indexPath.section == 1) {
+        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+        
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        if (![userDefaults stringForKey:FontFamilyNameDefaultKey])
+            [userDefaults setValue:FontFamilyNameDefault forKey:FontFamilyNameDefaultKey];
+        
+        NSString *currentFont = [userDefaults stringForKey:FontFamilyNameDefaultKey];
+        NSString *format = @"%@ is the font you want";
+        if (indexPath.row == 0) {
+            if ([currentFont isEqualToString:FontFamilySerif]) {
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            }
+            cell.textLabel.text = [NSString stringWithFormat:format, FontFamilySerif];
+            cell.textLabel.font = [UIFont fontWithName:FontFamilySerif size:17.0f];
+        }
+        else {
+            if ([currentFont isEqualToString:FontFamilySansSerif]) {
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            }
+            
+            cell.textLabel.text = [NSString stringWithFormat:format, FontFamilySansSerif];
+            cell.textLabel.font = [UIFont fontWithName:FontFamilySansSerif size:17.0f];
+        }
+    }
     
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 1) {
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        switch (indexPath.row) {
+            case 0:
+                [userDefaults setValue:FontFamilySerif forKey:FontFamilyNameDefaultKey];
+                break;
+            case 1:
+                [userDefaults setValue:FontFamilySansSerif forKey:FontFamilyNameDefaultKey];
+                break;
+        }
+        
+        [tableView reloadData];
+    }
+}
+
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"Threads displayed";
+    switch (section) {
+        case 0:
+            return @"Threads displayed";
+            break;
+        case 1:
+            return @"Font used";
+        default:
+            break;
+    }
+    
+    return @"";
 }
 
 #pragma mark - Table view delegate

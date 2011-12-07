@@ -11,3 +11,7 @@
 NSString * const ThreadRowsDisplayedKey = @"ThreadRowsDisplayed";
 NSInteger const ThreadRowsDisplayedDefault = 5;
 NSInteger const ThreadRowsDisplayedMaxRows = 8;
+NSString *const FontFamilyNameDefaultKey = @"FontFamily";
+NSString *const FontFamilySerif = @"Georgia";
+NSString *const FontFamilySansSerif = @"Helvetica";
+NSString *const FontFamilyNameDefault = @"Helvetica";
