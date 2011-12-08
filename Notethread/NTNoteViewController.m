@@ -70,6 +70,9 @@ const CGFloat threadCellRowHeight = 40.0f;
 }
 
 - (void)keyboardWillAppear:(NSNotification *)notification {
+    if (self.keyboardIsDisplayed == YES)
+        return;
+    
     self.keyboardIsDisplayed = YES;
     
     NSValue *value = [[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey];
@@ -81,7 +84,7 @@ const CGFloat threadCellRowHeight = 40.0f;
     CGRect adjustedNoteRect = CGRectMake(self.noteTextView.frame.origin.x, self.noteTextView.frame.origin.y, self.noteTextView.frame.size.width, adjustedHeight);
     
     UIInterfaceOrientation deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    if (UIDeviceOrientationIsLandscape(deviceOrientation)) {
+    if (UIInterfaceOrientationIsLandscape(deviceOrientation)) {
         adjustedNoteRect = [self frameForNoteTextViewLandscapeWithViewFrame:self.view.frame];
     }
     
@@ -182,7 +185,7 @@ const CGFloat threadCellRowHeight = 40.0f;
     self.noteThreads = [self.note.noteThreads array];
     [self.threadTableView reloadData];   
     
-    [self setKeyboardNotificationsObservers];
+//    [self setKeyboardNotificationsObservers];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -191,6 +194,8 @@ const CGFloat threadCellRowHeight = 40.0f;
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    
+    return;
     if (self.keyboardIsDisplayed == NO)
         return;
     
