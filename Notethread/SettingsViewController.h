@@ -13,6 +13,7 @@
 @property (strong) IBOutlet UISlider *threadRowSlider;
 @property (strong) UILabel *threadCountLabel;
 @property (strong) NSUserDefaults *userDefaults;
+@property (strong) NSString *fontFamilyName;
 
 - (IBAction)didCancelChangeSettings:(id)sender;
 - (IBAction)didSaveSettings:(id)sender;

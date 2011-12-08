@@ -191,6 +191,9 @@ const CGFloat threadCellRowHeight = 40.0f;
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    if (self.keyboardIsDisplayed == NO)
+        return;
+    
     CGRect viewFrame = self.view.frame;
     CGRect noteFrame = CGRectZero;
     

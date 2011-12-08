@@ -15,6 +15,7 @@
 @synthesize threadRowSlider  = _threadRowSlider;
 @synthesize userDefaults     = _userDefaults;
 @synthesize threadCountLabel = _threadCountLabel;
+@synthesize fontFamilyName   = _fontFamilyName;
 
 #pragma mark - selectors
 - (IBAction)didCancelChangeSettings:(id)sender {
@@ -24,7 +25,13 @@
 - (IBAction)didSaveSettings:(id)sender {
     NSInteger threadRows = (NSInteger)self.threadRowSlider.value;
     [self.userDefaults setInteger:threadRows forKey:ThreadRowsDisplayedKey];
+    [self.userDefaults setValue:self.fontFamilyName forKey:FontFamilyNameDefaultKey];
+    
     [self dismissModalViewControllerAnimated:YES];
+    
+    NSLog(@"Saving");
+    NSLog(@"Thread rows: %i", threadRows);
+    NSLog(@"Font used: %@", self.fontFamilyName);
 }
 
 - (IBAction)didMoveThreadRowSlider:(id)sender {
@@ -41,8 +48,12 @@
     if (![self.userDefaults integerForKey:ThreadRowsDisplayedKey])
         [self.userDefaults setInteger:ThreadRowsDisplayedDefault forKey:ThreadRowsDisplayedKey];
     
-    [self.threadRowSlider setValue:(float)[self.userDefaults integerForKey:ThreadRowsDisplayedKey]];
+    NSNumber *threadRows = [NSNumber numberWithInteger:[self.userDefaults integerForKey:ThreadRowsDisplayedKey]];
+    NSLog(@"viewDidLoad: threadRows: %f", [threadRows floatValue]);
     self.threadRowSlider.maximumValue = ThreadRowsDisplayedMaxRows;
+    [self.threadRowSlider setValue:[threadRows floatValue]];
+    
+    self.fontFamilyName = [self.userDefaults stringForKey:FontFamilyNameDefaultKey];
 }
 
 
@@ -87,22 +98,17 @@
     }
     else if (indexPath.section == 1) {
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-        
-        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-        if (![userDefaults stringForKey:FontFamilyNameDefaultKey])
-            [userDefaults setValue:FontFamilyNameDefault forKey:FontFamilyNameDefaultKey];
-        
-        NSString *currentFont = [userDefaults stringForKey:FontFamilyNameDefaultKey];
+                
         NSString *format = @"%@ is the font you want";
         if (indexPath.row == 0) {
-            if ([currentFont isEqualToString:FontFamilySerif]) {
+            if ([self.fontFamilyName isEqualToString:FontFamilySerif]) {
                 cell.accessoryType = UITableViewCellAccessoryCheckmark;
             }
             cell.textLabel.text = [NSString stringWithFormat:format, FontFamilySerif];
             cell.textLabel.font = [UIFont fontWithName:FontFamilySerif size:17.0f];
         }
         else {
-            if ([currentFont isEqualToString:FontFamilySansSerif]) {
+            if ([self.fontFamilyName isEqualToString:FontFamilySansSerif]) {
                 cell.accessoryType = UITableViewCellAccessoryCheckmark;
             }
             
@@ -116,13 +122,12 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 1) {
-        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
         switch (indexPath.row) {
             case 0:
-                [userDefaults setValue:FontFamilySerif forKey:FontFamilyNameDefaultKey];
+                self.fontFamilyName = FontFamilySerif;
                 break;
             case 1:
-                [userDefaults setValue:FontFamilySansSerif forKey:FontFamilyNameDefaultKey];
+                self.fontFamilyName = FontFamilySansSerif;
                 break;
         }
         
@@ -146,8 +151,12 @@
 
 #pragma mark - Table view delegate
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    AboutMeViewController *aboutMeViewController = [[AboutMeViewController alloc] initWithNibName:@"AboutMeViewController" bundle:nil];
-    return aboutMeViewController.view;
+    if (section == 1) {
+        AboutMeViewController *aboutMeViewController = [[AboutMeViewController alloc] initWithNibName:@"AboutMeViewController" bundle:nil];
+        return aboutMeViewController.view;
+    }
+    
+    return nil;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {

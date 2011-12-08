@@ -30,7 +30,7 @@
 
 - (UIFont *)fontDefault {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if (![userDefaults stringForKey:FontFamilyNameDefaultKey])
+    if (![[userDefaults stringForKey:FontFamilyNameDefaultKey] length])
         [userDefaults setValue:FontFamilyNameDefault forKey:FontFamilyNameDefaultKey];
     
     return [UIFont fontWithName:[userDefaults stringForKey:FontFamilyNameDefaultKey] size:18.0f];
