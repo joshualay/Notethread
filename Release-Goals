@@ -6,17 +6,15 @@ Version 1.1
 ----------------
 
 * Search functionality
-  - Search currently only at the very top level. Memory issues with drilling through all the notes. May have to change what a search 
-    really can be?
 * Any bug fixes
   - Prevent the user from being able to save an empty note
 * Style customisation 
   - Background textures for the table views, note view background, note text view background and table cells on the main page
   - Adjusted the height of the action toolbar, made it slightly higher
 * UX improvements
-  - Animations: When editing and saving, the movement of the note view
-  - Animations: Fade out toolbar and thread table view when adjusting note view
   - Landscape modes for all views -- settings page didn't have this
+* User settings
+  - User can now change font
   
 Checklist:
 [x] Can create new top level note
@@ -27,7 +25,6 @@ Checklist:
 [x] Can edit (move and delete) note threads
 [x] Can search for notes
 [x] Cancelling editing a note will not save changes or remain in the text view
-[ ] Rotating does not result in a malformed interface
 [x] Can change between serif and sans serif fonts
 
 
@@ -38,6 +35,12 @@ FUTURE RELEASE
 Version 1.2
 ----------------
 
+* Rotation & resizing for note text view
+ ***Code exists***
+  - Animations: When editing and saving, the movement of the note view
+  - Animations: Fade out toolbar and thread table view when adjusting note view
+* Moving the settings bar on the main view to allow for edit mode of the table
+* Change font size setting
 * Tags
 * Tag searching / full text search
 * Heirachy view mode
