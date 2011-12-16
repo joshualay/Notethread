@@ -5,11 +5,11 @@ ACTIVE RELEASE
 Version 1.2
 ----------------
 
-* Rotation & resizing for note text view
- ***Code exists***
-  - Animations: When editing and saving, the movement of the note view
-  - Animations: Fade out toolbar and thread table view when adjusting note view
 * Moving the settings bar on the main view to allow for edit mode of the table
+
+// * Can move top level notes
+// Not sure about this one. It's not really default behaviour anywhere else. 
+
 * Style and brand reassessment
 * Bug fixes:
  - Pasting into text view does not enable the [save] button
@@ -22,6 +22,10 @@ FUTURE RELEASE
 
 Version 1.3
 ----------------
+* Rotation & resizing for note text view
+ ***Code exists***
+  - Animations: When editing and saving, the movement of the note view
+  - Animations: Fade out toolbar and thread table view when adjusting note view
 * Add TODO list functionality? 
   - I can utilise the tags to make this quite quick. "completed" "todo" "inprogress"
   - Since the tags store a reference to the notes themselves I can easily do top level sorting
