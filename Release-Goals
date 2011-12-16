@@ -13,6 +13,8 @@ Version 1.2
 * Change font size setting
 * Heirachy view mode
 * Style and brand reassessment
+* Bug fixes:
+ - Pasting into text view does not enable the [save] button
 
 
 
