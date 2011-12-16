@@ -97,6 +97,7 @@
     [self dismissModalViewControllerAnimated:YES];
 }
 
+
 #pragma UITextViewDelegate
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     self.navigationBar.topItem.title = [NSString stringWithFormat:@"%@%@", textView.text, text];
@@ -108,4 +109,7 @@
     return YES;
 }
 
+- (void)textViewDidChange:(UITextView *)textView {
+    self.saveButton.enabled = ([textView.text length]) ? YES : NO;
+}
 @end
