@@ -46,7 +46,7 @@
 				<int key="IBUIContentMode">7</int>
 				<bool key="IBUIUserInteractionEnabled">NO</bool>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-				<string key="IBUIText">Notethread by Joshua Lay. version 1.2</string>
+				<string key="IBUIText">Notethread by Joshua Lay</string>
 				<object class="NSColor" key="IBUITextColor">
 					<int key="NSColorSpace">3</int>
 					<bytes key="NSWhite">MC4zMzMzMzMzMzMzAA</bytes>
