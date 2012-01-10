@@ -16,6 +16,8 @@
 
 @implementation StyleApplicationService
 
+@synthesize userDefaults = _userDefaults;
+
 #pragma Singleton pattern
 + (StyleApplicationService *)sharedSingleton {
     static StyleApplicationService *sharedSingleton;
@@ -28,12 +30,22 @@
     }
 }
 
+- (id)init {
+    self = [super init];
+    if (self) {
+        self.userDefaults = [NSUserDefaults standardUserDefaults];
+        if (![[self.userDefaults stringForKey:FontFamilyNameDefaultKey] length])
+            [self.userDefaults setValue:FontFamilyNameDefault forKey:FontFamilyNameDefaultKey];
+
+        if (![self.userDefaults floatForKey:FontWritingSizeKey])
+            [self.userDefaults setFloat:FontWritingSizeDefault forKey:FontWritingSizeKey];
+    }
+    return self;
+}
+
 - (UIFont *)fontDefault {
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if (![[userDefaults stringForKey:FontFamilyNameDefaultKey] length])
-        [userDefaults setValue:FontFamilyNameDefault forKey:FontFamilyNameDefaultKey];
-    
-    return [UIFont fontWithName:[userDefaults stringForKey:FontFamilyNameDefaultKey] size:18.0f];
+    return [UIFont fontWithName:[self.userDefaults stringForKey:FontFamilyNameDefaultKey] 
+                           size:[self.userDefaults floatForKey:FontWritingSizeKey]];
 }
 
 #pragma StyleApplicationServiceDelegate
@@ -46,11 +58,8 @@
 }
 
 - (UIFont *)fontTextLabelPrimary {
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if (![userDefaults stringForKey:FontFamilyNameDefaultKey])
-        [userDefaults setValue:FontFamilyNameDefault forKey:FontFamilyNameDefaultKey];
-    
-    return [UIFont fontWithName:[userDefaults stringForKey:FontFamilyNameDefaultKey] size:16.0f];
+    return [UIFont fontWithName:[self.userDefaults stringForKey:FontFamilyNameDefaultKey] 
+                           size:FontLabelSizeDefault];
 }
 
 - (UIFont *)fontDetailTextLabelPrimary {

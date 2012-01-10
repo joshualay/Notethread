@@ -16,6 +16,9 @@
 @synthesize userDefaults     = _userDefaults;
 @synthesize threadCountLabel = _threadCountLabel;
 @synthesize fontFamilyName   = _fontFamilyName;
+@synthesize fontSize         = _fontSize;
+
+const NSInteger lastSection = 2;
 
 #pragma mark - selectors
 - (IBAction)didCancelChangeSettings:(id)sender {
@@ -26,16 +29,29 @@
     NSInteger threadRows = (NSInteger)self.threadRowSlider.value;
     [self.userDefaults setInteger:threadRows forKey:ThreadRowsDisplayedKey];
     [self.userDefaults setValue:self.fontFamilyName forKey:FontFamilyNameDefaultKey];
+    [self.userDefaults setFloat:self.fontSize forKey:FontWritingSizeKey];
     
     [self dismissModalViewControllerAnimated:YES];
-    
-    NSLog(@"Saving");
-    NSLog(@"Thread rows: %i", threadRows);
-    NSLog(@"Font used: %@", self.fontFamilyName);
 }
 
 - (IBAction)didMoveThreadRowSlider:(id)sender {
     self.threadCountLabel.text = [NSString stringWithFormat:@"%i", (NSInteger)self.threadRowSlider.value];
+}
+
+- (IBAction)didSelectFontSize:(id)sender {
+    UISegmentedControl *segmentControl = (UISegmentedControl *)sender;
+        
+    switch (segmentControl.selectedSegmentIndex) {
+        case 0:
+            self.fontSize = FontNoteSizeSmall;
+            break;
+        case 1:
+            self.fontSize = FontNoteSizeNormal;
+            break;
+        case 2:
+            self.fontSize = FontNoteSizeLarge;
+            break;
+    }    
 }
 
 #pragma mark - View lifecycle
@@ -49,7 +65,6 @@
         [self.userDefaults setInteger:ThreadRowsDisplayedDefault forKey:ThreadRowsDisplayedKey];
     
     NSNumber *threadRows = [NSNumber numberWithInteger:[self.userDefaults integerForKey:ThreadRowsDisplayedKey]];
-    NSLog(@"viewDidLoad: threadRows: %f", [threadRows floatValue]);
     self.threadRowSlider.maximumValue = ThreadRowsDisplayedMaxRows;
     [self.threadRowSlider setValue:[threadRows floatValue]];
     
@@ -66,7 +81,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -116,6 +131,34 @@
             cell.textLabel.font = [UIFont fontWithName:FontFamilySansSerif size:17.0f];
         }
     }
+    else if (indexPath.section == 2) {
+        UISegmentedControl *fontSizeSegmentControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Small", @"Normal", @"Large", nil]];
+        
+        [fontSizeSegmentControl addTarget:self action:@selector(didSelectFontSize:) forControlEvents:UIControlEventValueChanged];
+        
+        fontSizeSegmentControl.segmentedControlStyle = UISegmentedControlStyleBar;
+        fontSizeSegmentControl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+                
+        CGRect cellContentFrame      = cell.contentView.frame;
+        CGRect contentSegmentFrame   = CGRectMake(cellContentFrame.origin.x + 10.0f, cellContentFrame.origin.y, cellContentFrame.size.width * 0.94, cellContentFrame.size.height);
+        fontSizeSegmentControl.frame = contentSegmentFrame;
+        
+        [cell.contentView addSubview:fontSizeSegmentControl];
+        
+        UIView *backView = [[UIView alloc] initWithFrame:CGRectZero];
+        backView.backgroundColor = [UIColor clearColor];
+        cell.backgroundView = backView;
+        cell.contentView.backgroundColor = [UIColor clearColor];
+        cell.backgroundColor             = [UIColor clearColor];
+        
+        CGFloat userFontSize = [self.userDefaults floatForKey:FontWritingSizeKey];
+        if (userFontSize == FontNoteSizeSmall)
+            fontSizeSegmentControl.selectedSegmentIndex = 0;
+        else if (userFontSize == FontNoteSizeNormal)
+            fontSizeSegmentControl.selectedSegmentIndex = 1;
+        else 
+            fontSizeSegmentControl.selectedSegmentIndex = 2;
+    }
     
     return cell;
 }
@@ -142,6 +185,10 @@
             break;
         case 1:
             return @"Font used";
+            break;
+        case 2:
+            return @"Note font size";
+            break;
         default:
             break;
     }
@@ -151,7 +198,7 @@
 
 #pragma mark - Table view delegate
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    if (section == 1) {
+    if (section == lastSection) {
         AboutMeViewController *aboutMeViewController = [[AboutMeViewController alloc] initWithNibName:@"AboutMeViewController" bundle:nil];
         return aboutMeViewController.view;
     }
@@ -160,7 +207,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    if (section == 1)
+    if (section == lastSection)
         return 30.0f;
     
     return 10.0f;

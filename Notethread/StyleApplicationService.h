@@ -28,6 +28,8 @@
 
 @interface StyleApplicationService : NSObject <StyleApplicationServiceDelegate>
 
+@property (nonatomic, strong) NSUserDefaults *userDefaults;
+
 + (StyleApplicationService *)sharedSingleton;
 
 @end

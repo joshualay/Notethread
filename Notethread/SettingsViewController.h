@@ -14,9 +14,12 @@
 @property (strong) UILabel *threadCountLabel;
 @property (strong) NSUserDefaults *userDefaults;
 @property (strong) NSString *fontFamilyName;
+@property (assign) CGFloat fontSize;
 
 - (IBAction)didCancelChangeSettings:(id)sender;
 - (IBAction)didSaveSettings:(id)sender;
 - (IBAction)didMoveThreadRowSlider:(id)sender;
+
+- (IBAction)didSelectFontSize:(id)sender;
 
 @end

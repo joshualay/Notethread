@@ -13,3 +13,13 @@ extern NSString *const  FontFamilyNameDefaultKey;
 extern NSString *const  FontFamilyNameDefault;
 extern NSString *const  FontFamilySerif;
 extern NSString *const  FontFamilySansSerif;
+
+extern NSString *const  FontWritingSizeKey;
+extern CGFloat const    FontWritingSizeDefault;
+
+extern CGFloat const    FontLabelSizeDefault;
+
+extern CGFloat const    FontNoteSizeSmall;
+extern CGFloat const    FontNoteSizeNormal;
+extern CGFloat const    FontNoteSizeLarge;
+
