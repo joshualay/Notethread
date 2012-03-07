@@ -1,12 +1,12 @@
 //
-//  MasterViewController.m
+//  NTNoteListViewController.m
 //  Notethread
 //
-//  Created by Joshua Lay on 7/11/11.
+//  Created by Joshua Lay on 16/12/11.
 //  Copyright (c) 2011 Joshua Lay. All rights reserved.
 //
 
-#import "MasterViewController.h"
+#import "NTNoteListViewController.h"
 
 #import "NTNoteViewController.h"
 #import "Note.h"
@@ -15,16 +15,19 @@
 #import "AlertApplicationService.h"
 #import "SettingsViewController.h"
 
-@interface MasterViewController ()
+
+@interface NTNoteListViewController ()
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath inTableView:(UITableView *)tableView;
 - (void)displayWriteView;
-- (void)displaySettingsView;
+- (IBAction)displaySettingsView;
 - (void)initFilteredListContentArrayCapacity;
 - (NSMutableArray *)arrayOfNotesMatchingSearch:(NSString *)search inNote:(Note *)note;
 - (BOOL)isSearch:(NSString *)term inString:(NSString *)searchingIn;
 @end
 
-@implementation MasterViewController
+@implementation NTNoteListViewController
+
+@synthesize tableView = _tableView;
 
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext     = __managedObjectContext;
@@ -41,8 +44,8 @@ const CGFloat   cellHeight         = 51.0f;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = NSLocalizedString(@"Notethread", @"Notethread");
-        self.styleApplicationService = [StyleApplicationService sharedSingleton];       
-
+        self.styleApplicationService = [StyleApplicationService sharedSingleton];   
+        
         [self initFilteredListContentArrayCapacity];
         // restore search settings if they were saved in didReceiveMemoryWarning.
         if (self.savedSearchTerm)
@@ -57,9 +60,9 @@ const CGFloat   cellHeight         = 51.0f;
     }
     return self;
 }
-							
 
-- (void)displaySettingsView {
+
+- (IBAction)displaySettingsView {
     SettingsViewController *settingsViewController = [[SettingsViewController alloc] initWithNibName:@"SettingsViewController" bundle:nil];
     
     settingsViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
@@ -77,16 +80,11 @@ const CGFloat   cellHeight         = 51.0f;
 {
     [super viewDidLoad];
     
-    UIButton *infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
-    [infoButton addTarget:self action:@selector(displaySettingsView) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
-
-
+    self.navigationItem.leftBarButtonItem = self.editButtonItem;
+    
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(displayWriteView)];
     self.navigationItem.rightBarButtonItem = addButton;
-    
-    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:self.tableView.frame];
-    self.tableView.tableFooterView.backgroundColor = [self.styleApplicationService colorForTableFooter];
+
     self.tableView.backgroundColor = [self.styleApplicationService paperColor];    
     
     [self.tableView setContentOffset:CGPointMake(0,self.searchDisplayController.searchBar.frame.size.height)];    
@@ -155,7 +153,7 @@ const CGFloat   cellHeight         = 51.0f;
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
-
+    
     [self configureCell:cell atIndexPath:indexPath inTableView:tableView];
     
     return cell;
@@ -179,7 +177,6 @@ const CGFloat   cellHeight         = 51.0f;
 
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // The table view should not be re-orderable.
     return NO;
 }
 
@@ -315,7 +312,7 @@ const CGFloat   cellHeight         = 51.0f;
     
     Note *activeNote = [self.fetchedResultsController objectAtIndexPath:indexPath];
     NTWriteViewController *threadWriteViewController = [[NTWriteViewController alloc] initWithThreadDepth:threadDepthInteger parent:activeNote];
-
+    
     [self.styleApplicationService modalStyleForThreadWriteView:threadWriteViewController];
     
     [self presentModalViewController:threadWriteViewController animated:YES];
@@ -368,6 +365,12 @@ const CGFloat   cellHeight         = 51.0f;
     
     // Return YES to cause the search result table view to be reloaded.
     return YES;
+}
+
+// To override the behaviour of self.editButtonItem
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
+    [super setEditing:editing animated:animated];
+    [self.tableView setEditing:editing];
 }
 
 @end

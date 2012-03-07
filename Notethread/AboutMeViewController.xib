@@ -33,7 +33,7 @@
 			<object class="IBUILabel" id="164956669">
 				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">301</int>
-				<string key="NSFrameSize">{203, 88}</string>
+				<string key="NSFrameSize">{253, 88}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView"/>
@@ -46,7 +46,7 @@
 				<int key="IBUIContentMode">7</int>
 				<bool key="IBUIUserInteractionEnabled">NO</bool>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-				<string key="IBUIText">Notethread by Joshua Lay. version 1.0</string>
+				<string key="IBUIText">Notethread by Joshua Lay</string>
 				<object class="NSColor" key="IBUITextColor">
 					<int key="NSColorSpace">3</int>
 					<bytes key="NSWhite">MC4zMzMzMzMzMzMzAA</bytes>

@@ -2,7 +2,7 @@
 //  Note.m
 //  Notethread
 //
-//  Created by Joshua Lay on 7/11/11.
+//  Created by Joshua Lay on 30/11/11.
 //  Copyright (c) 2011 Joshua Lay. All rights reserved.
 //
 
@@ -18,7 +18,7 @@
 @dynamic lastModifiedDate;
 @dynamic text;
 @dynamic noteThreads;
-@dynamic tags;
 @dynamic parentNote;
+@dynamic tags;
 
 @end

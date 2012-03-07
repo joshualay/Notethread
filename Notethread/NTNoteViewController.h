@@ -29,12 +29,14 @@
 @property (strong, nonatomic) Note *note;
 
 @property (strong, nonatomic) IBOutlet UITextView *noteTextView;
-
+@property (strong, nonatomic) UIToolbar *actionToolbar;
 @property (strong, nonatomic) UITableView *threadTableView;
 @property (strong, nonatomic) NSArray *noteThreads;
 
 @property (strong, nonatomic) StyleApplicationService *styleApplicationService;
 
 @property (strong, nonatomic) UIBarButtonItem *backButton;
+
+@property (assign) BOOL keyboardIsDisplayed;
 
 @end
