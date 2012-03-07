@@ -47,7 +47,7 @@
 
 @synthesize keyboardIsDisplayed = _keyboardIsDisplayed;
 
-const CGFloat threadCellRowHeight = 40.0f;
+const CGFloat threadCellRowHeight = 42.0f;
 
 - (id)init {
     self = [super initWithNibName:@"NTNoteViewController" bundle:nil];
@@ -335,9 +335,6 @@ const CGFloat threadCellRowHeight = 40.0f;
     
     self.threadTableView = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
     self.actionToolbar = [[UIToolbar alloc] initWithFrame:actionRect];
-    
-    self.threadTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(viewRect.origin.x, tableRect.origin.y, tableRect.size.width, tableRect.size.height)];
-    self.threadTableView.tableFooterView.backgroundColor = [self.styleApplicationService colorForTableFooter];
     
     self.noteTextView.font         = [self.styleApplicationService fontNoteView];    
     self.noteTextView.backgroundColor = [self.styleApplicationService paperColor];
