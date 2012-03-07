@@ -5,7 +5,7 @@
         <attribute name="depth" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="lastModifiedDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="noteThreads" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Note" inverseName="parentNote" inverseEntity="Note" syncable="YES"/>
+        <relationship name="noteThreads" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Note" inverseName="parentNote" inverseEntity="Note" syncable="YES"/>
         <relationship name="parentNote" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Note" inverseName="noteThreads" inverseEntity="Note" syncable="YES"/>
         <relationship name="tags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" inverseName="notes" inverseEntity="Tag" syncable="YES"/>
     </entity>
@@ -15,7 +15,7 @@
         <relationship name="notes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Note" inverseName="tags" inverseEntity="Note" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Note" positionX="261" positionY="189" width="128" height="135"/>
+        <element name="Note" positionX="261" positionY="189" width="128" height="150"/>
         <element name="Tag" positionX="160" positionY="192" width="128" height="105"/>
     </elements>
 </model>

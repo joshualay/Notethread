@@ -15,6 +15,7 @@
 
 @synthesize noteTextView  = _noteTextView;
 @synthesize navigationBar = _navigationBar;
+@synthesize saveButton    = _saveButton;
 @synthesize noteDepth     = _noteDepth;
 @synthesize parentNote    = _parentNote;
 
@@ -48,7 +49,14 @@
     self.navigationBar.topItem.title = NSLocalizedString(@"Writing...", @"Writing...");
     
     StyleApplicationService *styleApplicationService = [StyleApplicationService sharedSingleton];
+    
     self.noteTextView.font = [styleApplicationService fontNoteWrite];
+    self.noteTextView.inputAccessoryView = [styleApplicationService inputAccessoryViewForTextView:self.noteTextView];
+    
+    self.noteTextView.backgroundColor = [UIColor clearColor];
+    self.view.backgroundColor = [styleApplicationService paperColor];
+
+    self.saveButton.enabled = ([self.noteTextView.text length]) ? YES : NO;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -72,7 +80,11 @@
     newNote.text = self.noteTextView.text;
     
     if (self.parentNote != nil) {
-        [self.parentNote addNoteThreadsObject:newNote];
+        NSMutableArray *noteThreads = [[self.parentNote.noteThreads array] mutableCopy];
+        [noteThreads addObject:newNote];
+        
+        [self.parentNote setNoteThreads:[NSOrderedSet orderedSetWithArray:noteThreads]];
+        
         newNote.parentNote = self.parentNote;
         self.parentNote.lastModifiedDate = [NSDate date];
     }
@@ -85,10 +97,19 @@
     [self dismissModalViewControllerAnimated:YES];
 }
 
+
 #pragma UITextViewDelegate
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    self.navigationBar.topItem.title = [NSString stringWithFormat:@"%@%@", textView.text, text];      
+    self.navigationBar.topItem.title = [NSString stringWithFormat:@"%@%@", textView.text, text];
+    self.saveButton.enabled = ([textView.text length]) ? YES : NO;
+    
+    if (range.location == 0 && [text isEqualToString:@""])
+        self.saveButton.enabled = NO;
+    
     return YES;
 }
 
+- (void)textViewDidChange:(UITextView *)textView {
+    self.saveButton.enabled = ([textView.text length]) ? YES : NO;
+}
 @end

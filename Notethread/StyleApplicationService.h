@@ -19,10 +19,16 @@
 - (void)modalStyleForThreadWriteView:(NTWriteViewController *)threadWriteViewController;
 - (void)configureNoteTableCell:(UITableViewCell *)cell note:(Note *)note;
 
-- (NSString *)cssForEmail;
+- (UIToolbar *)inputAccessoryViewForTextView:(UITextView *)textView;
+
+- (UIColor *)colorForTableFooter;
+- (UIColor *)paperColor;
+- (UIColor *)blackLinenColor;
 @end
 
 @interface StyleApplicationService : NSObject <StyleApplicationServiceDelegate>
+
+@property (nonatomic, strong) NSUserDefaults *userDefaults;
 
 + (StyleApplicationService *)sharedSingleton;
 

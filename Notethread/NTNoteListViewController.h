@@ -1,8 +1,8 @@
 //
-//  MasterViewController.h
+//  NTNoteListViewController.h
 //  Notethread
 //
-//  Created by Joshua Lay on 7/11/11.
+//  Created by Joshua Lay on 16/12/11.
 //  Copyright (c) 2011 Joshua Lay. All rights reserved.
 //
 
@@ -15,9 +15,12 @@
 #import "NTThreadWriteViewDelegate.h"
 #import <CoreData/CoreData.h>
 
+@interface NTNoteListViewController : UIViewController 
+<UITableViewDelegate, UITableViewDataSource,
+UISearchDisplayDelegate, UISearchBarDelegate,
+NSFetchedResultsControllerDelegate, NTThreadWriteViewDelegate>
 
-@interface MasterViewController : UITableViewController 
-<NSFetchedResultsControllerDelegate, NTThreadWriteViewDelegate,UISearchDisplayDelegate, UISearchBarDelegate>
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;

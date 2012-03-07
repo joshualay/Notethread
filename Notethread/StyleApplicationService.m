@@ -7,12 +7,16 @@
 //
 
 #import "StyleApplicationService.h"
+#import "UserSettingsConstants.h"
+#import "StyleConstants.h"
 
 @interface StyleApplicationService()
 - (UIFont *)fontDefault;
 @end
 
 @implementation StyleApplicationService
+
+@synthesize userDefaults = _userDefaults;
 
 #pragma Singleton pattern
 + (StyleApplicationService *)sharedSingleton {
@@ -26,8 +30,22 @@
     }
 }
 
+- (id)init {
+    self = [super init];
+    if (self) {
+        self.userDefaults = [NSUserDefaults standardUserDefaults];
+        if (![[self.userDefaults stringForKey:FontFamilyNameDefaultKey] length])
+            [self.userDefaults setValue:FontFamilyNameDefault forKey:FontFamilyNameDefaultKey];
+
+        if (![self.userDefaults floatForKey:FontWritingSizeKey])
+            [self.userDefaults setFloat:FontWritingSizeDefault forKey:FontWritingSizeKey];
+    }
+    return self;
+}
+
 - (UIFont *)fontDefault {
-    return [UIFont fontWithName:@"Georgia" size:18.0f];
+    return [UIFont fontWithName:[self.userDefaults stringForKey:FontFamilyNameDefaultKey] 
+                           size:[self.userDefaults floatForKey:FontWritingSizeKey]];
 }
 
 #pragma StyleApplicationServiceDelegate
@@ -40,7 +58,8 @@
 }
 
 - (UIFont *)fontTextLabelPrimary {
-    return [UIFont fontWithName:@"Georgia" size:15.0f];
+    return [UIFont fontWithName:[self.userDefaults stringForKey:FontFamilyNameDefaultKey] 
+                           size:FontLabelSizeDefault];
 }
 
 - (UIFont *)fontDetailTextLabelPrimary {
@@ -75,24 +94,43 @@
     
     cell.textLabel.font       = [self fontTextLabelPrimary];
     cell.textLabel.textColor  = [UIColor blackColor];
+    cell.textLabel.backgroundColor = [UIColor clearColor];
     
     cell.detailTextLabel.font      = [self fontDetailTextLabelPrimary];    
     cell.detailTextLabel.textColor = [UIColor lightGrayColor];
     cell.detailTextLabel.backgroundColor = [UIColor clearColor];
     
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
-    
-    /*
-    CGFloat threadCountLabelOriginX = cell.contentView.frame.size.width - 44.0f;
-    CGFloat threadCountLabelOriginY = cell.contentView.frame.size.height / 2.0f;
-    UILabel *threadCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(threadCountLabelOriginX, threadCountLabelOriginY, 12.0f, 12.0f)];
-    threadCountLabel.text = [NSString stringWithFormat:@"%i", [note.noteThreads count]];
-    
-    [cell.contentView addSubview:threadCountLabel];*/
 }
 
-- (NSString *)cssForEmail {
-    return @"<style>body { font-family: Georgia, 'Times New Roman', serif; }</style>";
+- (UIToolbar *)inputAccessoryViewForTextView:(UITextView *)textView {
+    /*UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, textView.frame.origin.y, textView.frame.size.width, InputAccessoryViewForTextViewHeight)];
+    
+    toolbar.tintColor   = [UIColor lightGrayColor];*/
+    //toolbar.translucent = YES;
+
+    /*
+    UIBarButtonItem *addTagButton = [[UIBarButtonItem alloc] initWithTitle:@"tag note" style:UIBarButtonItemStyleBordered target:self action:@selector(willTagNote:)];
+    
+    UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    
+    [toolbar setItems:[NSArray arrayWithObjects:addTagButton, flexibleSpace , nil]];
+    */
+    //FIXME -- remove when ready for tags
+    UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
+    return toolbar;
+}
+
+- (UIColor *)colorForTableFooter {
+    return [UIColor colorWithPatternImage:[UIImage imageNamed:@"handmadepaper.png"]];
+}
+
+- (UIColor *)paperColor {
+    return [UIColor colorWithPatternImage:[UIImage imageNamed:@"fabric_1.png"]];
+}
+
+- (UIColor *)blackLinenColor {
+    return [UIColor colorWithPatternImage:[UIImage imageNamed:@"black-Linen.png"]];
 }
 
 @end
