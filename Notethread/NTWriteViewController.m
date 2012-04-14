@@ -57,6 +57,15 @@
     self.view.backgroundColor = [styleApplicationService paperColor];
 
     self.saveButton.enabled = ([self.noteTextView.text length]) ? YES : NO;
+    
+    UIScrollView *tagButtonScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 32.0f)];
+    tagButtonScrollView.backgroundColor = [UIColor blackColor];
+    
+    JLButtonScroller *buttonScroller = [[JLButtonScroller alloc] init];
+    buttonScroller.delegate = self;
+    [buttonScroller addButtonsForContentAreaIn:tagButtonScrollView];
+    
+    self.noteTextView.inputAccessoryView = tagButtonScrollView;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -112,4 +121,27 @@
 - (void)textViewDidChange:(UITextView *)textView {
     self.saveButton.enabled = ([textView.text length]) ? YES : NO;
 }
+
+
+#pragma mark - JLButtonScrollerDelegate
+- (UIFont *)fontForButton {
+    return [UIFont systemFontOfSize:14.0f];
+}
+
+- (NSInteger)numberOfButtons {
+    return 20;
+}
+
+- (UIButton *)buttonForIndex:(NSInteger)position {
+    return [UIButton buttonWithType:UIButtonTypeRoundedRect];
+}
+
+- (NSString *)stringForIndex:(NSInteger)position {
+    return @"tag";
+}
+
+- (CGFloat)heightForScrollView {
+    return 32.0f;
+}
+
 @end

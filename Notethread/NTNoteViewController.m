@@ -79,7 +79,7 @@ const CGFloat threadCellRowHeight = 42.0f;
         self.threadTableView.hidden = YES;
     }
     
-    [UIView animateWithDuration:0.4f animations:^{
+    [UIView animateWithDuration:0.7f animations:^{
         self.actionToolbar.layer.opacity = opacity;
         self.threadTableView.layer.opacity = opacity;
     }];
@@ -156,8 +156,6 @@ const CGFloat threadCellRowHeight = 42.0f;
     self.noteThreads = nil;
     self.noteThreads = [self.note.noteThreads array];
     [self.threadTableView reloadData];   
-    
-//    [self setKeyboardNotificationsObservers];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -394,8 +392,6 @@ const CGFloat threadCellRowHeight = 42.0f;
 
 #pragma NTThreadWriteViewDelegate
 - (void)displayChildThreadWriteViewForActiveNote:(id)sender {
-    [self removeKeyboardNotificationObservers];
-    
     NSInteger threadDepthInteger = [self.note.depth integerValue] + 1;
     
     NTWriteViewController *threadWriteViewController = [[NTWriteViewController alloc] initWithThreadDepth:threadDepthInteger parent:self.note];
