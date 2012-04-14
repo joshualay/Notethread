@@ -26,7 +26,6 @@
 - (IBAction)presentActionSheetForNote:(id)sender;
 - (void)willEditNoteTextView:(id)sender;
 - (void)navigationBarForNoteEditing;
-- (CGRect)frameForNoteTextViewLandscapeWithViewFrame:(CGRect)viewFrame;
 - (void)setKeyboardNotificationsObservers;
 - (void)removeKeyboardNotificationObservers;
 - (void)keyboardWillAppear:(NSNotification *)notification;
@@ -47,8 +46,6 @@
 
 @synthesize backButton = _backButton;
 
-@synthesize keyboardIsDisplayed = _keyboardIsDisplayed;
-
 const CGFloat threadCellRowHeight = 42.0f;
 
 - (id)init {
@@ -57,7 +54,6 @@ const CGFloat threadCellRowHeight = 42.0f;
         self.noteThreads = nil;
         self.styleApplicationService = [StyleApplicationService sharedSingleton];
         [self setKeyboardNotificationsObservers];
-        self.keyboardIsDisplayed = NO;
     }
     return self;  
 }
@@ -169,32 +165,6 @@ const CGFloat threadCellRowHeight = 42.0f;
     return YES;
 }
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    if (self.keyboardIsDisplayed == NO)
-        return;
-    
-    CGRect viewFrame = self.view.frame;
-    CGRect noteFrame = CGRectZero;
-    
-    if (UIInterfaceOrientationIsPortrait(fromInterfaceOrientation)) {
-        noteFrame = [self frameForNoteTextViewLandscapeWithViewFrame:viewFrame];
-        CGRect actionFrame = self.actionToolbar.frame;
-        if (self.keyboardIsDisplayed == NO)
-            noteFrame.size.height = actionFrame.origin.y;
-    }
-    else {
-        NSInteger rowsDisplayed = [self rowsForThreadTableView];
-        //CGFloat threadTableHeightOffset = ((CGFloat)rowsDisplayed * threadCellRowHeight) + NoteThreadActionToolbarHeight;
-        CGFloat threadTableHeightOffset = ((CGFloat)rowsDisplayed * threadCellRowHeight);
-        noteFrame = [self frameForNoteView:viewFrame threadTableOffset:threadTableHeightOffset];                            
-    }
-    
-    [UIView animateWithDuration:0.3f 
-                     animations:^{             
-                         self.noteTextView.frame = noteFrame;
-                     }];
-}
-
 - (UIBarButtonItem *)defaultRightBarButtonItem {
     return [[UIBarButtonItem alloc] initWithTitle:@"Edit Note" style:UIBarButtonItemStylePlain target:self action:@selector(willEditNoteTextView:)];
 }
@@ -225,11 +195,6 @@ const CGFloat threadCellRowHeight = 42.0f;
 - (void)navigationBarForNoteEditing {
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(editingNoteDone:)];
     self.navigationItem.leftBarButtonItem  = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(editingNoteCancel:)];
-}
-
-- (CGRect)frameForNoteTextViewLandscapeWithViewFrame:(CGRect)viewFrame {
-    CGFloat offset = (self.keyboardIsDisplayed) ? NoteTextViewLandscapeViewOffset : 0.0;
-    return CGRectMake(viewFrame.origin.x, viewFrame.origin.y, viewFrame.size.width, viewFrame.size.height - offset);   
 }
 
 #pragma NTThreadViewDelegate
