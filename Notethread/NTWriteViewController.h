@@ -8,10 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "Note.h"
+#import "JLButtonScroller.h"
 
 @class NTWriteViewController;
 
-@interface NTWriteViewController : UIViewController <UITextViewDelegate>
+@interface NTWriteViewController : UIViewController <UITextViewDelegate, JLButtonScrollerDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextView *noteTextView;
 @property (strong, nonatomic) IBOutlet UINavigationBar *navigationBar;
