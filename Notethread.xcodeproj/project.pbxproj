@@ -29,7 +29,7 @@
 		9818217B1468026E00DBC1D2 /* NotethreadTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9818217A1468026E00DBC1D2 /* NotethreadTests.m */; };
 		98190BCF149B72EC00E96126 /* NTNoteListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98190BCD149B72EB00E96126 /* NTNoteListViewController.m */; };
 		98190BD0149B72EC00E96126 /* NTNoteListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98190BCE149B72EC00E96126 /* NTNoteListViewController.xib */; };
-		983816A614C04FDD000A644C /* README in Resources */ = {isa = PBXBuildFile; fileRef = 983816A514C04FDD000A644C /* README */; };
+		983816A614C04FDD000A644C /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 983816A514C04FDD000A644C /* README.md */; };
 		986E806C147E3C06004645CF /* EmailContentApplicationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 986E806B147E3C06004645CF /* EmailContentApplicationService.m */; };
 		986E8072147E90EC004645CF /* EmailApplicationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 986E8071147E90EC004645CF /* EmailApplicationService.m */; };
 		986E8074147E98C5004645CF /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 986E8073147E98C5004645CF /* MessageUI.framework */; };
@@ -46,6 +46,8 @@
 		98EB1F06147D0CB70018FF08 /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98EB1F04147D0CB70018FF08 /* SettingsViewController.xib */; };
 		98EB1F0A147D35340018FF08 /* AboutMeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98EB1F08147D35340018FF08 /* AboutMeViewController.m */; };
 		98EB1F0B147D35340018FF08 /* AboutMeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98EB1F09147D35340018FF08 /* AboutMeViewController.xib */; };
+		98EC88F91539797C007D92A7 /* JLButtonScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 98EC88F81539797C007D92A7 /* JLButtonScroller.m */; };
+		98EC88FB15397EB3007D92A7 /* JLButtonScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 98EC88F81539797C007D92A7 /* JLButtonScroller.m */; };
 		98F911361482066300D421B0 /* icon57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 98F91134148203FC00D421B0 /* icon57x57.png */; };
 		98F911381482066600D421B0 /* icon114x114.png in Resources */ = {isa = PBXBuildFile; fileRef = 98F911371482066600D421B0 /* icon114x114.png */; };
 /* End PBXBuildFile section */
@@ -91,7 +93,7 @@
 		98190BCC149B72EB00E96126 /* NTNoteListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NTNoteListViewController.h; sourceTree = "<group>"; };
 		98190BCD149B72EB00E96126 /* NTNoteListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NTNoteListViewController.m; sourceTree = "<group>"; };
 		98190BCE149B72EC00E96126 /* NTNoteListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NTNoteListViewController.xib; sourceTree = "<group>"; };
-		983816A514C04FDD000A644C /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		983816A514C04FDD000A644C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		986E806A147E3C06004645CF /* EmailContentApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailContentApplicationService.h; sourceTree = "<group>"; };
 		986E806B147E3C06004645CF /* EmailContentApplicationService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailContentApplicationService.m; sourceTree = "<group>"; };
 		986E8070147E90EC004645CF /* EmailApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailApplicationService.h; sourceTree = "<group>"; };
@@ -118,6 +120,8 @@
 		98EB1F07147D35330018FF08 /* AboutMeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutMeViewController.h; sourceTree = "<group>"; };
 		98EB1F08147D35340018FF08 /* AboutMeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutMeViewController.m; sourceTree = "<group>"; };
 		98EB1F09147D35340018FF08 /* AboutMeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutMeViewController.xib; sourceTree = "<group>"; };
+		98EC88F71539797C007D92A7 /* JLButtonScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JLButtonScroller.h; sourceTree = "<group>"; };
+		98EC88F81539797C007D92A7 /* JLButtonScroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JLButtonScroller.m; sourceTree = "<group>"; };
 		98F911321481EF3200D421B0 /* NTThreadViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NTThreadViewDelegate.h; sourceTree = "<group>"; };
 		98F91134148203FC00D421B0 /* icon57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon57x57.png; sourceTree = "<group>"; };
 		98F911371482066600D421B0 /* icon114x114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon114x114.png; sourceTree = "<group>"; };
@@ -174,7 +178,7 @@
 				981821731468026E00DBC1D2 /* NotethreadTests */,
 				981821421468026D00DBC1D2 /* Frameworks */,
 				981821401468026D00DBC1D2 /* Products */,
-				983816A514C04FDD000A644C /* README */,
+				983816A514C04FDD000A644C /* README.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -216,6 +220,8 @@
 				98EB1F03147D0CB70018FF08 /* SettingsViewController.m */,
 				98EB1F07147D35330018FF08 /* AboutMeViewController.h */,
 				98EB1F08147D35340018FF08 /* AboutMeViewController.m */,
+				98EC88F71539797C007D92A7 /* JLButtonScroller.h */,
+				98EC88F81539797C007D92A7 /* JLButtonScroller.m */,
 				9871256C147132DF007D56D6 /* ApplicationServices */,
 				980055A5146AB89F004C4802 /* Views */,
 				98C3FF9B146806E100133628 /* Models */,
@@ -341,7 +347,7 @@
 		981821361468026D00DBC1D2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 				ORGANIZATIONNAME = "Joshua Lay";
 			};
 			buildConfigurationList = 981821391468026D00DBC1D2 /* Build configuration list for PBXProject "Notethread" */;
@@ -380,7 +386,7 @@
 				989D514E1488FECC002B27AB /* fabric_1.png in Resources */,
 				989D5150148900FD002B27AB /* handmadepaper.png in Resources */,
 				98190BD0149B72EC00E96126 /* NTNoteListViewController.xib in Resources */,
-				983816A614C04FDD000A644C /* README in Resources */,
+				983816A614C04FDD000A644C /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -415,6 +421,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98EC88FB15397EB3007D92A7 /* JLButtonScroller.m in Sources */,
 				981821521468026D00DBC1D2 /* main.m in Sources */,
 				981821561468026D00DBC1D2 /* AppDelegate.m in Sources */,
 				981821591468026D00DBC1D2 /* Notethread.xcdatamodeld in Sources */,
@@ -439,6 +446,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9818217B1468026E00DBC1D2 /* NotethreadTests.m in Sources */,
+				98EC88F91539797C007D92A7 /* JLButtonScroller.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -538,6 +546,7 @@
 				INFOPLIST_FILE = "Notethread/Notethread-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -550,6 +559,7 @@
 				INFOPLIST_FILE = "Notethread/Notethread-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

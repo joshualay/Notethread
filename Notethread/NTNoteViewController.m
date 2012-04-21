@@ -26,11 +26,12 @@
 - (IBAction)presentActionSheetForNote:(id)sender;
 - (void)willEditNoteTextView:(id)sender;
 - (void)navigationBarForNoteEditing;
-- (CGRect)frameForNoteTextViewLandscapeWithViewFrame:(CGRect)viewFrame;
 - (void)setKeyboardNotificationsObservers;
 - (void)removeKeyboardNotificationObservers;
 - (void)keyboardWillAppear:(NSNotification *)notification;
 - (void)keyboardWillDisappear:(NSNotification *)notification;
+// http://stackoverflow.com/a/7183223/626078 
+- (void)moveTextViewForKeyboard:(NSNotification *)aNotification keyboardHidden:(BOOL)keyboardHidden;
 @end
 
 @implementation NTNoteViewController
@@ -45,8 +46,6 @@
 
 @synthesize backButton = _backButton;
 
-@synthesize keyboardIsDisplayed = _keyboardIsDisplayed;
-
 const CGFloat threadCellRowHeight = 42.0f;
 
 - (id)init {
@@ -54,8 +53,7 @@ const CGFloat threadCellRowHeight = 42.0f;
     if (self) {
         self.noteThreads = nil;
         self.styleApplicationService = [StyleApplicationService sharedSingleton];
-        
-        self.keyboardIsDisplayed = NO;
+        [self setKeyboardNotificationsObservers];
     }
     return self;  
 }
@@ -69,76 +67,50 @@ const CGFloat threadCellRowHeight = 42.0f;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)keyboardWillAppear:(NSNotification *)notification {
-    if (self.keyboardIsDisplayed == YES)
-        return;
-    
-    self.keyboardIsDisplayed = YES;
-    
-    NSValue *value = [[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey];
-    
-    CGRect keyboardRect = [value CGRectValue];
-    
-    CGFloat adjustedHeight = self.view.frame.size.height - keyboardRect.size.height;
-    
-    CGRect adjustedNoteRect = CGRectMake(self.noteTextView.frame.origin.x, self.noteTextView.frame.origin.y, self.noteTextView.frame.size.width, adjustedHeight);
-    
-    UIInterfaceOrientation deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    if (UIInterfaceOrientationIsLandscape(deviceOrientation)) {
-        adjustedNoteRect = [self frameForNoteTextViewLandscapeWithViewFrame:self.view.frame];
+- (void)moveTextViewForKeyboard:(NSNotification *)aNotification keyboardHidden:(BOOL)keyboardHidden {
+    float opacity = 0.0f;
+    if (keyboardHidden) {
+        self.actionToolbar.hidden = NO;
+        self.threadTableView.hidden = NO;
+        opacity = 1.0f;
+    }
+    else {
+        self.actionToolbar.hidden = YES;
+        self.threadTableView.hidden = YES;
     }
     
-    [UIView animateWithDuration:0.5f 
-                     animations:^{
-                         self.noteTextView.frame = adjustedNoteRect;
-                         self.actionToolbar.layer.opacity = 0.0f;
-                         self.threadTableView.layer.opacity = 0.0f;
-                     }
-                     completion:^(BOOL finished) {                                                       
-                         self.actionToolbar.hidden = YES;
-                         self.threadTableView.hidden = YES;
-                     }
-     ];    
+    [UIView animateWithDuration:0.7f animations:^{
+        self.actionToolbar.layer.opacity = opacity;
+        self.threadTableView.layer.opacity = opacity;
+    }];
+    
+    NSDictionary* userInfo = [aNotification userInfo];
+    NSTimeInterval animationDuration;
+    UIViewAnimationCurve animationCurve;
+    CGRect keyboardEndFrame;
+    
+    [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] getValue:&animationCurve];
+    [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
+    [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardEndFrame];
+    
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:animationDuration];
+    [UIView setAnimationCurve:animationCurve];
+    
+    CGRect newFrame = self.noteTextView.frame;
+    CGRect keyboardFrame = [self.view convertRect:keyboardEndFrame toView:nil];
+    newFrame.size.height -= keyboardFrame.size.height * (keyboardHidden ? 1 : -1);
+    self.noteTextView.frame = newFrame;
+    
+    [UIView commitAnimations];  
+}
+
+- (void)keyboardWillAppear:(NSNotification *)notification {
+    [self moveTextViewForKeyboard:notification keyboardHidden:NO];       
 }
 
 - (void)keyboardWillDisappear:(NSNotification *)notification {
-    if (self.keyboardIsDisplayed == NO)
-        return;
-    
-    self.keyboardIsDisplayed = NO;
-    
-    CGRect noteRectAdjusted = self.noteTextView.frame;
-    CGFloat heightAnimatedOffset = 2.5f;
-    if (noteRectAdjusted.size.height > self.actionToolbar.frame.origin.y)
-        noteRectAdjusted.size.height += heightAnimatedOffset;
-    else 
-        noteRectAdjusted.size.height -= heightAnimatedOffset;
-    
-    CGRect noteRect = [self frameForNoteView:self.view.frame threadTableOffset:threadCellRowHeight];
-    noteRect.size.height = self.actionToolbar.frame.origin.y;
-    
-    [UIView animateWithDuration:0.3f 
-                     animations:^{
-                         self.noteTextView.frame = noteRectAdjusted;
-                     }
-                     completion:^(BOOL finished) {
-                         [UIView animateWithDuration:0.3f 
-                                          animations:^{
-                                              self.noteTextView.frame = noteRect;
-                                          }
-                                          completion:^(BOOL finished) {
-                                              self.actionToolbar.hidden = NO;
-                                              self.threadTableView.hidden = NO;
-                                              
-                                              [UIView animateWithDuration:0.5f 
-                                                               animations:^{
-                                                                   self.actionToolbar.layer.opacity = 1.0f;
-                                                                   self.threadTableView.layer.opacity = 1.0f;
-                                                               }
-                                               ];
-                                          }];
-                     }
-     ];     
+    [self moveTextViewForKeyboard:notification keyboardHidden:YES];
 }
 
 
@@ -184,41 +156,11 @@ const CGFloat threadCellRowHeight = 42.0f;
     self.noteThreads = nil;
     self.noteThreads = [self.note.noteThreads array];
     [self.threadTableView reloadData];   
-    
-//    [self setKeyboardNotificationsObservers];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    
-    return;
-    if (self.keyboardIsDisplayed == NO)
-        return;
-    
-    CGRect viewFrame = self.view.frame;
-    CGRect noteFrame = CGRectZero;
-    
-    if (UIInterfaceOrientationIsPortrait(fromInterfaceOrientation)) {
-        noteFrame = [self frameForNoteTextViewLandscapeWithViewFrame:viewFrame];
-        CGRect actionFrame = self.actionToolbar.frame;
-        if (self.keyboardIsDisplayed == NO)
-            noteFrame.size.height = actionFrame.origin.y;
-    }
-    else {
-        NSInteger rowsDisplayed = [self rowsForThreadTableView];
-        //CGFloat threadTableHeightOffset = ((CGFloat)rowsDisplayed * threadCellRowHeight) + NoteThreadActionToolbarHeight;
-        CGFloat threadTableHeightOffset = ((CGFloat)rowsDisplayed * threadCellRowHeight);
-        noteFrame = [self frameForNoteView:viewFrame threadTableOffset:threadTableHeightOffset];                            
-    }
-    
-    [UIView animateWithDuration:0.3f 
-                     animations:^{             
-                         self.noteTextView.frame = noteFrame;
-                     }];
 }
 
 - (UIBarButtonItem *)defaultRightBarButtonItem {
@@ -251,11 +193,6 @@ const CGFloat threadCellRowHeight = 42.0f;
 - (void)navigationBarForNoteEditing {
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(editingNoteDone:)];
     self.navigationItem.leftBarButtonItem  = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(editingNoteCancel:)];
-}
-
-- (CGRect)frameForNoteTextViewLandscapeWithViewFrame:(CGRect)viewFrame {
-    CGFloat offset = (self.keyboardIsDisplayed) ? NoteTextViewLandscapeViewOffset : 0.0;
-    return CGRectMake(viewFrame.origin.x, viewFrame.origin.y, viewFrame.size.width, viewFrame.size.height - offset);   
 }
 
 #pragma NTThreadViewDelegate
@@ -455,8 +392,6 @@ const CGFloat threadCellRowHeight = 42.0f;
 
 #pragma NTThreadWriteViewDelegate
 - (void)displayChildThreadWriteViewForActiveNote:(id)sender {
-    [self removeKeyboardNotificationObservers];
-    
     NSInteger threadDepthInteger = [self.note.depth integerValue] + 1;
     
     NTWriteViewController *threadWriteViewController = [[NTWriteViewController alloc] initWithThreadDepth:threadDepthInteger parent:self.note];
