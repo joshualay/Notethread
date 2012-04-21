@@ -58,7 +58,7 @@
 
     self.saveButton.enabled = ([self.noteTextView.text length]) ? YES : NO;
     
-    UIScrollView *tagButtonScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 32.0f)];
+    /*UIScrollView *tagButtonScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 32.0f)];
     tagButtonScrollView.backgroundColor = [UIColor blackColor];
     
     JLButtonScroller *buttonScroller = [[JLButtonScroller alloc] init];
@@ -66,6 +66,7 @@
     [buttonScroller addButtonsForContentAreaIn:tagButtonScrollView];
     
     self.noteTextView.inputAccessoryView = tagButtonScrollView;
+     */
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
