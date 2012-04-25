@@ -12,6 +12,8 @@
 		980055A4146AB884004C4802 /* NTWriteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 980055A2146AB884004C4802 /* NTWriteViewController.xib */; };
 		9801C7B0148645CF005138A7 /* Note.m in Sources */ = {isa = PBXBuildFile; fileRef = 9801C7AF148645CF005138A7 /* Note.m */; };
 		9815BD2B154812B500E450DA /* Notethread v1.5 Journal.md in Resources */ = {isa = PBXBuildFile; fileRef = 9815BD2A154812B500E450DA /* Notethread v1.5 Journal.md */; };
+		9815BD321548151400E450DA /* TagService.m in Sources */ = {isa = PBXBuildFile; fileRef = 9815BD311548151400E450DA /* TagService.m */; };
+		9815BD331548151400E450DA /* TagService.m in Sources */ = {isa = PBXBuildFile; fileRef = 9815BD311548151400E450DA /* TagService.m */; };
 		981821441468026D00DBC1D2 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981821431468026D00DBC1D2 /* UIKit.framework */; };
 		981821461468026D00DBC1D2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981821451468026D00DBC1D2 /* Foundation.framework */; };
 		981821481468026D00DBC1D2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981821471468026D00DBC1D2 /* CoreGraphics.framework */; };
@@ -71,6 +73,8 @@
 		9801C7AE148645CF005138A7 /* Note.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Note.h; path = ../Note.h; sourceTree = "<group>"; };
 		9801C7AF148645CF005138A7 /* Note.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Note.m; path = ../Note.m; sourceTree = "<group>"; };
 		9815BD2A154812B500E450DA /* Notethread v1.5 Journal.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Notethread v1.5 Journal.md"; sourceTree = "<group>"; };
+		9815BD301548151400E450DA /* TagService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagService.h; sourceTree = "<group>"; };
+		9815BD311548151400E450DA /* TagService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagService.m; sourceTree = "<group>"; };
 		9818213F1468026D00DBC1D2 /* Notethread.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Notethread.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		981821431468026D00DBC1D2 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		981821451468026D00DBC1D2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -267,6 +271,8 @@
 		9871256C147132DF007D56D6 /* ApplicationServices */ = {
 			isa = PBXGroup;
 			children = (
+				9815BD301548151400E450DA /* TagService.h */,
+				9815BD311548151400E450DA /* TagService.m */,
 				9871256E14713310007D56D6 /* StyleApplicationService.h */,
 				9871256F14713310007D56D6 /* StyleApplicationService.m */,
 				98EB1EF7147BBF160018FF08 /* AlertApplicationService.h */,
@@ -438,6 +444,7 @@
 				9801C7B0148645CF005138A7 /* Note.m in Sources */,
 				989D514C1488F45A002B27AB /* StyleConstants.m in Sources */,
 				98190BCF149B72EC00E96126 /* NTNoteListViewController.m in Sources */,
+				9815BD321548151400E450DA /* TagService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -447,6 +454,7 @@
 			files = (
 				9818217B1468026E00DBC1D2 /* NotethreadTests.m in Sources */,
 				98EC88F91539797C007D92A7 /* JLButtonScroller.m in Sources */,
+				9815BD331548151400E450DA /* TagService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
