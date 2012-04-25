@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import "StyleApplicationService.h"
 #import "AlertApplicationService.h"
+#import "TagService.h"
 
 @interface NTWriteViewController(Private)
 - (void)setKeyboardNotificationsObservers;
@@ -32,6 +33,7 @@
     if (self) {
         _noteDepth  = noteDepth;
         _parentNote = note;
+        _tagService = [[TagService alloc] init];
     }
     return self;
 }
@@ -41,6 +43,7 @@
     if (self) {
         _noteDepth  = threadDepth;
         _parentNote = note;
+        _tagService = [[TagService alloc] init];
     }
     return self;
 }
@@ -65,7 +68,7 @@
 
     self.saveButton.enabled = ([self.noteTextView.text length]) ? YES : NO;
     
-    /*UIScrollView *tagButtonScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 32.0f)];
+    UIScrollView *tagButtonScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 32.0f)];
     tagButtonScrollView.backgroundColor = [UIColor blackColor];
     
     JLButtonScroller *buttonScroller = [[JLButtonScroller alloc] init];
@@ -73,7 +76,11 @@
     [buttonScroller addButtonsForContentAreaIn:tagButtonScrollView];
     
     self.noteTextView.inputAccessoryView = tagButtonScrollView;
-     */
+    
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *managedObject = [appDelegate managedObjectContext];
+    self->_existingTags = nil;
+    self->_existingTags = [self->_tagService arrayExistingTagsIn:managedObject];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -192,7 +199,7 @@
 }
 
 - (NSString *)stringForIndex:(NSInteger)position {
-    return @"tag";
+    return [self->_existingTags objectAtIndex:position];
 }
 
 - (CGFloat)heightForScrollView {

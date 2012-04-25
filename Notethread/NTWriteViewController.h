@@ -11,8 +11,12 @@
 #import "JLButtonScroller.h"
 
 @class NTWriteViewController;
+@class TagService;
 
-@interface NTWriteViewController : UIViewController <UITextViewDelegate, JLButtonScrollerDelegate>
+@interface NTWriteViewController : UIViewController <UITextViewDelegate, JLButtonScrollerDelegate> {
+    TagService *_tagService;
+    NSArray *_existingTags;
+}
 
 @property (strong, nonatomic) IBOutlet UITextView *noteTextView;
 @property (strong, nonatomic) IBOutlet UINavigationBar *navigationBar;
