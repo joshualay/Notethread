@@ -62,11 +62,18 @@
     
     self.noteTextView.font = [styleApplicationService fontNoteWrite];
     self.noteTextView.inputAccessoryView = [styleApplicationService inputAccessoryViewForTextView:self.noteTextView];
+    self.noteTextView.keyboardType = UIKeyboardTypeTwitter;
     
     self.noteTextView.backgroundColor = [UIColor clearColor];
     self.view.backgroundColor = [styleApplicationService paperColor];
 
     self.saveButton.enabled = ([self.noteTextView.text length]) ? YES : NO;
+    
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *managedObject = [appDelegate managedObjectContext];
+    self->_existingTags = nil;
+    self->_existingTags = [self->_tagService arrayExistingTagsIn:managedObject];
+    NSLog(@"existingTags - %i", [self->_existingTags count]);
     
     UIScrollView *tagButtonScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 32.0f)];
     tagButtonScrollView.backgroundColor = [UIColor blackColor];
@@ -76,11 +83,6 @@
     [buttonScroller addButtonsForContentAreaIn:tagButtonScrollView];
     
     self.noteTextView.inputAccessoryView = tagButtonScrollView;
-    
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *managedObject = [appDelegate managedObjectContext];
-    self->_existingTags = nil;
-    self->_existingTags = [self->_tagService arrayExistingTagsIn:managedObject];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -110,6 +112,11 @@
     newNote.lastModifiedDate = [NSDate date];
     newNote.depth = [NSNumber numberWithInteger:self.noteDepth];
     newNote.text = self.noteTextView.text;
+    
+    NSArray *tagsInNote = [self->_tagService arrayOfTagsInText:newNote.text];
+    NSLog(@"tagsInNote - %i", [tagsInNote count]);
+    
+    [self->_tagService storeTags:tagsInNote withRelationship:newNote inManagedContext:managedObjectContext];
     
     if (self.parentNote != nil) {
         NSMutableArray *noteThreads = [[self.parentNote.noteThreads array] mutableCopy];
@@ -191,7 +198,7 @@
 }
 
 - (NSInteger)numberOfButtons {
-    return 20;
+    return [self->_existingTags count];
 }
 
 - (UIButton *)buttonForIndex:(NSInteger)position {
@@ -199,7 +206,7 @@
 }
 
 - (NSString *)stringForIndex:(NSInteger)position {
-    return [self->_existingTags objectAtIndex:position];
+    return [[self->_existingTags objectAtIndex:position] name];
 }
 
 - (CGFloat)heightForScrollView {
