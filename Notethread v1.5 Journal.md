@@ -19,27 +19,30 @@ I think this is best done by using the new Twitter keyboard.
 
 ### Work log
 
-Lets change the keyboard type for the UITextView.
+#### Code snippet - Lets change the keyboard type for the UITextView.
 	self.noteTextView.keyboardType = UIKeyboardTypeTwitter;
 
 Simple!
 
 Rather than do anything complex just yet; I'll just make it scan for any tags in the note
 and save it if it finds anything.
-Changes to be made in here:
+
+#### Code snippet - Changes to be made in here:
 	- (IBAction)saveNote:(id)sender
 	
-TagService methods to use:
+#### Code snippet - TagService methods to use:
 	- (NSArray *)arrayOfTagsInText:(NSString *)text;
 	- (void)storeTags:(NSArray *)tags withRelationship:(Note *)note inManagedContext:(NSManagedObjectContext *)managedObjectContext;
 
 	NSArray *tagsInNote = [self->_tagService arrayOfTagsInText:newNote.text];
-    [self->_tagService storeTags:tagsInNote withRelationship:newNote inManagedContext:managedObjectContext];
+	[self->_tagService storeTags:tagsInNote withRelationship:newNote inManagedContext:managedObjectContext];
 
 Doesn't look like it's saving. Time to debug; 
  * Log the size of the array from _arrayOfTagsInText_
 
 It looks like it's definitely storing tags. Lets see if it's loading the tags correctly.
+
+#### Code snippet - Logging existing
 	NSLog(@"existingTags - %i", [self->_existingTags count]);
 
 Okay I can code - so it is loading existing tags. Now why aren't there tag buttons?
