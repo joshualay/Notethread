@@ -2,6 +2,71 @@
 
 The goal of this release is to attempt to get tags into play.
 
+## 26/04/2012
+
+A late night coding spurt after a long day of... coding... plus some training to boot. 
+I'm tired but I have the urge to create something new.
+
+To recap for myself. I've got the tags loading and displaying; with the major issue being
+I have no tags stored yet. So the aim right now is to provide a mechanism to add tags to 
+a note. 
+
+My thoughts are that I'll rely on the # button and detecting it in the users input. 
+
+**Adding hashes the easy way**
+
+I think this is best done by using the new Twitter keyboard.
+
+### Work log
+
+Lets change the keyboard type for the UITextView.
+	self.noteTextView.keyboardType = UIKeyboardTypeTwitter;
+
+Simple!
+
+Rather than do anything complex just yet; I'll just make it scan for any tags in the note
+and save it if it finds anything.
+Changes to be made in here:
+	- (IBAction)saveNote:(id)sender
+	
+TagService methods to use:
+	- (NSArray *)arrayOfTagsInText:(NSString *)text;
+	- (void)storeTags:(NSArray *)tags withRelationship:(Note *)note inManagedContext:(NSManagedObjectContext *)managedObjectContext;
+
+	NSArray *tagsInNote = [self->_tagService arrayOfTagsInText:newNote.text];
+    [self->_tagService storeTags:tagsInNote withRelationship:newNote inManagedContext:managedObjectContext];
+
+Doesn't look like it's saving. Time to debug; 
+ * Log the size of the array from _arrayOfTagsInText_
+
+It looks like it's definitely storing tags. Lets see if it's loading the tags correctly.
+	NSLog(@"existingTags - %i", [self->_existingTags count]);
+
+Okay I can code - so it is loading existing tags. Now why aren't there tag buttons?
+
+Well scratch that. I can't code. Turns out that I wasn't providing a string in my
+JLButtonScroller method. I was just trying to return a Tag object. The last silly thing
+was that I was processing the button scroller before I had loaded the existing tags. 
+Hence nothing!
+
+Awesome. Fixing that up displays the existing tags as buttons.
+
+I want it to dynamically display tags based on their current # input. To achieve this I'll
+need:
+ * A list of all the existing tags
+ * A list of current matching tags to a search term
+ 
+But I need to include the keyboard in this.
+ 1. # character detected
+ 2. In tag matching state
+ 3. In keyboard input maintain the characters entered after the #
+ 4. Match these characters against the names of tags in _existingTags
+ 5. Store those matches in _matchingTags
+
+This may be fiddly. I'll leave it to a time where I'm not falling asleep. Time to commit.
+
+**josh;**
+
 ## 25/04/2012
 
 There are a few major decisions I need to make.

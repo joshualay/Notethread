@@ -90,11 +90,6 @@
             [note addTagsObject:tagObject];
         }
     }
-    
-    NSError *error;
-	if ( ![managedObjectContext save:&error] ) {
-        //TODO
-	}
 }
 
 - (NSArray *)arrayOfTagsInText:(NSString *)text {

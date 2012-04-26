@@ -1,6 +1,5 @@
 //
 //  JLButtonScroller.m
-//  aporterapp
 //
 //  Created by Joshua Lay on 7/09/11.
 //  Copyright 2011 Joshua Lay. All rights reserved.
