@@ -34,6 +34,7 @@
         _noteDepth  = noteDepth;
         _parentNote = note;
         _tagService = [[TagService alloc] init];
+        _isEnteringTag = NO;
     }
     return self;
 }
@@ -44,6 +45,7 @@
         _noteDepth  = threadDepth;
         _parentNote = note;
         _tagService = [[TagService alloc] init];
+        _isEnteringTag = NO;
     }
     return self;
 }
@@ -75,14 +77,13 @@
     self->_existingTags = [self->_tagService arrayExistingTagsIn:managedObject];
     NSLog(@"existingTags - %i", [self->_existingTags count]);
     
-    UIScrollView *tagButtonScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 32.0f)];
-    tagButtonScrollView.backgroundColor = [UIColor blackColor];
+    self->_tagButtonScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 32.0f)];
+    self->_tagButtonScrollView.backgroundColor = [UIColor blackColor];
     
-    JLButtonScroller *buttonScroller = [[JLButtonScroller alloc] init];
-    buttonScroller.delegate = self;
-    [buttonScroller addButtonsForContentAreaIn:tagButtonScrollView];
+    self->_buttonScroller = [[JLButtonScroller alloc] init];
+    self->_buttonScroller.delegate = self;
     
-    self.noteTextView.inputAccessoryView = tagButtonScrollView;
+    self.noteTextView.inputAccessoryView = self->_tagButtonScrollView;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -181,8 +182,40 @@
     self.navigationBar.topItem.title = [NSString stringWithFormat:@"%@%@", textView.text, text];
     self.saveButton.enabled = ([textView.text length]) ? YES : NO;
     
-    if (range.location == 0 && [text isEqualToString:@""])
+    if (range.location == 0 && [text isEqualToString:@""]) {
+        self.navigationBar.topItem.title = @"";
         self.saveButton.enabled = NO;
+        return YES;
+    }
+    
+    if ([text isEqualToString:@"#"]) {
+        self->_matchedTags = nil;        
+        self->_currentTagSearch = @"";
+        self->_isEnteringTag = YES;
+  
+        [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
+        
+        return YES;
+    }
+    
+    if (self->_isEnteringTag) {
+        if ([text isEqualToString:@" "]) {
+            self->_isEnteringTag = NO;
+            self->_matchedTags = nil;
+            self->_currentTagSearch = @"";
+            [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
+
+            return YES;
+        }
+
+        self->_currentTagSearch = [NSString stringWithFormat:@"%@%@", self->_currentTagSearch, text];
+        self->_matchedTags = [self->_tagService arrayOfMatchingTags:self->_currentTagSearch inArray:self->_existingTags];
+        
+        [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
+        
+        NSLog(@"currentTagSearch - %@", self->_currentTagSearch);
+        NSLog(@"matchedTags count - %i", [self->_matchedTags count]);
+    }
     
     return YES;
 }
@@ -198,7 +231,7 @@
 }
 
 - (NSInteger)numberOfButtons {
-    return [self->_existingTags count];
+    return [self->_matchedTags count];
 }
 
 - (UIButton *)buttonForIndex:(NSInteger)position {
@@ -206,7 +239,7 @@
 }
 
 - (NSString *)stringForIndex:(NSInteger)position {
-    return [[self->_existingTags objectAtIndex:position] name];
+    return [[self->_matchedTags objectAtIndex:position] name];
 }
 
 - (CGFloat)heightForScrollView {

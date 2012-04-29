@@ -16,6 +16,11 @@
 @interface NTWriteViewController : UIViewController <UITextViewDelegate, JLButtonScrollerDelegate> {
     TagService *_tagService;
     NSArray *_existingTags;
+    NSArray *_matchedTags;
+    NSString *_currentTagSearch;
+    BOOL _isEnteringTag;
+    JLButtonScroller *_buttonScroller;
+    UIScrollView *_tagButtonScrollView;
 }
 
 @property (strong, nonatomic) IBOutlet UITextView *noteTextView;

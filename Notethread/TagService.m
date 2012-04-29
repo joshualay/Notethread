@@ -36,6 +36,20 @@
     return nil;
 }
 
+- (NSArray *)arrayOfMatchingTags:(NSString *)term inArray:(NSArray *)existingTags {
+    
+    NSMutableArray *matchedExistingTags = [[NSMutableArray alloc] initWithCapacity:[existingTags count]];
+    for (Tag *tag in existingTags) {
+        NSComparisonResult result = [tag.name compare:term options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch) range:NSMakeRange(0, [term length])];
+        if (result == NSOrderedSame)
+        {
+            [matchedExistingTags addObject:tag];
+        }
+    }
+    
+    return matchedExistingTags;
+}
+
 - (bool)doesTagExist:(NSString *)name inManagedContext:(NSManagedObjectContext *)managedObjectContext {
     if ([self tagWithName:name inManagedContext:managedObjectContext] != nil) {
         return TRUE;

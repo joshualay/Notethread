@@ -2,6 +2,160 @@
 
 The goal of this release is to attempt to get tags into play.
 
+## 29/04/2012
+
+Goal of this session is just to get the # detection working. So when the # character is
+entered it will then compare the word following that with existing tags.
+
+### Work log
+
+Just fixed up a small issue with the title updating when deleting characters. When you 
+delete the last one the title remains the same until you delete again. Simple fix.
+
+#### Code snippet - from NTWriteViewController
+
+	- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+		self.navigationBar.topItem.title = [NSString stringWithFormat:@"%@%@", textView.text, text];
+    	self.saveButton.enabled = ([textView.text length]) ? YES : NO;
+    
+    	if (range.location == 0 && [text isEqualToString:@""]) {
+        	self.navigationBar.topItem.title = @"";
+        	self.saveButton.enabled = NO;
+    	}
+    
+    	return YES;
+	}
+
+I already had this method which is from **UITextViewDelegate**. When it hits that 
+conditional statement; clear the title as well. Tested and it's much nicer. A minor 
+nitpick I know. 
+
+Okay onto the goal.
+
+I'll have to stay in this method. Lets do some simple detection and see where that goes.
+
+The important part of the delegate method from above is replacementText. In the case
+the user enters a # then text will equal "#". 
+
+#### Code snippet - string matching the #
+	if ([text isEqualToString:@"#"]) {
+		// Do something
+	}
+
+In order to display a dynamic list I'll have to maintain an array with all possible
+matches. To start off with I'll update Do something to reset my matching tags array.
+
+#### Code snippet - matching tag array
+	// Going to use the count of all the tags as my capacity to bound it
+    if ([text isEqualToString:@"#"]) {
+        self->_matchedTags = nil;
+        self->_matchedTags = [[NSMutableArray alloc] initWithCapacity:[self->_existingTags count]];
+    }
+    
+This isn't good enough. I need to store what the user is entering in after the #, plus
+have a flag to tell the code that the user is entering in a tag. 
+
+#### Code snippet - adding the required ivars
+	@interface NTWriteViewController : UIViewController <UITextViewDelegate, JLButtonScrollerDelegate> {
+		// ...
+		NSMutableArray *_matchedTags;
+		NSString *_currentTagSearch;
+		BOOL _isEnteringTag;
+	}
+
+I think this will suffice for now. 
+
+Trying to implement this I ran into a problem. I had no method exposed in the 
+TagService to get me an array of matching tags to the whatever the value of
+_currentTagSearch. 
+
+#### Code snippet - changes for actually making it work
+	// TagService.h
+	- (NSArray *)arrayOfMatchingTags:(NSString *)term inManagedContext:(NSManagedObjectContext *)managedObjectContext;
+	
+	// NTWriteViewController.h
+	@interface NTWriteViewController ... {
+		// ...
+		NSArray *_matchedTags
+	}
+	
+All this cruft now leaves me with a pretty ugly method.
+
+#### Code snippet - shouldChangeTextInRange in NTWriteViewController
+    if ([text isEqualToString:@"#"]) {
+        self->_matchedTags = nil;        
+        self->_currentTagSearch = @"";
+        self->_isEnteringTag = YES;
+        
+        return YES;
+    }
+    
+    if (self->_isEnteringTag) {
+        if ([text isEqualToString:@" "]) {
+            self->_isEnteringTag = NO;
+            self->_matchedTags = nil;
+            self->_currentTagSearch = @"";
+            
+            return YES;
+        }
+        
+        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
+        
+        self->_currentTagSearch = [NSString stringWithFormat:@"%@%@", self->_currentTagSearch, text];
+        self->_matchedTags = [self->_tagService arrayOfMatchingTags:self->_currentTagSearch inManagedContext:managedObjectContext];
+    }
+	
+Ran it and it didn't crash. However I need to update the JLButtonScrollerDelegate 
+methods to use self->_matchedTags.
+
+Well that was a pain in the arse. 
+
+JLButtonScroller only runs once via the processing method addButtonsForContentAreaIn. 
+What this means is I had to make it an ivar, along with the scroll view so I can access
+them elsewhere and to generate the buttons for the newly matched tags. 
+
+Ran it and it doesn't seem to be matching. First check is to see the _currentTagSearch
+value by logging it.
+
+That looks fine. This means the issue is in the method I created in TagService. There
+must be an issue with how I'm searching. I'm going to look at another project to see
+what I did there.
+
+Updated the tag service to just searching within the existing tags.
+
+#### Code snippet - TagService updated tag search method
+	- (NSArray *)arrayOfMatchingTags:(NSString *)term inArray:(NSArray *)existingTags {
+		
+		NSMutableArray *matchedExistingTags = [[NSMutableArray alloc] initWithCapacity:[existingTags count]];
+		for (Tag *tag in existingTags) {
+			NSComparisonResult result = [tag.name compare:term options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch) range:NSMakeRange(0, [term length])];
+			if (result == NSOrderedSame)
+			{
+				[matchedExistingTags addObject:tag];
+			}
+		}
+		
+		return matchedExistingTags;
+	}
+	
+All well in good... *but* I have the issue of me adding button subviews on top of each
+other. I need to just clear out the subviews from the scroll view. I can do that in 
+JLButtonScroller.
+
+#### Code snippet - JLButtonScroller remove subviews
+    for (UIView *view in scrollView.subviews) {
+        [view removeFromSuperview];
+    }
+
+Looks like I have best case scenario stuff going. I want to check it fully functional,
+then I can play the refactor game. 
+
+I'm keen on checking out the performance as well. Notethread is pretty light and fast,
+but it'd be good to keep it down.
+
+**josh;**
+
 ## 26/04/2012
 
 A late night coding spurt after a long day of... coding... plus some training to boot. 

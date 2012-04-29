@@ -23,5 +23,6 @@
 - (UIFont *)fontTag;
 - (void)storeTags:(NSArray *)tags withRelationship:(Note *)note inManagedContext:(NSManagedObjectContext *)managedObjectContext;
 - (NSArray *)arrayOfTagsInText:(NSString *)text;
+- (NSArray *)arrayOfMatchingTags:(NSString *)term inArray:(NSArray *)existingTags;
 
 @end
