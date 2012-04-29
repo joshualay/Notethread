@@ -13,6 +13,10 @@
 @synthesize delegate;
 
 - (void)addButtonsForContentAreaIn:(UIScrollView *)scrollView {
+    for (UIView *view in scrollView.subviews) {
+        [view removeFromSuperview];
+    }
+    
     UIFont *font = [delegate fontForButton];
     
     NSInteger buttonOffset = 10.0f;
