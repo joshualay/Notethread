@@ -12,6 +12,20 @@
 #import "AlertApplicationService.h"
 #import "TagService.h"
 
+@implementation NSArray (reverse)
+
+- (NSArray *)reverseArray {
+    NSMutableArray *array =
+    [NSMutableArray arrayWithCapacity:[self count]];
+    NSEnumerator *enumerator = [self reverseObjectEnumerator];
+    for (id element in enumerator) {
+        [array addObject:element];
+    }
+    return array;
+}
+
+@end
+
 @implementation NTWriteViewController
 
 @synthesize noteTextView  = _noteTextView;
@@ -125,12 +139,59 @@
 
 #pragma UITextViewDelegate
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    NSLog(@"range.location = %i, range.length = %i, replacementText = %@", range.location, range.length, text);
+    
     self.navigationBar.topItem.title = [NSString stringWithFormat:@"%@%@", textView.text, text];
     self.saveButton.enabled = ([textView.text length]) ? YES : NO;
     
     if (range.location == 0 && [text isEqualToString:@""]) {
         self.navigationBar.topItem.title = @"";
         self.saveButton.enabled = NO;
+        
+        self->_isEnteringTag = NO;
+        self->_matchedTags = nil;
+        self->_currentTagSearch = @"";
+        [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];    
+        
+        return YES;
+    }
+    
+    // deleting
+    if (range.length == 1) {
+        BOOL isSpaceCharacter = NO;
+        
+        NSMutableArray *foundCharacters = [[NSMutableArray alloc] init];
+        NSUInteger location = range.location - 1;
+        while (!isSpaceCharacter) {
+            unichar prevChar = [textView.text characterAtIndex:location];
+            NSString *prevCharStr = [NSString stringWithFormat:@"%C", prevChar];
+            
+            if ([prevCharStr rangeOfCharacterFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].location != NSNotFound) {
+                isSpaceCharacter = YES;
+                break;
+            }
+            
+            [foundCharacters addObject:prevCharStr];
+            location--;
+        }
+        
+        NSArray *orderedFoundCharacters = [foundCharacters reverseArray];
+        NSMutableString *prevWord = [[NSMutableString alloc] initWithCapacity:[orderedFoundCharacters count]];
+        for (NSString *str in orderedFoundCharacters) {
+            [prevWord appendString:str];
+        }
+        
+        NSArray *tags = [self->_tagService arrayOfTagsInText:prevWord];
+        if ([tags count]) {
+            NSString *prevTag = [tags objectAtIndex:0];
+            
+            self->_isEnteringTag = YES;
+            self->_currentTagSearch = prevTag;
+            self->_matchedTags = nil;
+            self->_matchedTags = [self->_tagService arrayOfMatchingTags:self->_currentTagSearch inArray:self->_existingTags];
+            [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
+        }
+        
         return YES;
     }
     
