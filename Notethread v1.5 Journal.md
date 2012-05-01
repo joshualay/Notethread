@@ -2,6 +2,125 @@
 
 The goal of this release is to attempt to get tags into play.
 
+## 01/05/2012
+
+This session is yet again working on # detection. 
+
+There's also an issue when editing - the tag's don't show up. I'm guessing it's because
+I need to implement it another class. I'm going to tackle this first as it may require
+some refactoring.
+
+### Work log
+
+Having a look around in NTNoteViewController and it looks like it does create a 
+NTWriteViewController. This means it should show in the view. 
+
+As a note; the current implementation of a @protocol is poor. This was due to my lack of
+understanding. However they serve their purpose and the app works. I wouldn't 
+recommend what I've done though :)
+
+Ah my bad. When I'm creating a child note then it's okay. It's when I'm editing which is
+the issue. This may be a hassle. I'll have to refactor a few things. In order to not
+halt progress I'm going to scratch fixing this now. 
+
+On to making the detection work properly. 
+
+Issues:
+
+* When deleting characters it will not clear if the tag is the first item
+* Pretty much deleting anywhere it doesn't clear
+* When the cursor is on a #tag it doesn't realise this
+
+How can I fix this?
+
+First step is to start logging what's going on:
+
+#### Code snippet - Logging UITextViewDelegate
+
+	#pragma UITextViewDelegate
+	- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+		NSLog(@"range.location = %i, range.length = %i, replacementText = %@", range.location, range.length, text);
+
+Interesting points to note:
+
+* Entering any character gives **range.length == 0**
+* Deleting any character gives **range.length == 1**
+
+My issue is that if I'm deleting characters and I hit a word... how do I know that? 
+
+	- (NSArray *)componentsSeparatedByString:(NSString *)separator
+	
+Offers a solution of giving me an array of strings; but it's missing useful information
+such as their location. 
+
+I'm thinking of working backwards from my current location to detect if the character
+before the location is the end of a word. 
+
+#### Code snippet - converting unichar to NSString
+
+[via Stackoverflow](http://stackoverflow.com/a/1354413/626078)
+
+        unichar prevChar = [textView.text characterAtIndex:(range.location - 1)];
+        NSString *prevCharStr = [NSString stringWithFormat:@"%C", prevChar];
+
+Using that method I've got something workable.
+
+#### Code snippet - Grabbing the previous word and detecting if it's a tag
+
+	// For reverseArray method
+	@implementation NSArray (reverse)
+	- (NSArray *)reverseArray {
+		NSMutableArray *array =
+		[NSMutableArray arrayWithCapacity:[self count]];
+		NSEnumerator *enumerator = [self reverseObjectEnumerator];
+		for (id element in enumerator) {
+			[array addObject:element];
+		}
+		return array;
+	}
+	@end
+
+	// deleting
+    if (range.length == 1) {
+        BOOL isSpaceCharacter = NO;
+        
+        NSMutableArray *foundCharacters = [[NSMutableArray alloc] init];
+        NSUInteger location = range.location - 1;
+        while (!isSpaceCharacter) {
+            unichar prevChar = [textView.text characterAtIndex:location];
+            NSString *prevCharStr = [NSString stringWithFormat:@"%C", prevChar];
+            
+            if ([prevCharStr rangeOfCharacterFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].location != NSNotFound) {
+                isSpaceCharacter = YES;
+                break;
+            }
+            
+            [foundCharacters addObject:prevCharStr];
+            location--;
+        }
+        
+        NSArray *orderedFoundCharacters = [foundCharacters reverseArray];
+        NSMutableString *prevWord = [[NSMutableString alloc] initWithCapacity:[orderedFoundCharacters count]];
+        for (NSString *str in orderedFoundCharacters) {
+            [prevWord appendString:str];
+        }
+        
+        NSArray *tags = [self->_tagService arrayOfTagsInText:prevWord];
+        if ([tags count]) {
+            NSString *prevTag = [tags objectAtIndex:0];
+                        
+            self->_isEnteringTag = YES;
+            self->_currentTagSearch = prevTag;
+            self->_matchedTags = nil;
+            self->_matchedTags = [self->_tagService arrayOfMatchingTags:self->_currentTagSearch inArray:self->_existingTags];
+            [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
+        }
+
+Next is to do this kind of thing when the user changes where the cursor is with their 
+fingers.
+
+**josh;**
+
 ## 29/04/2012
 
 Goal of this session is just to get the # detection working. So when the # character is
