@@ -67,6 +67,47 @@ Okay wicked that works.
 
 **Refactor the code to check if the previous word is a #tag to update the tag scroll view**
 
+I've refactored out this previous word checking code to the TagService. 
+
+Now to get this working for the **textViewDidChangeSelection** scenario. 
+
+Wooo crash! I'm guessing I'm doing something silly.
+
+	2012-05-02 21:30:17.737 Notethread[15682:15203] *** Terminating app due to uncaught exception 'NSRangeException', reason: '-[__NSCFString characterAtIndex:]: Range or index out of bounds'
+
+
+	- (void)textViewDidChangeSelection:(UITextView *)textView {
+		NSUInteger location = textView.selectedRange.location;
+		if (location == 0)
+			return;
+		
+		NSString *prevTag = [self->_tagService stringTagPreviousWordInText:textView.text fromLocation:location];
+		BOOL isTracking = (prevTag == nil) ? NO : YES;
+		[self resetTagTracking:isTracking withTermOrNil:prevTag];
+		
+		if (prevTag != nil)
+			self->_matchedTags = [self->_tagService arrayOfMatchingTags:self->_currentTagSearch inArray:self->_existingTags];
+		
+		[self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
+	}
+
+It looks like when the view first loads this delegate method is called. So from 
+debugging I can see:
+	
+	textView.selectedRange.location == 2147483647
+
+Time for a sanity check in there. Just need to make sure the textView.text is not zero.
+
+	if (location == 0 || ![textView.text length])
+
+This has solved the problem! It looks like the #tag detection is working okay. I still
+have a few edge cases; but this is good progress.
+
+Refactored it once again. 
+
+Next step is making those tag buttons work and add the tag after the current cursor 
+position.
+
 **josh;**
 
 ## 01/05/2012
