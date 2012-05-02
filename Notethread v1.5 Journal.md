@@ -2,6 +2,21 @@
 
 The goal of this release is to attempt to get tags into play.
 
+## 02/05/2012
+
+Quick refactoring of the resetting tag/hash tracking code.
+
+	#pragma mark - (Private)
+	- (void)resetTagTracking:(BOOL)isTracking withTermOrNil:(NSString *)term {
+		if (term == nil)
+			term = @"";
+		
+		self->_isEnteringTag = isTracking;
+		self->_matchedTags = nil;
+		self->_currentTagSearch = term;
+	}
+
+
 ## 01/05/2012
 
 This session is yet again working on # detection. 

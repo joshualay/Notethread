@@ -26,6 +26,10 @@
 
 @end
 
+@interface NTWriteViewController(Private) 
+- (void)resetTagTracking:(BOOL)isTracking withTermOrNil:(NSString *)term;
+@end
+
 @implementation NTWriteViewController
 
 @synthesize noteTextView  = _noteTextView;
@@ -148,9 +152,7 @@
         self.navigationBar.topItem.title = @"";
         self.saveButton.enabled = NO;
         
-        self->_isEnteringTag = NO;
-        self->_matchedTags = nil;
-        self->_currentTagSearch = @"";
+        [self resetTagTracking:NO withTermOrNil:nil];
         [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];    
         
         return YES;
@@ -184,11 +186,10 @@
         NSArray *tags = [self->_tagService arrayOfTagsInText:prevWord];
         if ([tags count]) {
             NSString *prevTag = [tags objectAtIndex:0];
+            [self resetTagTracking:YES withTermOrNil:prevTag];
             
-            self->_isEnteringTag = YES;
-            self->_currentTagSearch = prevTag;
-            self->_matchedTags = nil;
             self->_matchedTags = [self->_tagService arrayOfMatchingTags:self->_currentTagSearch inArray:self->_existingTags];
+            
             [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
         }
         
@@ -196,9 +197,7 @@
     }
     
     if ([text isEqualToString:@"#"]) {
-        self->_matchedTags = nil;        
-        self->_currentTagSearch = @"";
-        self->_isEnteringTag = YES;
+        [self resetTagTracking:YES withTermOrNil:nil];
   
         [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
         
@@ -207,11 +206,8 @@
     
     if (self->_isEnteringTag) {
         if ([text isEqualToString:@" "]) {
-            self->_isEnteringTag = NO;
-            self->_matchedTags = nil;
-            self->_currentTagSearch = @"";
+            [self resetTagTracking:NO withTermOrNil:nil];
             [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
-
             return YES;
         }
 
@@ -231,6 +227,15 @@
     self.saveButton.enabled = ([textView.text length]) ? YES : NO;
 }
 
+#pragma mark - (Private)
+- (void)resetTagTracking:(BOOL)isTracking withTermOrNil:(NSString *)term {
+    if (term == nil)
+        term = @"";
+    
+    self->_isEnteringTag = isTracking;
+    self->_matchedTags = nil;
+    self->_currentTagSearch = term;
+}
 
 #pragma mark - JLButtonScrollerDelegate
 - (UIFont *)fontForButton {
