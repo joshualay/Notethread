@@ -227,6 +227,10 @@
     self.saveButton.enabled = ([textView.text length]) ? YES : NO;
 }
 
+- (void)textViewDidChangeSelection:(UITextView *)textView {
+    NSLog(@"textViewDidChangeSelection: range = %i", textView.selectedRange.location);
+}
+
 #pragma mark - (Private)
 - (void)resetTagTracking:(BOOL)isTracking withTermOrNil:(NSString *)term {
     if (term == nil)

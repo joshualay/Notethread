@@ -6,6 +6,10 @@ The goal of this release is to attempt to get tags into play.
 
 Quick refactoring of the resetting tag/hash tracking code.
 
+### Work log
+
+#### Code snippet - reset tag tracking method
+
 	#pragma mark - (Private)
 	- (void)resetTagTracking:(BOOL)isTracking withTermOrNil:(NSString *)term {
 		if (term == nil)
@@ -16,6 +20,54 @@ Quick refactoring of the resetting tag/hash tracking code.
 		self->_currentTagSearch = term;
 	}
 
+Now I need to work out how to detect the cursor position when the user taps in the text
+view. I don't think any of the delegate methods from UITextViewDelegate allow this. 
+
+#### Code snippet - UITextViewDelegate methods
+
+	- (BOOL)textViewShouldBeginEditing:(UITextView *)textView;
+	- (BOOL)textViewShouldEndEditing:(UITextView *)textView;
+	
+	- (void)textViewDidBeginEditing:(UITextView *)textView;
+	- (void)textViewDidEndEditing:(UITextView *)textView;
+	
+	- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text;
+	- (void)textViewDidChange:(UITextView *)textView;
+	
+	- (void)textViewDidChangeSelection:(UITextView *)textView;
+
+Come to think of it; there's only one method which provides a range. The rest just 
+pass in the text view itself. _textView:shouldChangeTextInRange:replacementText_ is the 
+only one and that doesn't update upon touch. 
+
+It's likely I'll have to override UITextView to steal that touch event to get more
+information.
+
+[Looks like there are some hints here](http://stackoverflow.com/questions/618759/getting-cursor-position-in-a-uitextview-on-the-iphone)
+
+Going to check out the documentation: [UITextView](http://developer.apple.com/library/ios/#documentation/uikit/reference/UITextView_Class/Reference/UITextView.html)
+
+Okay so I was wrong about no delegate methods being useful:
+
+	- (void)textViewDidChangeSelection:(UITextView *)textView;
+	
+When the user taps elsewhere in the view this is going to get called. Now I combine
+it with this:
+
+	// UITextView
+	@property(nonatomic) NSRange selectedRange
+
+To confirm:
+
+	- (void)textViewDidChangeSelection:(UITextView *)textView {
+    	NSLog(@"textViewDidChangeSelection: range = %i", textView.selectedRange.location);
+	}
+
+Okay wicked that works. 
+
+**Refactor the code to check if the previous word is a #tag to update the tag scroll view**
+
+**josh;**
 
 ## 01/05/2012
 
