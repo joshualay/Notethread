@@ -10,6 +10,20 @@
 #import "Tag.h"
 #import "Note.h"
 
+@implementation NSArray (reverse)
+
+- (NSArray *)reverseArray {
+    NSMutableArray *array =
+    [NSMutableArray arrayWithCapacity:[self count]];
+    NSEnumerator *enumerator = [self reverseObjectEnumerator];
+    for (id element in enumerator) {
+        [array addObject:element];
+    }
+    return array;
+}
+
+@end
+
 @implementation TagService
 
 - (Tag *)tagWithName:(NSString *)name inManagedContext:(NSManagedObjectContext *)managedObjectContext {
@@ -119,5 +133,37 @@
     return outfitTags;
 }
 
+- (NSString *)stringTagPreviousWordInText:(NSString *)text fromLocation:(NSUInteger)location {
+    BOOL isSpaceCharacter = NO;
+    
+    NSMutableArray *foundCharacters = [[NSMutableArray alloc] init];
+    
+    // Start after
+    location = location - 1;
+    while (!isSpaceCharacter) {
+        unichar prevChar = [text characterAtIndex:location];
+        NSString *prevCharStr = [NSString stringWithFormat:@"%C", prevChar];
+        
+        if ([prevCharStr rangeOfCharacterFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].location != NSNotFound) {
+            isSpaceCharacter = YES;
+            break;
+        }
+        
+        [foundCharacters addObject:prevCharStr];
+        location--;
+    }
+    
+    NSArray *orderedFoundCharacters = [foundCharacters reverseArray];
+    NSMutableString *prevWord = [[NSMutableString alloc] initWithCapacity:[orderedFoundCharacters count]];
+    for (NSString *str in orderedFoundCharacters) {
+        [prevWord appendString:str];
+    }
+    
+    NSArray *tags = [self arrayOfTagsInText:prevWord];
+    if ([tags count])
+        return [tags objectAtIndex:0];
+    
+    return nil;
+}
 
 @end

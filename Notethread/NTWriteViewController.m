@@ -12,22 +12,10 @@
 #import "AlertApplicationService.h"
 #import "TagService.h"
 
-@implementation NSArray (reverse)
-
-- (NSArray *)reverseArray {
-    NSMutableArray *array =
-    [NSMutableArray arrayWithCapacity:[self count]];
-    NSEnumerator *enumerator = [self reverseObjectEnumerator];
-    for (id element in enumerator) {
-        [array addObject:element];
-    }
-    return array;
-}
-
-@end
 
 @interface NTWriteViewController(Private) 
 - (void)resetTagTracking:(BOOL)isTracking withTermOrNil:(NSString *)term;
+- (void)previousWordIsTagDetectionForText:(NSString *)text fromLocation:(NSUInteger)location;
 @end
 
 @implementation NTWriteViewController
@@ -86,7 +74,6 @@
     NSManagedObjectContext *managedObject = [appDelegate managedObjectContext];
     self->_existingTags = nil;
     self->_existingTags = [self->_tagService arrayExistingTagsIn:managedObject];
-    NSLog(@"existingTags - %i", [self->_existingTags count]);
     
     self->_tagButtonScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 32.0f)];
     self->_tagButtonScrollView.backgroundColor = [UIColor blackColor];
@@ -142,12 +129,11 @@
 
 
 #pragma UITextViewDelegate
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    NSLog(@"range.location = %i, range.length = %i, replacementText = %@", range.location, range.length, text);
-    
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {    
     self.navigationBar.topItem.title = [NSString stringWithFormat:@"%@%@", textView.text, text];
     self.saveButton.enabled = ([textView.text length]) ? YES : NO;
     
+    // Back to the start
     if (range.location == 0 && [text isEqualToString:@""]) {
         self.navigationBar.topItem.title = @"";
         self.saveButton.enabled = NO;
@@ -160,42 +146,11 @@
     
     // deleting
     if (range.length == 1) {
-        BOOL isSpaceCharacter = NO;
-        
-        NSMutableArray *foundCharacters = [[NSMutableArray alloc] init];
-        NSUInteger location = range.location - 1;
-        while (!isSpaceCharacter) {
-            unichar prevChar = [textView.text characterAtIndex:location];
-            NSString *prevCharStr = [NSString stringWithFormat:@"%C", prevChar];
-            
-            if ([prevCharStr rangeOfCharacterFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].location != NSNotFound) {
-                isSpaceCharacter = YES;
-                break;
-            }
-            
-            [foundCharacters addObject:prevCharStr];
-            location--;
-        }
-        
-        NSArray *orderedFoundCharacters = [foundCharacters reverseArray];
-        NSMutableString *prevWord = [[NSMutableString alloc] initWithCapacity:[orderedFoundCharacters count]];
-        for (NSString *str in orderedFoundCharacters) {
-            [prevWord appendString:str];
-        }
-        
-        NSArray *tags = [self->_tagService arrayOfTagsInText:prevWord];
-        if ([tags count]) {
-            NSString *prevTag = [tags objectAtIndex:0];
-            [self resetTagTracking:YES withTermOrNil:prevTag];
-            
-            self->_matchedTags = [self->_tagService arrayOfMatchingTags:self->_currentTagSearch inArray:self->_existingTags];
-            
-            [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
-        }
-        
+        [self previousWordIsTagDetectionForText:textView.text fromLocation:range.location];
         return YES;
     }
     
+    // Entering a #tag
     if ([text isEqualToString:@"#"]) {
         [self resetTagTracking:YES withTermOrNil:nil];
   
@@ -204,20 +159,18 @@
         return YES;
     }
     
+    // Currently entering a #tag
     if (self->_isEnteringTag) {
         if ([text isEqualToString:@" "]) {
             [self resetTagTracking:NO withTermOrNil:nil];
             [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
+            
             return YES;
         }
 
         self->_currentTagSearch = [NSString stringWithFormat:@"%@%@", self->_currentTagSearch, text];
         self->_matchedTags = [self->_tagService arrayOfMatchingTags:self->_currentTagSearch inArray:self->_existingTags];
-        
         [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
-        
-        NSLog(@"currentTagSearch - %@", self->_currentTagSearch);
-        NSLog(@"matchedTags count - %i", [self->_matchedTags count]);
     }
     
     return YES;
@@ -228,7 +181,11 @@
 }
 
 - (void)textViewDidChangeSelection:(UITextView *)textView {
-    NSLog(@"textViewDidChangeSelection: range = %i", textView.selectedRange.location);
+    NSUInteger location = textView.selectedRange.location;
+    if (location == 0 || ![textView.text length])
+        return;
+    
+    [self previousWordIsTagDetectionForText:textView.text fromLocation:location];
 }
 
 #pragma mark - (Private)
@@ -239,6 +196,17 @@
     self->_isEnteringTag = isTracking;
     self->_matchedTags = nil;
     self->_currentTagSearch = term;
+}
+
+- (void)previousWordIsTagDetectionForText:(NSString *)text fromLocation:(NSUInteger)location {
+    NSString *prevTag = [self->_tagService stringTagPreviousWordInText:text fromLocation:location];
+    BOOL isTracking = (prevTag == nil) ? NO : YES;
+    [self resetTagTracking:isTracking withTermOrNil:prevTag];
+    
+    if (prevTag != nil)
+        self->_matchedTags = [self->_tagService arrayOfMatchingTags:self->_currentTagSearch inArray:self->_existingTags];
+    
+    [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];    
 }
 
 #pragma mark - JLButtonScrollerDelegate
