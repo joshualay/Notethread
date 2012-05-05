@@ -74,6 +74,27 @@ Just playing around with the look of the tag bar and buttons.
 > possible feature: When double tapping the action bar in the view it drops down to the 
 > bottom so you can view the note full screen until you tap it
 
+Doing up a simple texture for the tag scroll view. Keeping it a darker colour. I don't
+feel it should be the same as the action bar seen when you view the note. As this is
+dynamically generated only when a tag is entered. 
+
+This makes me think... since that tag scroll view is single featured I will hide it until
+there's actually a matching tag.
+
+Might make a sliding animation for it.
+
+	typedef enum {
+    	NTDirectionUp,
+    	NTDirectionDown
+	} NTDirection;
+	
+	- (void)slideToggleDirection:(NTDirection)direction;
+
+Actually no. That's too frivolous. 
+
+Having trouble trying to change the background colour of a UIButton. If I change the
+text's background it's still leaving white around and I can't seem to access that layer.
+
 **josh;**
 
 ## 02/05/2012

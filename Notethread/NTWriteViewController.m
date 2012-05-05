@@ -66,7 +66,8 @@
     self->_existingTags = [self->_tagService arrayExistingTagsIn:managedObject];
     
     self->_tagButtonScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 26.0f)];
-    self->_tagButtonScrollView.backgroundColor = [UIColor lightGrayColor];
+    self->_tagButtonScrollView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"gray-tile-tagbar.png"]];
+    [self->_tagButtonScrollView setHidden:YES];
     
     self->_buttonScroller = [[JLButtonScroller alloc] init];
     self->_buttonScroller.delegate = self;
@@ -225,12 +226,17 @@
 }
 
 - (NSInteger)numberOfButtons {
-    return [self->_matchedTags count];
+    NSInteger numberOfButtons = [self->_matchedTags count];
+        
+    BOOL isHidden = (numberOfButtons) ? NO : YES;
+    [self->_tagButtonScrollView setHidden:isHidden];
+    
+    return numberOfButtons;
 }
 
 - (UIButton *)buttonForIndex:(NSInteger)position {
     UIButton *tagButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    tagButton.tintColor = [UIColor whiteColor];
+    
     [tagButton addTarget:self action:@selector(addButtonTagNameToText:) forControlEvents:UIControlEventTouchUpInside];
     return tagButton;
 }
@@ -241,6 +247,10 @@
 
 - (CGFloat)heightForScrollView {
     return 26.0f;
+}
+
+- (CGFloat)heightForButton {
+    return 24.0f;
 }
 
 @end
