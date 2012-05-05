@@ -67,7 +67,14 @@ string replacement.
 		self.noteTextView.text = noteText;
 	}
 	
+Just playing around with the look of the tag bar and buttons.
 
+**Need to change the search to add tags as a classifier**
+
+> possible feature: When double tapping the action bar in the view it drops down to the 
+> bottom so you can view the note full screen until you tap it
+
+**josh;**
 
 ## 02/05/2012
 

@@ -76,8 +76,8 @@
     self->_existingTags = nil;
     self->_existingTags = [self->_tagService arrayExistingTagsIn:managedObject];
     
-    self->_tagButtonScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 32.0f)];
-    self->_tagButtonScrollView.backgroundColor = [UIColor blackColor];
+    self->_tagButtonScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 26.0f)];
+    self->_tagButtonScrollView.backgroundColor = [UIColor lightGrayColor];
     
     self->_buttonScroller = [[JLButtonScroller alloc] init];
     self->_buttonScroller.delegate = self;
@@ -106,7 +106,6 @@
     newNote.text = self.noteTextView.text;
     
     NSArray *tagsInNote = [self->_tagService arrayOfTagsInText:newNote.text];
-    NSLog(@"tagsInNote - %i", [tagsInNote count]);
     
     [self->_tagService storeTags:tagsInNote withRelationship:newNote inManagedContext:managedObjectContext];
     
@@ -226,6 +225,9 @@
     [noteText replaceCharactersInRange:range withString:tagString];
     
     self.noteTextView.text = noteText;
+    
+    // Tidying up
+    self.navigationBar.topItem.title = noteText;
 }
 
 #pragma mark - JLButtonScrollerDelegate
@@ -239,6 +241,7 @@
 
 - (UIButton *)buttonForIndex:(NSInteger)position {
     UIButton *tagButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    tagButton.tintColor = [UIColor whiteColor];
     [tagButton addTarget:self action:@selector(addButtonTagNameToText:) forControlEvents:UIControlEventTouchUpInside];
     return tagButton;
 }
@@ -248,7 +251,7 @@
 }
 
 - (CGFloat)heightForScrollView {
-    return 32.0f;
+    return 26.0f;
 }
 
 @end
