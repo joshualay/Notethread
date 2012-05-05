@@ -30,10 +30,7 @@
 @property (assign, nonatomic) NSInteger noteDepth;
 @property (strong, nonatomic) Note *parentNote;
 
-
-- (id)initWithDepth:(NSInteger)noteDepth parent:(Note *)note;
 - (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note;
-
 
 - (IBAction)cancelWriting:(id)sender;
 - (IBAction)saveNote:(id)sender;
