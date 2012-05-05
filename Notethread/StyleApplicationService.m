@@ -104,19 +104,6 @@
 }
 
 - (UIToolbar *)inputAccessoryViewForTextView:(UITextView *)textView {
-    /*UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, textView.frame.origin.y, textView.frame.size.width, InputAccessoryViewForTextViewHeight)];
-    
-    toolbar.tintColor   = [UIColor lightGrayColor];*/
-    //toolbar.translucent = YES;
-
-    /*
-    UIBarButtonItem *addTagButton = [[UIBarButtonItem alloc] initWithTitle:@"tag note" style:UIBarButtonItemStyleBordered target:self action:@selector(willTagNote:)];
-    
-    UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    
-    [toolbar setItems:[NSArray arrayWithObjects:addTagButton, flexibleSpace , nil]];
-    */
-    //FIXME -- remove when ready for tags
     UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
     return toolbar;
 }
