@@ -293,7 +293,7 @@ const CGFloat   cellHeight         = 51.0f;
 
 // Top level note: UIModalTransitionStyleCoverVertical
 - (void)displayWriteView {
-    NTWriteViewController *writeViewController = [[NTWriteViewController alloc] initWithDepth:0 parent:nil];
+    NTWriteViewController *writeViewController = [[NTWriteViewController alloc] initWithThreadDepth:0 parent:nil];
     
     writeViewController.modalTransitionStyle   = UIModalTransitionStyleCoverVertical;
     writeViewController.modalPresentationStyle = UIModalPresentationFormSheet;

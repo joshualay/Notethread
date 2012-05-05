@@ -44,17 +44,6 @@
 @synthesize parentNote    = _parentNote;
 
 
-- (id)initWithDepth:(NSInteger)noteDepth parent:(Note *)note {
-    self = [super initWithNibName:@"NTWriteViewController" bundle:nil];
-    if (self) {
-        _noteDepth  = noteDepth;
-        _parentNote = note;
-        _tagService = [[TagService alloc] init];
-        _isEnteringTag = NO;
-    }
-    return self;
-}
-
 - (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note {
     self = [super initWithNibName:@"NTWriteViewController" bundle:nil];
     if (self) {
