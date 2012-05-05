@@ -16,6 +16,7 @@
 @interface NTWriteViewController(Private) 
 - (void)resetTagTracking:(BOOL)isTracking withTermOrNil:(NSString *)term;
 - (void)previousWordIsTagDetectionForText:(NSString *)text fromLocation:(NSUInteger)location;
+- (void)addButtonTagNameToText:(id)sender;
 @end
 
 @implementation NTWriteViewController
@@ -209,6 +210,24 @@
     [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];    
 }
 
+- (void)addButtonTagNameToText:(id)sender {
+    UIButton *button = (UIButton *)sender;
+    
+    NSString *tagString = button.titleLabel.text;
+    NSUInteger insertionLocation = self.noteTextView.selectedRange.location;
+        
+    NSMutableString *noteText = [self.noteTextView.text mutableCopy];
+    
+    NSString *prevTag = [self->_tagService stringTagPreviousWordInText:noteText fromLocation:insertionLocation];
+    NSUInteger enteredLength = [prevTag length];
+    NSUInteger tagStartLocation = insertionLocation - enteredLength;
+    NSRange range = NSMakeRange(tagStartLocation, enteredLength);
+    
+    [noteText replaceCharactersInRange:range withString:tagString];
+    
+    self.noteTextView.text = noteText;
+}
+
 #pragma mark - JLButtonScrollerDelegate
 - (UIFont *)fontForButton {
     return [UIFont systemFontOfSize:14.0f];
@@ -219,7 +238,9 @@
 }
 
 - (UIButton *)buttonForIndex:(NSInteger)position {
-    return [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    UIButton *tagButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [tagButton addTarget:self action:@selector(addButtonTagNameToText:) forControlEvents:UIControlEventTouchUpInside];
+    return tagButton;
 }
 
 - (NSString *)stringForIndex:(NSInteger)position {

@@ -2,6 +2,73 @@
 
 The goal of this release is to attempt to get tags into play.
 
+## 05/05/2012
+
+Making the tag buttons work. 
+
+### Work log
+
+As a guess I'm going to try and add a gesture recogniser to the button
+
+	- (UIButton *)buttonForIndex:(NSInteger)position {
+		UIButton *tagButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+		UIGestureRecognizer *tap = [[UIGestureRecognizer alloc] initWithTarget:self action:@selector(addButtonTagNameToText:)];
+		[tagButton addGestureRecognizer:tap];
+		
+		return tagButton;
+	}
+
+That didn't work. I need to add a target and control type
+
+#### Code snippet - Adding a touch up inside event to a UIButton
+
+	[tagButton addTarget:self action:@selector(addButtonTagNameToText:) forControlEvents:UIControlEventTouchUpInside];
+
+Now to get the text of the button to push into the UITextView. 
+
+The signature of the @selector looks like this
+
+	- (void)addButtonTagNameToText:(id)sender;
+
+This means that **sender** will be the UIButton that was touched. The method body can 
+now access the button's text.
+
+#### Code snippet - (id)sender to (UIButton)
+
+    UIButton *button = (UIButton *)sender;
+    NSString *tag = button.titleLabel.text;
+    
+First issue. The user will have already entered in characters from the tag. What has to
+happen is determining what they've currently entered and fill in the rest. 
+
+I'm thinking that from the current selected location I can work backwards to get the 
+text. 
+
+That wasn't too hard. Re-used a method from my TagService and just did some simple
+string replacement. 
+
+#### Code snippet - Completing the tag text in the text view
+
+	- (void)addButtonTagNameToText:(id)sender {
+		UIButton *button = (UIButton *)sender;
+		
+		NSString *tagString = button.titleLabel.text;
+		NSUInteger insertionLocation = self.noteTextView.selectedRange.location;
+			
+		NSMutableString *noteText = [self.noteTextView.text mutableCopy];
+		
+		NSString *prevTag = [self->_tagService stringTagPreviousWordInText:noteText fromLocation:insertionLocation];
+		NSUInteger enteredLength = [prevTag length];
+		NSUInteger tagStartLocation = insertionLocation - enteredLength;
+		NSRange range = NSMakeRange(tagStartLocation, enteredLength);
+		
+		[noteText replaceCharactersInRange:range withString:tagString];
+		
+		self.noteTextView.text = noteText;
+	}
+	
+
+
 ## 02/05/2012
 
 Quick refactoring of the resetting tag/hash tracking code.
