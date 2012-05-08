@@ -53,14 +53,13 @@ const CGFloat threadCellRowHeight = 42.0f;
     if (self) {
         self.noteThreads = nil;
         self.styleApplicationService = [StyleApplicationService sharedSingleton];
-        [self setKeyboardNotificationsObservers];
     }
     return self;  
 }
 
 - (void)setKeyboardNotificationsObservers {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillAppear:) name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillDisappear:) name:UIKeyboardDidHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillDisappear:) name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void)removeKeyboardNotificationObservers {
@@ -99,8 +98,19 @@ const CGFloat threadCellRowHeight = 42.0f;
     
     CGRect newFrame = self.noteTextView.frame;
     CGRect keyboardFrame = [self.view convertRect:keyboardEndFrame toView:nil];
-    newFrame.size.height -= keyboardFrame.size.height * (keyboardHidden ? 1 : -1);
+    NSLog(@"newFrame before - %@", NSStringFromCGRect(newFrame));
+    if (UIDeviceOrientationIsPortrait(self.interfaceOrientation)) {
+        newFrame.size.height -= 65.0f * (keyboardHidden ? -1 : 1);
+    }
+    else {
+        newFrame.size.height -= 105.0f * (keyboardHidden ? -1 : 1);
+    }
+    
+    newFrame.size.height -= keyboardFrame.size.height * (keyboardHidden ? 1 : -1);    
     self.noteTextView.frame = newFrame;
+    
+    NSLog(@"keyboardFrame - %@", NSStringFromCGRect(keyboardFrame));
+    NSLog(@"newFrame - %@", NSStringFromCGRect(newFrame));
     
     [UIView commitAnimations];  
 }
@@ -149,6 +159,10 @@ const CGFloat threadCellRowHeight = 42.0f;
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+    NSLog(@"viewDidAppear");
+    
+    [self setKeyboardNotificationsObservers];
+    
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
     [managedObjectContext refreshObject:self.note mergeChanges:YES];
@@ -156,6 +170,10 @@ const CGFloat threadCellRowHeight = 42.0f;
     self.noteThreads = nil;
     self.noteThreads = [self.note.noteThreads array];
     [self.threadTableView reloadData];   
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [self removeKeyboardNotificationObservers];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -394,6 +412,7 @@ const CGFloat threadCellRowHeight = 42.0f;
 - (void)displayChildThreadWriteViewForActiveNote:(id)sender {
     NSInteger threadDepthInteger = [self.note.depth integerValue] + 1;
     
+    [self removeKeyboardNotificationObservers];
     NTWriteViewController *threadWriteViewController = [[NTWriteViewController alloc] initWithThreadDepth:threadDepthInteger parent:self.note];
     
     [self.styleApplicationService modalStyleForThreadWriteView:threadWriteViewController];

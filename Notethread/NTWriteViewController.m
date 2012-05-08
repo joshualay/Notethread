@@ -11,6 +11,13 @@
 #import "StyleApplicationService.h"
 #import "AlertApplicationService.h"
 
+@interface NTWriteViewController(Private)
+- (void)setKeyboardNotificationsObservers;
+- (void)removeKeyboardNotificationObservers;
+- (void)keyboardWillAppear:(NSNotification *)notification;
+- (void)moveTextViewForKeyboard:(NSNotification *)aNotification keyboardHidden:(BOOL)keyboardHidden;
+@end
+
 @implementation NTWriteViewController
 
 @synthesize noteTextView  = _noteTextView;
@@ -69,6 +76,14 @@
      */
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [self setKeyboardNotificationsObservers];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [self removeKeyboardNotificationObservers];
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
@@ -105,6 +120,45 @@
     } 
     
     [self dismissModalViewControllerAnimated:YES];
+}
+
+- (void)setKeyboardNotificationsObservers {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillAppear:) name:UIKeyboardWillShowNotification object:nil];
+}
+
+- (void)removeKeyboardNotificationObservers {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)moveTextViewForKeyboard:(NSNotification *)aNotification keyboardHidden:(BOOL)keyboardHidden {
+    NSDictionary* userInfo = [aNotification userInfo];
+    NSTimeInterval animationDuration;
+    UIViewAnimationCurve animationCurve;
+    
+    [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] getValue:&animationCurve];
+    [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
+    
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:animationDuration];
+    [UIView setAnimationCurve:animationCurve];
+    
+    CGRect newFrame = self.noteTextView.frame;
+
+    if (UIDeviceOrientationIsPortrait(self.interfaceOrientation)) {
+        newFrame.origin.y = 49.0f;
+        newFrame.size = CGSizeMake(310.0f, 196.0f);
+    }
+    else {
+        newFrame.origin.y = 49.0f;
+        newFrame.size = CGSizeMake(480.0f, 90.0f);
+    }
+    self.noteTextView.frame = newFrame;
+        
+    [UIView commitAnimations];  
+}
+
+- (void)keyboardWillAppear:(NSNotification *)notification {
+    [self moveTextViewForKeyboard:notification keyboardHidden:NO];       
 }
 
 
