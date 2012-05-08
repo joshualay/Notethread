@@ -98,7 +98,6 @@ const CGFloat threadCellRowHeight = 42.0f;
     
     CGRect newFrame = self.noteTextView.frame;
     CGRect keyboardFrame = [self.view convertRect:keyboardEndFrame toView:nil];
-    NSLog(@"newFrame before - %@", NSStringFromCGRect(newFrame));
     if (UIDeviceOrientationIsPortrait(self.interfaceOrientation)) {
         newFrame.size.height -= 65.0f * (keyboardHidden ? -1 : 1);
     }
@@ -108,9 +107,6 @@ const CGFloat threadCellRowHeight = 42.0f;
     
     newFrame.size.height -= keyboardFrame.size.height * (keyboardHidden ? 1 : -1);    
     self.noteTextView.frame = newFrame;
-    
-    NSLog(@"keyboardFrame - %@", NSStringFromCGRect(keyboardFrame));
-    NSLog(@"newFrame - %@", NSStringFromCGRect(newFrame));
     
     [UIView commitAnimations];  
 }
@@ -158,9 +154,7 @@ const CGFloat threadCellRowHeight = 42.0f;
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-    NSLog(@"viewDidAppear");
-    
+        
     [self setKeyboardNotificationsObservers];
     
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
