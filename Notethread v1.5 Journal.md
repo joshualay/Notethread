@@ -2,6 +2,35 @@
 
 The goal of this release is to attempt to get tags into play.
 
+## 08/05/2012
+
+Just mucking around with the tag button
+
+### Work log
+
+Creating a gradient PNG to use as the background image for the tag buttons.
+
+	    [tagButton setBackgroundImage:[UIImage imageNamed:@"button_normal_gradient.png"] forState:UIControlStateNormal];
+
+Now the result of this is that the buttons are stuck up right next to each other. I'll need to create a buffer.
+
+Had to modify JLButtonScroller to put an off set between the buttons. 
+
+After much mucking around. I'm going to get rid of the images.
+
+Going for the ever classic "gray" look:
+
+    self->_tagButtonScrollView.backgroundColor = [UIColor colorWithWhite:0.7f alpha:0.5f];
+
+In order to change the background colour when selected from awesome bright blue:
+
+	[tagButton setTintColor:[UIColor lightTextColor]];
+	[tagButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateHighlighted];
+
+When selecting a tag via the button I've added a space after and reset the tag buttons. Reason being is that if you tap the button you want that tag and are ready to carry on typing. No need to leave the tag buttons up there.
+
+**Just noticed that I need to adjust the text view when the tag scroll view is displayed. Bugger.**
+
 ## 05/05/2012
 
 Making the tag buttons work. 

@@ -26,6 +26,7 @@
     
     NSInteger maxButtons = [delegate numberOfButtons];
     
+    NSUInteger xBuffer = 4.0f;
     NSInteger xOffset = 0;
     for (int i = 0; i < maxButtons; i++) {
         UIButton *button = [delegate buttonForIndex:i];
@@ -39,7 +40,7 @@
         if ([delegate respondsToSelector:@selector(heightForButton)])
             heightForButton = [delegate heightForButton];
         
-        button.frame = CGRectMake(xOffset, 1, stringWidth, heightForButton);
+        button.frame = CGRectMake(xOffset, 2, stringWidth, heightForButton);
         
         [button setTitle:text forState:UIControlStateNormal];
         [button setTitle:text forState:UIControlStateHighlighted];
@@ -60,7 +61,7 @@
         
         [scrollView addSubview:button];
         
-        xOffset += stringWidth;
+        xOffset += stringWidth + xBuffer;
     }
     
     [scrollView setContentSize:CGSizeMake(xOffset, [delegate heightForScrollView])];

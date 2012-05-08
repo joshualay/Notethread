@@ -82,7 +82,7 @@
     self->_existingTags = [self->_tagService arrayExistingTagsIn:managedObject];
     
     self->_tagButtonScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 26.0f)];
-    self->_tagButtonScrollView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"gray-tile-tagbar.png"]];
+    self->_tagButtonScrollView.backgroundColor = [UIColor colorWithWhite:0.7f alpha:0.5f];
     [self->_tagButtonScrollView setHidden:YES];
     
     self->_buttonScroller = [[JLButtonScroller alloc] init];
@@ -276,16 +276,19 @@
     NSRange range = NSMakeRange(tagStartLocation, enteredLength);
     
     [noteText replaceCharactersInRange:range withString:tagString];
+    [noteText appendString:@" "];
     
     self.noteTextView.text = noteText;
     
     // Tidying up
     self.navigationBar.topItem.title = noteText;
+    [self resetTagTracking:NO withTermOrNil:nil];
+    [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
 }
 
 #pragma mark - JLButtonScrollerDelegate
 - (UIFont *)fontForButton {
-    return [UIFont systemFontOfSize:14.0f];
+    return [UIFont systemFontOfSize:12.0f];
 }
 
 - (NSInteger)numberOfButtons {
@@ -299,6 +302,12 @@
 
 - (UIButton *)buttonForIndex:(NSInteger)position {
     UIButton *tagButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        
+    [tagButton setTintColor:[UIColor lightTextColor]];
+    [tagButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateHighlighted];
+    
+    [tagButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+    [tagButton setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
     [tagButton addTarget:self action:@selector(addButtonTagNameToText:) forControlEvents:UIControlEventTouchUpInside];
     return tagButton;
@@ -309,11 +318,11 @@
 }
 
 - (CGFloat)heightForScrollView {
-    return 26.0f;
+    return 28.0f;
 }
 
 - (CGFloat)heightForButton {
-    return 24.0f;
+    return 22.0f;
 }
 
 @end

@@ -14,7 +14,6 @@
 		9815BD2B154812B500E450DA /* Notethread v1.5 Journal.md in Resources */ = {isa = PBXBuildFile; fileRef = 9815BD2A154812B500E450DA /* Notethread v1.5 Journal.md */; };
 		9815BD321548151400E450DA /* TagService.m in Sources */ = {isa = PBXBuildFile; fileRef = 9815BD311548151400E450DA /* TagService.m */; };
 		9815BD331548151400E450DA /* TagService.m in Sources */ = {isa = PBXBuildFile; fileRef = 9815BD311548151400E450DA /* TagService.m */; };
-		9815BD5A15551A6200E450DA /* gray-tile-tagbar.png in Resources */ = {isa = PBXBuildFile; fileRef = 9815BD5915551A6200E450DA /* gray-tile-tagbar.png */; };
 		981821441468026D00DBC1D2 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981821431468026D00DBC1D2 /* UIKit.framework */; };
 		981821461468026D00DBC1D2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981821451468026D00DBC1D2 /* Foundation.framework */; };
 		981821481468026D00DBC1D2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981821471468026D00DBC1D2 /* CoreGraphics.framework */; };
@@ -76,7 +75,6 @@
 		9815BD2A154812B500E450DA /* Notethread v1.5 Journal.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Notethread v1.5 Journal.md"; sourceTree = "<group>"; };
 		9815BD301548151400E450DA /* TagService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagService.h; sourceTree = "<group>"; };
 		9815BD311548151400E450DA /* TagService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagService.m; sourceTree = "<group>"; };
-		9815BD5915551A6200E450DA /* gray-tile-tagbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gray-tile-tagbar.png"; sourceTree = "<group>"; };
 		9818213F1468026D00DBC1D2 /* Notethread.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Notethread.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		981821431468026D00DBC1D2 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		981821451468026D00DBC1D2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -240,7 +238,6 @@
 		9818214C1468026D00DBC1D2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				9815BD5915551A6200E450DA /* gray-tile-tagbar.png */,
 				989D514F148900FD002B27AB /* handmadepaper.png */,
 				989D514D1488FECC002B27AB /* fabric_1.png */,
 				989D51471488F013002B27AB /* black-Linen.png */,
@@ -396,7 +393,6 @@
 				98190BD0149B72EC00E96126 /* NTNoteListViewController.xib in Resources */,
 				983816A614C04FDD000A644C /* README.md in Resources */,
 				9815BD2B154812B500E450DA /* Notethread v1.5 Journal.md in Resources */,
-				9815BD5A15551A6200E450DA /* gray-tile-tagbar.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
