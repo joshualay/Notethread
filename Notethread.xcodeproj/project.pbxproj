@@ -10,7 +10,6 @@
 		9800559C14680E50004C4802 /* Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = 9800559B14680E50004C4802 /* Tag.m */; };
 		980055A3146AB884004C4802 /* NTWriteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 980055A1146AB884004C4802 /* NTWriteViewController.m */; };
 		980055A4146AB884004C4802 /* NTWriteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 980055A2146AB884004C4802 /* NTWriteViewController.xib */; };
-		9801C7AA1484DE83005138A7 /* Release-Goals in Resources */ = {isa = PBXBuildFile; fileRef = 9801C7A91484DE83005138A7 /* Release-Goals */; };
 		9801C7B0148645CF005138A7 /* Note.m in Sources */ = {isa = PBXBuildFile; fileRef = 9801C7AF148645CF005138A7 /* Note.m */; };
 		9815BD2B154812B500E450DA /* Notethread v1.5 Journal.md in Resources */ = {isa = PBXBuildFile; fileRef = 9815BD2A154812B500E450DA /* Notethread v1.5 Journal.md */; };
 		9815BD321548151400E450DA /* TagService.m in Sources */ = {isa = PBXBuildFile; fileRef = 9815BD311548151400E450DA /* TagService.m */; };
@@ -72,7 +71,6 @@
 		980055A0146AB884004C4802 /* NTWriteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NTWriteViewController.h; sourceTree = "<group>"; };
 		980055A1146AB884004C4802 /* NTWriteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NTWriteViewController.m; sourceTree = "<group>"; };
 		980055A2146AB884004C4802 /* NTWriteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NTWriteViewController.xib; sourceTree = "<group>"; };
-		9801C7A91484DE83005138A7 /* Release-Goals */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Release-Goals"; sourceTree = "<group>"; };
 		9801C7AE148645CF005138A7 /* Note.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Note.h; path = ../Note.h; sourceTree = "<group>"; };
 		9801C7AF148645CF005138A7 /* Note.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Note.m; path = ../Note.m; sourceTree = "<group>"; };
 		9815BD2A154812B500E450DA /* Notethread v1.5 Journal.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Notethread v1.5 Journal.md"; sourceTree = "<group>"; };
@@ -178,7 +176,7 @@
 		981821341468026D00DBC1D2 = {
 			isa = PBXGroup;
 			children = (
-				9801C7A91484DE83005138A7 /* Release-Goals */,
+				9815BD2A154812B500E450DA /* Notethread v1.5 Journal.md */,
 				98F911371482066600D421B0 /* icon114x114.png */,
 				98F91134148203FC00D421B0 /* icon57x57.png */,
 				986E8073147E98C5004645CF /* MessageUI.framework */,
@@ -392,7 +390,6 @@
 				98EB1F0B147D35340018FF08 /* AboutMeViewController.xib in Resources */,
 				98F911361482066300D421B0 /* icon57x57.png in Resources */,
 				98F911381482066600D421B0 /* icon114x114.png in Resources */,
-				9801C7AA1484DE83005138A7 /* Release-Goals in Resources */,
 				989D51481488F013002B27AB /* black-Linen.png in Resources */,
 				989D514E1488FECC002B27AB /* fabric_1.png in Resources */,
 				989D5150148900FD002B27AB /* handmadepaper.png in Resources */,

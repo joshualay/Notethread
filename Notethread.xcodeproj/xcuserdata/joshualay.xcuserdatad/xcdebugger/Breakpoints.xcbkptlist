@@ -8,12 +8,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Notethread/NTNoteViewController.m"
-         timestampString = "358172454.072583"
+         timestampString = "357565037.745975"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "184"
-         endingLineNumber = "184"
-         landmarkName = "-resetNavigationItemFromEditing"
+         startingLineNumber = "190"
+         endingLineNumber = "190"
+         landmarkName = "-willEditNoteTextView:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
