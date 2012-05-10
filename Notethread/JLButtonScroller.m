@@ -13,9 +13,18 @@
 @synthesize delegate;
 
 - (void)addButtonsForContentAreaIn:(UIScrollView *)scrollView {
+    scrollView.delegate = self;
+    
+    NSInteger maxButtons = [delegate numberOfButtons];
     for (UIView *view in scrollView.subviews) {
-        [view removeFromSuperview];
+        if ([view isKindOfClass:[UIButton class]])
+            [view removeFromSuperview];
+        
+        if ([view isKindOfClass:[UILabel class]])
+            [view setHidden:(maxButtons) ? YES : NO];
     }
+    
+    if (!maxButtons) return;
     
     UIFont *font = [delegate fontForButton];
     
@@ -24,7 +33,6 @@
         buttonOffset = [delegate paddingForButton];
     }
     
-    NSInteger maxButtons = [delegate numberOfButtons];
     
     NSUInteger xBuffer = 4.0f;
     NSInteger xOffset = 0;
@@ -67,5 +75,9 @@
     [scrollView setContentSize:CGSizeMake(xOffset, [delegate heightForScrollView])];
 }
 
+#pragma mark - UIScrollViewDelegate 
+- (void)scrollViewDidScroll:(UIScrollView *)aScrollView {
+    [aScrollView setContentOffset: CGPointMake(aScrollView.contentOffset.x, 0)];
+}
 
 @end

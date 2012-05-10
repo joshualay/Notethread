@@ -81,9 +81,20 @@
     self->_existingTags = nil;
     self->_existingTags = [self->_tagService arrayExistingTagsIn:managedObject];
     
-    self->_tagButtonScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 26.0f)];
-    self->_tagButtonScrollView.backgroundColor = [UIColor colorWithWhite:0.7f alpha:0.5f];
-    [self->_tagButtonScrollView setHidden:YES];
+    CGRect tagButtonScrollFrame = CGRectMake(0, 0, self.view.frame.size.width, 26.0f);
+    self->_tagButtonScrollView = [[UIScrollView alloc] initWithFrame:tagButtonScrollFrame];
+    self->_tagButtonScrollView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:0.5f];
+
+    CGRect tagLabelRect = CGRectMake(5.0f, 0, self.view.frame.size.width, tagButtonScrollFrame.size.height);
+    UILabel *tagInfoLabel = [[UILabel alloc] initWithFrame:tagLabelRect];
+    tagInfoLabel.font = [UIFont systemFontOfSize:12.0f];
+    tagInfoLabel.textColor = [UIColor colorWithWhite:0.2f alpha:0.9f];
+    tagInfoLabel.backgroundColor = [UIColor clearColor];
+    tagInfoLabel.text = NSLocalizedString(@"# to start adding a tag", @"Adding tag");
+    
+    [self->_tagButtonScrollView addSubview:tagInfoLabel];
+    
+    //[self->_tagButtonScrollView setHidden:YES];
     
     self->_buttonScroller = [[JLButtonScroller alloc] init];
     self->_buttonScroller.delegate = self;
@@ -163,13 +174,14 @@
     
     CGRect newFrame = self.noteTextView.frame;
 
+    CGFloat scrollViewHeight = self->_tagButtonScrollView.frame.size.height;
     if (UIDeviceOrientationIsPortrait(self.interfaceOrientation)) {
         newFrame.origin.y = 49.0f;
-        newFrame.size = CGSizeMake(310.0f, 196.0f);
+        newFrame.size = CGSizeMake(310.0f, 196.0f - scrollViewHeight);
     }
     else {
         newFrame.origin.y = 49.0f;
-        newFrame.size = CGSizeMake(480.0f, 90.0f);
+        newFrame.size = CGSizeMake(480.0f, 90.0f - scrollViewHeight);
     }
     self.noteTextView.frame = newFrame;
         
@@ -294,8 +306,8 @@
 - (NSInteger)numberOfButtons {
     NSInteger numberOfButtons = [self->_matchedTags count];
         
-    BOOL isHidden = (numberOfButtons) ? NO : YES;
-    [self->_tagButtonScrollView setHidden:isHidden];
+    //BOOL isHidden = (numberOfButtons) ? NO : YES;
+    //[self->_tagButtonScrollView setHidden:isHidden];
     
     return numberOfButtons;
 }

@@ -2,6 +2,42 @@
 
 The goal of this release is to attempt to get tags into play.
 
+## 10/05/2012
+
+Get the sizing correct for the note text view when the tag scroll view is displayed. I'm thinking it may be worthwhile to display always. I'll see how that flows first.
+
+### Work log
+
+Starting to display the scroll view always - play around with that.
+
+Since I have my mega hacks (™) in here for the sizing I'm offsetting the note text view with the height of the scroll view. 
+
+Now I noticed that not only can i scroll horizontally; I can scroll vertically as well for the tag scroll view. I don't think that works at all. In order to fix this:
+
+[Stackoverflow answer](http://stackoverflow.com/a/5095989/626078)
+
+I'll do it in JLButtonScroller:
+
+**JLButtonScroller.h**
+
+	@interface JLButtonScroller : NSObject <UIScrollViewDelegate> {
+
+**JLButtonScroller.m**
+
+	- (void)addButtonsForContentAreaIn:(UIScrollView *)scrollView {
+		scrollView.delegate = self;
+		//...
+	}
+	
+	#pragma mark - UIScrollViewDelegate 
+	- (void)scrollViewDidScroll:(UIScrollView *)aScrollView {
+	    [aScrollView setContentOffset: CGPointMake(aScrollView.contentOffset.x, 0)];
+	}
+
+That fixes the issue!
+
+When deleting text in a tag - it doesn't seem to keep track that we're still in a tag :(
+
 ## 08/05/2012
 
 Just mucking around with the tag button
@@ -30,6 +66,8 @@ In order to change the background colour when selected from awesome bright blue:
 When selecting a tag via the button I've added a space after and reset the tag buttons. Reason being is that if you tap the button you want that tag and are ready to carry on typing. No need to leave the tag buttons up there.
 
 **Just noticed that I need to adjust the text view when the tag scroll view is displayed. Bugger.**
+
+**Need to add tag saving for the NTNoteViewController - and then the rest of the tag functionality**
 
 ## 05/05/2012
 
