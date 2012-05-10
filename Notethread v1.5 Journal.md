@@ -38,6 +38,10 @@ That fixes the issue!
 
 When deleting text in a tag - it doesn't seem to keep track that we're still in a tag :(
 
+Just tidying up a few things before I call it a night.
+
+
+
 ## 08/05/2012
 
 Just mucking around with the tag button

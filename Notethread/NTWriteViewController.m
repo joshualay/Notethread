@@ -26,7 +26,7 @@
 @end
 
 @interface NTWriteViewController(Private) 
-- (void)resetTagTracking:(BOOL)isTracking withTermOrNil:(NSString *)term;
+- (void)resetTagTrackingIsTracking:(BOOL)isTracking withTermOrNil:(NSString *)term;
 - (void)previousWordIsTagDetectionForText:(NSString *)text fromLocation:(NSUInteger)location;
 - (void)addButtonTagNameToText:(id)sender;
 - (void)setKeyboardNotificationsObservers;
@@ -93,9 +93,7 @@
     tagInfoLabel.text = NSLocalizedString(@"# to start adding a tag", @"Adding tag");
     
     [self->_tagButtonScrollView addSubview:tagInfoLabel];
-    
-    //[self->_tagButtonScrollView setHidden:YES];
-    
+        
     self->_buttonScroller = [[JLButtonScroller alloc] init];
     self->_buttonScroller.delegate = self;
     
@@ -203,7 +201,7 @@
         self.navigationBar.topItem.title = @"";
         self.saveButton.enabled = NO;
         
-        [self resetTagTracking:NO withTermOrNil:nil];
+        [self resetTagTrackingIsTracking:NO withTermOrNil:nil];
         [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];    
         
         return YES;
@@ -217,7 +215,7 @@
     
     // Entering a #tag
     if ([text isEqualToString:@"#"]) {
-        [self resetTagTracking:YES withTermOrNil:nil];
+        [self resetTagTrackingIsTracking:YES withTermOrNil:nil];
   
         [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
         
@@ -227,7 +225,7 @@
     // Currently entering a #tag
     if (self->_isEnteringTag) {
         if ([text isEqualToString:@" "]) {
-            [self resetTagTracking:NO withTermOrNil:nil];
+            [self resetTagTrackingIsTracking:NO withTermOrNil:nil];
             [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
             
             return YES;
@@ -254,7 +252,7 @@
 }
 
 #pragma mark - (Private)
-- (void)resetTagTracking:(BOOL)isTracking withTermOrNil:(NSString *)term {
+- (void)resetTagTrackingIsTracking:(BOOL)isTracking withTermOrNil:(NSString *)term {
     if (term == nil)
         term = @"";
     
@@ -266,7 +264,7 @@
 - (void)previousWordIsTagDetectionForText:(NSString *)text fromLocation:(NSUInteger)location {
     NSString *prevTag = [self->_tagService stringTagPreviousWordInText:text fromLocation:location];
     BOOL isTracking = (prevTag == nil) ? NO : YES;
-    [self resetTagTracking:isTracking withTermOrNil:prevTag];
+    [self resetTagTrackingIsTracking:isTracking withTermOrNil:prevTag];
     
     if (prevTag != nil)
         self->_matchedTags = [self->_tagService arrayOfMatchingTags:self->_currentTagSearch inArray:self->_existingTags];
@@ -294,7 +292,7 @@
     
     // Tidying up
     self.navigationBar.topItem.title = noteText;
-    [self resetTagTracking:NO withTermOrNil:nil];
+    [self resetTagTrackingIsTracking:NO withTermOrNil:nil];
     [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
 }
 
@@ -304,12 +302,7 @@
 }
 
 - (NSInteger)numberOfButtons {
-    NSInteger numberOfButtons = [self->_matchedTags count];
-        
-    //BOOL isHidden = (numberOfButtons) ? NO : YES;
-    //[self->_tagButtonScrollView setHidden:isHidden];
-    
-    return numberOfButtons;
+    return [self->_matchedTags count];
 }
 
 - (UIButton *)buttonForIndex:(NSInteger)position {

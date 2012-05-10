@@ -13,6 +13,7 @@
 @synthesize delegate;
 
 - (void)addButtonsForContentAreaIn:(UIScrollView *)scrollView {
+    scrollView.delegate = nil;
     scrollView.delegate = self;
     
     NSInteger maxButtons = [delegate numberOfButtons];
