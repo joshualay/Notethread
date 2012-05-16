@@ -66,7 +66,7 @@ const CGFloat threadCellRowHeight = 42.0f;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)moveTextViewForKeyboard:(NSNotification *)aNotification keyboardHidden:(BOOL)keyboardHidden {
+- (void)moveTextViewForKeyboard:(NSNotification *)aNotification keyboardHidden:(BOOL)keyboardHidden {    
     float opacity = 0.0f;
     if (keyboardHidden) {
         self.actionToolbar.hidden = NO;
@@ -97,17 +97,30 @@ const CGFloat threadCellRowHeight = 42.0f;
     [UIView setAnimationCurve:animationCurve];
     
     CGRect newFrame = self.noteTextView.frame;
-    CGRect keyboardFrame = [self.view convertRect:keyboardEndFrame toView:nil];
-    if (UIDeviceOrientationIsPortrait(self.interfaceOrientation)) {
-        newFrame.size.height -= 65.0f * (keyboardHidden ? -1 : 1);
+
+    CGFloat kbOriginY      = keyboardEndFrame.origin.y;
+    if (keyboardHidden) {
+        newFrame.size.height = self.actionToolbar.frame.origin.y;
+    }
+    else if (UIDeviceOrientationIsPortrait(self.interfaceOrientation)) {
+        CGFloat noteViewHeight = self.actionToolbar.frame.origin.y - newFrame.origin.y;
+        CGFloat offset = self.navigationController.navigationBar.frame.size.height +
+                         (self.actionToolbar.frame.size.height / 2.0f);
+        if (noteViewHeight < kbOriginY) {
+            CGFloat diff = kbOriginY - noteViewHeight;
+            noteViewHeight += (diff - offset);
+        }
+        else {
+            CGFloat diff = noteViewHeight - kbOriginY;
+            noteViewHeight -= (diff + offset);
+        }
+        newFrame.size.height = noteViewHeight;
     }
     else {
-        newFrame.size.height -= 105.0f * (keyboardHidden ? -1 : 1);
+        newFrame.size   = CGSizeMake(480.0f, 110.0f);
     }
-    
-    newFrame.size.height -= keyboardFrame.size.height * (keyboardHidden ? 1 : -1);    
+        
     self.noteTextView.frame = newFrame;
-    
     [UIView commitAnimations];  
 }
 
@@ -172,6 +185,9 @@ const CGFloat threadCellRowHeight = 42.0f;
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
+    if (interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)
+        return NO;
+    
     return YES;
 }
 

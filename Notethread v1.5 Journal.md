@@ -2,6 +2,72 @@
 
 The goal of this release is to attempt to get tags into play.
 
+## 16/05/2012
+
+The resizing when keyboard has been displayed has been the bane of my Notethread life. 
+
+### Work log
+
+Trying to calculate the note view smartly when going from the NTViewController.
+
+Needed to think this one out a bit more. The issue is I'm trying to resize something that may be larger than or much smaller than the keyboard's y origin. 
+
+Getting the note thread view back to the right place is simple. All I have to do for that is find out the y origin position of the action bar.
+
+    CGRect newFrame = self.noteTextView.frame;
+
+    CGFloat noteViewHeight = newFrame.size.height;
+    CGFloat kbOriginY      = keyboardEndFrame.origin.y;
+    if (keyboardHidden) {
+        noteViewHeight = self.actionToolbar.frame.origin.y;
+    }
+    else {
+        CGFloat offset = self.navigationController.navigationBar.frame.size.height +
+                         self.actionToolbar.frame.size.height;
+        if (noteViewHeight < kbOriginY) {
+            CGFloat diff = kbOriginY - noteViewHeight;
+            noteViewHeight += (diff - offset);
+        }
+        else {
+            CGFloat diff = noteViewHeight - kbOriginY;
+            noteViewHeight -= (diff + offset);
+        }
+    }
+    
+    newFrame.size.height = noteViewHeight;
+
+This code snippet works for portrait mode. But rotating and when intially in landscape mode to edit breaks it. 
+
+I have a feeling when it rotates it's origin gets lost and it ends up way off screen. 
+
+Ah so it turns out when you're upside down you get negative values :) Going to just disable rotation upside down.
+
+    CGRect newFrame = self.noteTextView.frame;
+
+    CGFloat kbOriginY      = keyboardEndFrame.origin.y;
+    if (keyboardHidden) {
+        newFrame.size.height = self.actionToolbar.frame.origin.y;
+    }
+    else if (UIDeviceOrientationIsPortrait(self.interfaceOrientation)) {
+        CGFloat noteViewHeight = self.actionToolbar.frame.origin.y - newFrame.origin.y;
+        CGFloat offset = self.navigationController.navigationBar.frame.size.height +
+                         (self.actionToolbar.frame.size.height / 2.0f);
+        if (noteViewHeight < kbOriginY) {
+            CGFloat diff = kbOriginY - noteViewHeight;
+            noteViewHeight += (diff - offset);
+        }
+        else {
+            CGFloat diff = noteViewHeight - kbOriginY;
+            noteViewHeight -= (diff + offset);
+        }
+        newFrame.size.height = noteViewHeight;
+    }
+    else {
+        newFrame.size   = CGSizeMake(480.0f, 110.0f);
+    }
+    
+This gives me what I want for now. However it will need more testing. I really want to get back onto making the tags awesome!
+
 ## 10/05/2012
 
 Get the sizing correct for the note text view when the tag scroll view is displayed. I'm thinking it may be worthwhile to display always. I'll see how that flows first.
