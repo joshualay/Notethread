@@ -24,6 +24,8 @@
 - (UIColor *)colorForTableFooter;
 - (UIColor *)paperColor;
 - (UIColor *)blackLinenColor;
+
+- (UILabel *)labelForTagScrollBarWithFrame:(CGRect)frame;
 @end
 
 @interface StyleApplicationService : NSObject <StyleApplicationServiceDelegate>

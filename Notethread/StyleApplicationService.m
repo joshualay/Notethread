@@ -120,4 +120,14 @@
     return [UIColor colorWithPatternImage:[UIImage imageNamed:@"black-Linen.png"]];
 }
 
+- (UILabel *)labelForTagScrollBarWithFrame:(CGRect)frame {
+    UILabel *tagInfoLabel = [[UILabel alloc] initWithFrame:frame];
+    tagInfoLabel.font = [UIFont systemFontOfSize:12.0f];
+    tagInfoLabel.textColor = [UIColor colorWithWhite:0.2f alpha:0.9f];
+    tagInfoLabel.backgroundColor = [UIColor clearColor];
+    tagInfoLabel.text = NSLocalizedString(@"# to start adding a tag", @"Adding tag");  
+    
+    return tagInfoLabel;
+}
+
 @end

@@ -51,8 +51,7 @@ const CGFloat   cellHeight         = 51.0f;
         if (self.savedSearchTerm)
         {
             [self.searchDisplayController setActive:self.searchWasActive];
-            //[self.searchDisplayController.searchBar setSelectedScopeButtonIndex:self.savedScopeButtonIndex];
-            self.searchDisplayController.searchBar.scopeButtonTitles = nil;
+            [self.searchDisplayController.searchBar setSelectedScopeButtonIndex:self.savedScopeButtonIndex];
             [self.searchDisplayController.searchBar setText:savedSearchTerm];
             
             self.savedSearchTerm = nil;
@@ -88,6 +87,9 @@ const CGFloat   cellHeight         = 51.0f;
     self.tableView.backgroundColor = [self.styleApplicationService paperColor];    
     
     [self.tableView setContentOffset:CGPointMake(0,self.searchDisplayController.searchBar.frame.size.height)];    
+    
+    [self.searchDisplayController.searchBar setShowsScopeBar:YES];
+    self.searchDisplayController.searchBar.scopeButtonTitles = [NSArray arrayWithObjects:@"All", @"Tags", nil];
 }
 
 - (void)viewDidUnload {
@@ -324,7 +326,7 @@ const CGFloat   cellHeight         = 51.0f;
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
 {
 	[self.filteredListContent removeAllObjects]; // First clear the filtered array.
-	
+	NSLog(@"scope - %@", scope);
     NSArray *listContent = [self.fetchedResultsController fetchedObjects];
 	for (Note *note in listContent)
 	{

@@ -43,6 +43,13 @@
 @synthesize noteDepth     = _noteDepth;
 @synthesize parentNote    = _parentNote;
 
+// For the note view sizings
+CGFloat const NoteViewOriginY = 49.0f;
+CGFloat const NoteViewPortraitSizeWidth = 310.0f;
+CGFloat const NoteViewPortraitSizeHeight = 196.0f;
+CGFloat const NoteViewLandscapeSizeWidth = 480.0f;
+CGFloat const NoteViewLandscapeSizeHeight = 90.0f;
+
 
 - (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note {
     self = [super initWithNibName:@"NTWriteViewController" bundle:nil];
@@ -86,11 +93,7 @@
     self->_tagButtonScrollView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:0.5f];
 
     CGRect tagLabelRect = CGRectMake(5.0f, 0, self.view.frame.size.width, tagButtonScrollFrame.size.height);
-    UILabel *tagInfoLabel = [[UILabel alloc] initWithFrame:tagLabelRect];
-    tagInfoLabel.font = [UIFont systemFontOfSize:12.0f];
-    tagInfoLabel.textColor = [UIColor colorWithWhite:0.2f alpha:0.9f];
-    tagInfoLabel.backgroundColor = [UIColor clearColor];
-    tagInfoLabel.text = NSLocalizedString(@"# to start adding a tag", @"Adding tag");
+    UILabel *tagInfoLabel = [styleApplicationService labelForTagScrollBarWithFrame:tagLabelRect];
     
     [self->_tagButtonScrollView addSubview:tagInfoLabel];
         
@@ -173,13 +176,12 @@
     CGRect newFrame = self.noteTextView.frame;
 
     CGFloat scrollViewHeight = self->_tagButtonScrollView.frame.size.height;
+    newFrame.origin.y = NoteViewOriginY;
     if (UIDeviceOrientationIsPortrait(self.interfaceOrientation)) {
-        newFrame.origin.y = 49.0f;
-        newFrame.size = CGSizeMake(310.0f, 196.0f - scrollViewHeight);
+        newFrame.size = CGSizeMake(NoteViewPortraitSizeWidth, NoteViewPortraitSizeHeight - scrollViewHeight);
     }
     else {
-        newFrame.origin.y = 49.0f;
-        newFrame.size = CGSizeMake(480.0f, 90.0f - scrollViewHeight);
+        newFrame.size = CGSizeMake(NoteViewLandscapeSizeWidth, NoteViewLandscapeSizeHeight - scrollViewHeight);
     }
     self.noteTextView.frame = newFrame;
         

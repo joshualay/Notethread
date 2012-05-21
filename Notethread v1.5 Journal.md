@@ -2,6 +2,40 @@
 
 The goal of this release is to attempt to get tags into play.
 
+## 19/05/2012
+
+Just going through and tidying up anything that annoy's me really. A lazy Saturday for coding. 
+
+### Work log
+
+Since I have a style service layer I'll move the tag information label into that. In case I want to reuse it.
+
+I'm thinking I'll have to take out the existing tag tracking code and put it in a separate layer. This way I can save on duplication when I implement tags in the NoteViewController. There's always going to be duplication in some sense as I'll need to implement UITextViewDelegate methods.
+
+Anyhow. Firstly I want to add searching for tags in. Need to add it.
+
+	self.searchDisplayController.searchBar.scopeButtonTitles = [NSArray arrayWithObjects:@"All", @"Tags", nil];
+
+Then in order to work out what I'm currently searching for:
+
+	#pragma mark UISearchDisplayController Delegate Methods
+	
+	- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
+	{
+	    [self filterContentForSearchText:searchString scope:
+	     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
+	    
+	    // Return YES to cause the search result table view to be reloaded.
+	    return YES;
+	}
+
+I'll have to fetch all the tags to do this. Each existing tag should be linked to a note. However I may just try and look up tags for all notes.
+
+Silly mistake - needed to set it so it would display!
+
+    [self.searchDisplayController.searchBar setShowsScopeBar:YES];
+
+
 ## 16/05/2012
 
 The resizing when keyboard has been displayed has been the bane of my Notethread life. 
