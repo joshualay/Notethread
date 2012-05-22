@@ -9,6 +9,7 @@
 #import "StyleApplicationService.h"
 #import "UserSettingsConstants.h"
 #import "StyleConstants.h"
+#import "NTWriteViewController.h"
 
 @interface StyleApplicationService()
 - (UIFont *)fontDefault;
@@ -128,6 +129,29 @@
     tagInfoLabel.text = NSLocalizedString(@"# to start adding a tag", @"Adding tag");  
     
     return tagInfoLabel;
+}
+
+- (UIScrollView *)scrollViewForTagAtPoint:(CGPoint)point width:(CGFloat)width {
+    CGRect tagButtonScrollFrame = CGRectMake(point.x, point.y, width, 26.0f);
+    UIScrollView *tagScrollView = [[UIScrollView alloc] initWithFrame:tagButtonScrollFrame];
+    tagScrollView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:0.5f];  
+    return tagScrollView;
+}
+
+- (UIFont *)fontTagButton {
+    return [UIFont systemFontOfSize:12.0f];
+}
+
+- (UIButton *)buttonForTagScrollView {
+    UIButton *tagButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    
+    [tagButton setTintColor:[UIColor lightTextColor]];
+    [tagButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateHighlighted];
+    
+    [tagButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+    [tagButton setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    
+    return tagButton;
 }
 
 @end

@@ -2,6 +2,31 @@
 
 The goal of this release is to attempt to get tags into play.
 
+## 22/05/2012
+
+Refactoring the tag scroll view stuff so I can add it into NTNoteViewController.
+
+### Work log
+
+Going to pick off something obvious to get into the swing of things.
+
+Style application service in NTWriteViewController.
+
+Moving all the specific tag and button style information into StyleApplicationService layer.
+
+StyleApplicationService has a bit of a pointless @protocol. I think is when I didn't understand why you'd use them. Just moving all the methods out.
+
+Moving out NSArray+reverse out of NTWriteViewController.
+
+Adding saving tags in the NTNoteViewController.
+
+**Next is to add tags when editing a note**
+
+**I think I should consider a checklist for tag functionality. There are a few cases where the tracking doesn't hold up**
+
+
+
+
 ## 19/05/2012
 
 Just going through and tidying up anything that annoy's me really. A lazy Saturday for coding. 

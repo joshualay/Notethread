@@ -32,6 +32,7 @@
 		98190BCF149B72EC00E96126 /* NTNoteListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98190BCD149B72EB00E96126 /* NTNoteListViewController.m */; };
 		98190BD0149B72EC00E96126 /* NTNoteListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98190BCE149B72EC00E96126 /* NTNoteListViewController.xib */; };
 		983816A614C04FDD000A644C /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 983816A514C04FDD000A644C /* README.md */; };
+		98489949156B8F33008AF533 /* NSArray+Reverse.m in Sources */ = {isa = PBXBuildFile; fileRef = 98489948156B8F33008AF533 /* NSArray+Reverse.m */; };
 		986E806C147E3C06004645CF /* EmailContentApplicationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 986E806B147E3C06004645CF /* EmailContentApplicationService.m */; };
 		986E8072147E90EC004645CF /* EmailApplicationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 986E8071147E90EC004645CF /* EmailApplicationService.m */; };
 		986E8074147E98C5004645CF /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 986E8073147E98C5004645CF /* MessageUI.framework */; };
@@ -98,6 +99,8 @@
 		98190BCD149B72EB00E96126 /* NTNoteListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NTNoteListViewController.m; sourceTree = "<group>"; };
 		98190BCE149B72EC00E96126 /* NTNoteListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NTNoteListViewController.xib; sourceTree = "<group>"; };
 		983816A514C04FDD000A644C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		98489947156B8F33008AF533 /* NSArray+Reverse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Reverse.h"; sourceTree = "<group>"; };
+		98489948156B8F33008AF533 /* NSArray+Reverse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Reverse.m"; sourceTree = "<group>"; };
 		986E806A147E3C06004645CF /* EmailContentApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailContentApplicationService.h; sourceTree = "<group>"; };
 		986E806B147E3C06004645CF /* EmailContentApplicationService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailContentApplicationService.m; sourceTree = "<group>"; };
 		986E8070147E90EC004645CF /* EmailApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailApplicationService.h; sourceTree = "<group>"; };
@@ -231,6 +234,8 @@
 				98C3FF9B146806E100133628 /* Models */,
 				98EB1EFE147CE9550018FF08 /* Constants */,
 				9818214C1468026D00DBC1D2 /* Supporting Files */,
+				98489947156B8F33008AF533 /* NSArray+Reverse.h */,
+				98489948156B8F33008AF533 /* NSArray+Reverse.m */,
 			);
 			path = Notethread;
 			sourceTree = "<group>";
@@ -445,6 +450,7 @@
 				989D514C1488F45A002B27AB /* StyleConstants.m in Sources */,
 				98190BCF149B72EC00E96126 /* NTNoteListViewController.m in Sources */,
 				9815BD321548151400E450DA /* TagService.m in Sources */,
+				98489949156B8F33008AF533 /* NSArray+Reverse.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

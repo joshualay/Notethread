@@ -8,9 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-#import "NTWriteViewController.h"
+@class NTWriteViewController;
+@class Note;
 
-@protocol StyleApplicationServiceDelegate <NSObject>
+@interface StyleApplicationService : NSObject
+
+@property (nonatomic, strong) NSUserDefaults *userDefaults;
+
++ (StyleApplicationService *)sharedSingleton;
+
 - (UIFont *)fontNoteWrite;
 - (UIFont *)fontNoteView;
 - (UIFont *)fontTextLabelPrimary;
@@ -26,12 +32,8 @@
 - (UIColor *)blackLinenColor;
 
 - (UILabel *)labelForTagScrollBarWithFrame:(CGRect)frame;
-@end
-
-@interface StyleApplicationService : NSObject <StyleApplicationServiceDelegate>
-
-@property (nonatomic, strong) NSUserDefaults *userDefaults;
-
-+ (StyleApplicationService *)sharedSingleton;
+- (UIScrollView *)scrollViewForTagAtPoint:(CGPoint)point width:(CGFloat)width;
+- (UIFont *)fontTagButton;
+- (UIButton *)buttonForTagScrollView;
 
 @end

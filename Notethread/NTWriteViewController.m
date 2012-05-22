@@ -11,19 +11,8 @@
 #import "StyleApplicationService.h"
 #import "AlertApplicationService.h"
 #import "TagService.h"
-
-@implementation NSArray (reverse)
-
-- (NSArray *)reverseArray {
-    NSMutableArray *array =
-    [NSMutableArray arrayWithCapacity:[self count]];
-    NSEnumerator *enumerator = [self reverseObjectEnumerator];
-    for (id element in enumerator) {
-        [array addObject:element];
-    }
-    return array;
-}
-@end
+#import "StyleConstants.h"
+#import "NSArray+Reverse.h"
 
 @interface NTWriteViewController(Private) 
 - (void)resetTagTrackingIsTracking:(BOOL)isTracking withTermOrNil:(NSString *)term;
@@ -43,6 +32,8 @@
 @synthesize noteDepth     = _noteDepth;
 @synthesize parentNote    = _parentNote;
 
+@synthesize styleApplicationService = _styleApplicationService;
+
 // For the note view sizings
 CGFloat const NoteViewOriginY = 49.0f;
 CGFloat const NoteViewPortraitSizeWidth = 310.0f;
@@ -58,6 +49,7 @@ CGFloat const NoteViewLandscapeSizeHeight = 90.0f;
         _parentNote = note;
         _tagService = [[TagService alloc] init];
         _isEnteringTag = NO;
+        _styleApplicationService = [StyleApplicationService sharedSingleton];
     }
     return self;
 }
@@ -88,11 +80,9 @@ CGFloat const NoteViewLandscapeSizeHeight = 90.0f;
     self->_existingTags = nil;
     self->_existingTags = [self->_tagService arrayExistingTagsIn:managedObject];
     
-    CGRect tagButtonScrollFrame = CGRectMake(0, 0, self.view.frame.size.width, 26.0f);
-    self->_tagButtonScrollView = [[UIScrollView alloc] initWithFrame:tagButtonScrollFrame];
-    self->_tagButtonScrollView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:0.5f];
+    self->_tagButtonScrollView = [self.styleApplicationService scrollViewForTagAtPoint:CGPointZero width:self.view.frame.size.width];
 
-    CGRect tagLabelRect = CGRectMake(5.0f, 0, self.view.frame.size.width, tagButtonScrollFrame.size.height);
+    CGRect tagLabelRect = CGRectMake(5.0f, 0, self.view.frame.size.width, self->_tagButtonScrollView.frame.size.height);
     UILabel *tagInfoLabel = [styleApplicationService labelForTagScrollBarWithFrame:tagLabelRect];
     
     [self->_tagButtonScrollView addSubview:tagInfoLabel];
@@ -300,7 +290,7 @@ CGFloat const NoteViewLandscapeSizeHeight = 90.0f;
 
 #pragma mark - JLButtonScrollerDelegate
 - (UIFont *)fontForButton {
-    return [UIFont systemFontOfSize:12.0f];
+    return [self.styleApplicationService fontTagButton];
 }
 
 - (NSInteger)numberOfButtons {
@@ -308,14 +298,7 @@ CGFloat const NoteViewLandscapeSizeHeight = 90.0f;
 }
 
 - (UIButton *)buttonForIndex:(NSInteger)position {
-    UIButton *tagButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        
-    [tagButton setTintColor:[UIColor lightTextColor]];
-    [tagButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateHighlighted];
-    
-    [tagButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-    [tagButton setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    
+    UIButton *tagButton = [self.styleApplicationService buttonForTagScrollView];
     [tagButton addTarget:self action:@selector(addButtonTagNameToText:) forControlEvents:UIControlEventTouchUpInside];
     return tagButton;
 }
@@ -325,11 +308,11 @@ CGFloat const NoteViewLandscapeSizeHeight = 90.0f;
 }
 
 - (CGFloat)heightForScrollView {
-    return 28.0f;
+    return TagScrollViewHeight;
 }
 
 - (CGFloat)heightForButton {
-    return 22.0f;
+    return TagButtonHeight;
 }
 
 @end

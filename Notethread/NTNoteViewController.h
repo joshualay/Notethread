@@ -12,19 +12,20 @@
 
 @class NTWriteViewController;
 @class StyleApplicationService;
+@class TagService;
 
 #import "Note.h"
 #import "NTThreadWriteViewDelegate.h"
 #import "NTThreadViewDelegate.h"
 
 @interface NTNoteViewController : UIViewController 
-                                                    <UITableViewDelegate, 
-                                                     UITableViewDataSource, 
-                                                     NTThreadWriteViewDelegate, 
+                                                    <UITableViewDelegate, UITableViewDataSource, 
+                                                     NTThreadWriteViewDelegate, NTThreadViewDelegate,
                                                      UITextViewDelegate,
                                                      MFMailComposeViewControllerDelegate,
-                                                     NTThreadViewDelegate,
-                                                     UIActionSheetDelegate>
+                                                     UIActionSheetDelegate> {
+    TagService *_tagService;
+}
 
 @property (strong, nonatomic) Note *note;
 

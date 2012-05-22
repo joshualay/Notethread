@@ -12,6 +12,7 @@
 
 @class NTWriteViewController;
 @class TagService;
+@class StyleApplicationService;
 
 @interface NTWriteViewController : UIViewController <UITextViewDelegate, JLButtonScrollerDelegate> {
     TagService *_tagService;
@@ -29,6 +30,8 @@
 
 @property (assign, nonatomic) NSInteger noteDepth;
 @property (strong, nonatomic) Note *parentNote;
+
+@property (strong, nonatomic) StyleApplicationService *styleApplicationService;
 
 - (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note;
 

@@ -16,6 +16,7 @@
 #import "UserSettingsConstants.h"
 #import "StyleConstants.h"
 #import "EmailApplicationService.h"
+#import "TagService.h"
 
 
 @interface NTNoteViewController()
@@ -30,7 +31,10 @@
 - (void)removeKeyboardNotificationObservers;
 - (void)keyboardWillAppear:(NSNotification *)notification;
 - (void)keyboardWillDisappear:(NSNotification *)notification;
-// http://stackoverflow.com/a/7183223/626078 
+
+/* 
+ http://stackoverflow.com/a/7183223/626078 
+*/
 - (void)moveTextViewForKeyboard:(NSNotification *)aNotification keyboardHidden:(BOOL)keyboardHidden;
 @end
 
@@ -53,6 +57,7 @@ const CGFloat threadCellRowHeight = 42.0f;
     if (self) {
         self.noteThreads = nil;
         self.styleApplicationService = [StyleApplicationService sharedSingleton];
+        _tagService = [[TagService alloc] init];
     }
     return self;  
 }
@@ -436,6 +441,10 @@ const CGFloat threadCellRowHeight = 42.0f;
     
     self.note.text             = self.noteTextView.text;
     self.note.lastModifiedDate = [NSDate date];
+    
+    NSArray *tagsInNote = [self->_tagService arrayOfTagsInText:self.note.text];
+    
+    [self->_tagService storeTags:tagsInNote withRelationship:self.note inManagedContext:managedObjectContext];
     
     NSError *error = nil;
     if (![managedObjectContext save:&error]) {

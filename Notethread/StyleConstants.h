@@ -10,3 +10,5 @@
 extern CGFloat const NoteThreadActionToolbarHeight;
 extern CGFloat const InputAccessoryViewForTextViewHeight;
 extern CGFloat const NoteTextViewLandscapeViewOffset;
+extern CGFloat const TagScrollViewHeight;
+extern CGFloat const TagButtonHeight;
