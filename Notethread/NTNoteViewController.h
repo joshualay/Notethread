@@ -10,21 +10,30 @@
 #import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
 
-@class NTWriteViewController;
-@class StyleApplicationService;
-@class TagService;
-
 #import "Note.h"
 #import "NTThreadWriteViewDelegate.h"
 #import "NTThreadViewDelegate.h"
+#import "JLButtonScroller.h"
+
+@class NTWriteViewController;
+@class StyleApplicationService;
+@class TagService;
+@class TagTracker;
 
 @interface NTNoteViewController : UIViewController 
                                                     <UITableViewDelegate, UITableViewDataSource, 
                                                      NTThreadWriteViewDelegate, NTThreadViewDelegate,
                                                      UITextViewDelegate,
                                                      MFMailComposeViewControllerDelegate,
-                                                     UIActionSheetDelegate> {
+                                                     UIActionSheetDelegate,
+                                                     JLButtonScrollerDelegate> 
+{
     TagService *_tagService;
+    TagTracker *_tagTracker;
+    NSArray *_matchedTags;
+    JLButtonScroller *_buttonScroller;
+    NSArray *_existingTags;
+    UIScrollView *_tagButtonScrollView;
 }
 
 @property (strong, nonatomic) Note *note;

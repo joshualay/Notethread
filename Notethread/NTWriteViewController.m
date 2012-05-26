@@ -233,6 +233,7 @@ CGFloat const NoteViewLandscapeSizeHeight = 90.0f;
     // Tidying up
     self.navigationBar.topItem.title = noteText;
     [self->_tagTracker setIsTracking:NO withTermOrNil:nil];
+    self->_matchedTags = nil;
     [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
 }
 

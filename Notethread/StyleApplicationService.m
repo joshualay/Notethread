@@ -124,7 +124,7 @@
 - (UILabel *)labelForTagScrollBarWithFrame:(CGRect)frame {
     UILabel *tagInfoLabel = [[UILabel alloc] initWithFrame:frame];
     tagInfoLabel.font = [UIFont systemFontOfSize:12.0f];
-    tagInfoLabel.textColor = [UIColor colorWithWhite:0.2f alpha:0.9f];
+    tagInfoLabel.textColor = [UIColor colorWithWhite:0.2f alpha:1.0f];
     tagInfoLabel.backgroundColor = [UIColor clearColor];
     tagInfoLabel.text = NSLocalizedString(@"# to start adding a tag", @"Adding tag");  
     
@@ -134,7 +134,7 @@
 - (UIScrollView *)scrollViewForTagAtPoint:(CGPoint)point width:(CGFloat)width {
     CGRect tagButtonScrollFrame = CGRectMake(point.x, point.y, width, 26.0f);
     UIScrollView *tagScrollView = [[UIScrollView alloc] initWithFrame:tagButtonScrollFrame];
-    tagScrollView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:0.5f];  
+    tagScrollView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];  
     return tagScrollView;
 }
 

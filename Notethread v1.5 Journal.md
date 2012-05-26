@@ -26,7 +26,13 @@ Issues:
 * When I was doing the previous tag detection I had incorrectly used the text that had been entered. This meant i'd be hitting out of bounds straight away. 
 * Resetting the current tag search term to nil meant that I was building an NSString like - @"(null)t". Can't match that!
 
+Shifted over the code I require to get the tag scroll view working. Really highlights how much duplicated code I have though. No design ideas yet on how to refactor.
 
+It works on first shot; however the the tag view appears to be sitting behind another view. It looks a bit off. Investigation required.
+
+It looked incorrect because I had adjusted the note text view. This meant that the tag scroll view looked too dark as I had its alpha as < 1. So against black it was going to look crap. 
+
+Looks like it's working well for now. I need to get to the search bar now. I really think the tags could use some design love though!
 
 
 ## 22/05/2012
