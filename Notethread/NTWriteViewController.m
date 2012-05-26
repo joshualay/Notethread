@@ -11,12 +11,11 @@
 #import "StyleApplicationService.h"
 #import "AlertApplicationService.h"
 #import "TagService.h"
+#import "TagTracker.h"
 #import "StyleConstants.h"
 #import "NSArray+Reverse.h"
 
 @interface NTWriteViewController(Private) 
-- (void)resetTagTrackingIsTracking:(BOOL)isTracking withTermOrNil:(NSString *)term;
-- (void)previousWordIsTagDetectionForText:(NSString *)text fromLocation:(NSUInteger)location;
 - (void)addButtonTagNameToText:(id)sender;
 - (void)setKeyboardNotificationsObservers;
 - (void)removeKeyboardNotificationObservers;
@@ -48,8 +47,8 @@ CGFloat const NoteViewLandscapeSizeHeight = 90.0f;
         _noteDepth  = threadDepth;
         _parentNote = note;
         _tagService = [[TagService alloc] init];
-        _isEnteringTag = NO;
         _styleApplicationService = [StyleApplicationService sharedSingleton];
+        _tagTracker = [[TagTracker alloc] initWithTagService:_tagService];
     }
     return self;
 }
@@ -188,45 +187,13 @@ CGFloat const NoteViewLandscapeSizeHeight = 90.0f;
     self.navigationBar.topItem.title = [NSString stringWithFormat:@"%@%@", textView.text, text];
     self.saveButton.enabled = ([textView.text length]) ? YES : NO;
     
-    // Back to the start
     if (range.location == 0 && [text isEqualToString:@""]) {
         self.navigationBar.topItem.title = @"";
         self.saveButton.enabled = NO;
-        
-        [self resetTagTrackingIsTracking:NO withTermOrNil:nil];
-        [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];    
-        
-        return YES;
     }
     
-    // deleting
-    if (range.length == 1) {
-        [self previousWordIsTagDetectionForText:textView.text fromLocation:range.location];
-        return YES;
-    }
-    
-    // Entering a #tag
-    if ([text isEqualToString:@"#"]) {
-        [self resetTagTrackingIsTracking:YES withTermOrNil:nil];
-  
-        [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
-        
-        return YES;
-    }
-    
-    // Currently entering a #tag
-    if (self->_isEnteringTag) {
-        if ([text isEqualToString:@" "]) {
-            [self resetTagTrackingIsTracking:NO withTermOrNil:nil];
-            [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
-            
-            return YES;
-        }
-
-        self->_currentTagSearch = [NSString stringWithFormat:@"%@%@", self->_currentTagSearch, text];
-        self->_matchedTags = [self->_tagService arrayOfMatchingTags:self->_currentTagSearch inArray:self->_existingTags];
-        [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
-    }
+    self->_matchedTags = [self->_tagTracker arrayOfMatchedTagsInEnteredText:text inTextView:textView inRange:range withExistingTags:self->_existingTags];
+    [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];    
     
     return YES;
 }
@@ -239,31 +206,12 @@ CGFloat const NoteViewLandscapeSizeHeight = 90.0f;
     NSUInteger location = textView.selectedRange.location;
     if (location == 0 || ![textView.text length])
         return;
-    
-    [self previousWordIsTagDetectionForText:textView.text fromLocation:location];
+
+    self->_matchedTags = [self->_tagTracker arrayOfMatchedTagsWhenPreviousWordIsTagInText:textView.text fromLocation:location withExistingTags:self->_existingTags];
+    [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
 }
 
 #pragma mark - (Private)
-- (void)resetTagTrackingIsTracking:(BOOL)isTracking withTermOrNil:(NSString *)term {
-    if (term == nil)
-        term = @"";
-    
-    self->_isEnteringTag = isTracking;
-    self->_matchedTags = nil;
-    self->_currentTagSearch = term;
-}
-
-- (void)previousWordIsTagDetectionForText:(NSString *)text fromLocation:(NSUInteger)location {
-    NSString *prevTag = [self->_tagService stringTagPreviousWordInText:text fromLocation:location];
-    BOOL isTracking = (prevTag == nil) ? NO : YES;
-    [self resetTagTrackingIsTracking:isTracking withTermOrNil:prevTag];
-    
-    if (prevTag != nil)
-        self->_matchedTags = [self->_tagService arrayOfMatchingTags:self->_currentTagSearch inArray:self->_existingTags];
-    
-    [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];    
-}
-
 - (void)addButtonTagNameToText:(id)sender {
     UIButton *button = (UIButton *)sender;
     
@@ -284,7 +232,7 @@ CGFloat const NoteViewLandscapeSizeHeight = 90.0f;
     
     // Tidying up
     self.navigationBar.topItem.title = noteText;
-    [self resetTagTrackingIsTracking:NO withTermOrNil:nil];
+    [self->_tagTracker setIsTracking:NO withTermOrNil:nil];
     [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
 }
 

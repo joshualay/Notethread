@@ -13,13 +13,13 @@
 @class NTWriteViewController;
 @class TagService;
 @class StyleApplicationService;
+@class TagTracker;
 
 @interface NTWriteViewController : UIViewController <UITextViewDelegate, JLButtonScrollerDelegate> {
+    TagTracker *_tagTracker;
     TagService *_tagService;
     NSArray *_existingTags;
     NSArray *_matchedTags;
-    NSString *_currentTagSearch;
-    BOOL _isEnteringTag;
     JLButtonScroller *_buttonScroller;
     UIScrollView *_tagButtonScrollView;
 }

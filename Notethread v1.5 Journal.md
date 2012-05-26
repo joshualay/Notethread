@@ -2,6 +2,33 @@
 
 The goal of this release is to attempt to get tags into play.
 
+## 26/05/2012
+
+Adding tags to the NoteViewController - i.e. When you're editing
+
+### Work log
+
+What's missing from the NTNoteViewController:
+ 
+  * Tag scroll view
+  * Tag state tracking
+  
+Going to attempt to pull out the tag tracking logic into another object. So it can maintain state in one place; rather than the view controller having ivars to worry about.
+
+Moved everything out in a TagTracker object. 
+
+Testing to see if it still runs as is.
+
+And… thats a no. Time to work out what has happened.
+
+Issues:
+
+* When I was doing the previous tag detection I had incorrectly used the text that had been entered. This meant i'd be hitting out of bounds straight away. 
+* Resetting the current tag search term to nil meant that I was building an NSString like - @"(null)t". Can't match that!
+
+
+
+
 ## 22/05/2012
 
 Refactoring the tag scroll view stuff so I can add it into NTNoteViewController.

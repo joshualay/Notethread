@@ -33,6 +33,7 @@
 		98190BD0149B72EC00E96126 /* NTNoteListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98190BCE149B72EC00E96126 /* NTNoteListViewController.xib */; };
 		983816A614C04FDD000A644C /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 983816A514C04FDD000A644C /* README.md */; };
 		98489949156B8F33008AF533 /* NSArray+Reverse.m in Sources */ = {isa = PBXBuildFile; fileRef = 98489948156B8F33008AF533 /* NSArray+Reverse.m */; };
+		9848994D15706C36008AF533 /* TagTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 9848994C15706C36008AF533 /* TagTracker.m */; };
 		986E806C147E3C06004645CF /* EmailContentApplicationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 986E806B147E3C06004645CF /* EmailContentApplicationService.m */; };
 		986E8072147E90EC004645CF /* EmailApplicationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 986E8071147E90EC004645CF /* EmailApplicationService.m */; };
 		986E8074147E98C5004645CF /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 986E8073147E98C5004645CF /* MessageUI.framework */; };
@@ -101,6 +102,8 @@
 		983816A514C04FDD000A644C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		98489947156B8F33008AF533 /* NSArray+Reverse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Reverse.h"; sourceTree = "<group>"; };
 		98489948156B8F33008AF533 /* NSArray+Reverse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Reverse.m"; sourceTree = "<group>"; };
+		9848994B15706C36008AF533 /* TagTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagTracker.h; sourceTree = "<group>"; };
+		9848994C15706C36008AF533 /* TagTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagTracker.m; sourceTree = "<group>"; };
 		986E806A147E3C06004645CF /* EmailContentApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailContentApplicationService.h; sourceTree = "<group>"; };
 		986E806B147E3C06004645CF /* EmailContentApplicationService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailContentApplicationService.m; sourceTree = "<group>"; };
 		986E8070147E90EC004645CF /* EmailApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailApplicationService.h; sourceTree = "<group>"; };
@@ -278,6 +281,8 @@
 			children = (
 				9815BD301548151400E450DA /* TagService.h */,
 				9815BD311548151400E450DA /* TagService.m */,
+				9848994B15706C36008AF533 /* TagTracker.h */,
+				9848994C15706C36008AF533 /* TagTracker.m */,
 				9871256E14713310007D56D6 /* StyleApplicationService.h */,
 				9871256F14713310007D56D6 /* StyleApplicationService.m */,
 				98EB1EF7147BBF160018FF08 /* AlertApplicationService.h */,
@@ -451,6 +456,7 @@
 				98190BCF149B72EC00E96126 /* NTNoteListViewController.m in Sources */,
 				9815BD321548151400E450DA /* TagService.m in Sources */,
 				98489949156B8F33008AF533 /* NSArray+Reverse.m in Sources */,
+				9848994D15706C36008AF533 /* TagTracker.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
