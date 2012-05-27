@@ -2,6 +2,18 @@
 
 The goal of this release is to attempt to get tags into play.
 
+## 27/05/2012
+
+**Cursor movement doesn't trigger previous tag searching!**
+
+### Work log
+
+NTNoteViewController was missing @delegate method: 
+	
+	- (void)textViewDidChangeSelection:(UITextView *)textView;
+	
+All is well now.
+
 ## 26/05/2012
 
 Adding tags to the NoteViewController - i.e. When you're editing

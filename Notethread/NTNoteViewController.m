@@ -496,6 +496,16 @@ const CGFloat threadCellRowHeight = 42.0f;
     self.navigationItem.rightBarButtonItem.enabled =  ([textView.text length]) ? YES : NO;
 }
 
+- (void)textViewDidChangeSelection:(UITextView *)textView {
+    NSUInteger location = textView.selectedRange.location;
+    if (location == 0 || ![textView.text length])
+        return;
+    
+    self->_matchedTags = [self->_tagTracker arrayOfMatchedTagsWhenPreviousWordIsTagInText:textView.text fromLocation:location withExistingTags:self->_existingTags];
+    [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
+}
+
+
 - (void)addButtonTagNameToText:(id)sender {
     UIButton *button = (UIButton *)sender;
     
