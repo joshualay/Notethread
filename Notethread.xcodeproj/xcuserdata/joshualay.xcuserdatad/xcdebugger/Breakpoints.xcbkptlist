@@ -20,19 +20,6 @@
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "Notethread/NTWriteViewController.m"
-         timestampString = "359792714.710823"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "206"
-         endingLineNumber = "206"
-         landmarkName = "-textViewDidChangeSelection:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
          filePath = "Notethread/TagService.m"
          timestampString = "359792974.494393"
          startingColumnNumber = "9223372036854775807"
@@ -40,6 +27,32 @@
          startingLineNumber = "64"
          endingLineNumber = "64"
          landmarkName = "-arrayOfMatchingTags:inArray:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Notethread/NTWriteViewController.m"
+         timestampString = "359990410.369366"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "156"
+         endingLineNumber = "156"
+         landmarkName = "-textView:shouldChangeTextInRange:replacementText:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Notethread/TagTracker.m"
+         timestampString = "359990498.62743"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "30"
+         endingLineNumber = "30"
+         landmarkName = "-arrayOfMatchedTagsInEnteredText:inTextView:inRange:withExistingTags:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

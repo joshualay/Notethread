@@ -2,6 +2,18 @@
 
 The goal of this release is to attempt to get tags into play.
 
+## 29/05/2012
+
+Refactoring. I'm duplicating too much code for the tags. I want to create a super class and then have the Write and NoteView controllers tack on what else they need to do; if required.
+
+### Work log
+
+Look at the header and see what is common.
+
+Slowly work out common code for the view lifecycle methods.
+
+Refactored for one class! NTWriteViewController. Next is going to be NTNoteViewController :)
+
 ## 27/05/2012
 
 **Cursor movement doesn't trigger previous tag searching!**

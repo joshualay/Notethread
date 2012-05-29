@@ -10,6 +10,7 @@
 #import "UserSettingsConstants.h"
 #import "StyleConstants.h"
 #import "NTWriteViewController.h"
+#import "Note.h"
 
 @interface StyleApplicationService()
 - (UIFont *)fontDefault;

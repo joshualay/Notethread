@@ -7,31 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Note.h"
-#import "JLButtonScroller.h"
+#import "NTNoteController.h"
 
-@class NTWriteViewController;
-@class TagService;
-@class StyleApplicationService;
-@class TagTracker;
+@class Note;
 
-@interface NTWriteViewController : UIViewController <UITextViewDelegate, JLButtonScrollerDelegate> {
-    TagTracker *_tagTracker;
-    TagService *_tagService;
-    NSArray *_existingTags;
-    NSArray *_matchedTags;
-    JLButtonScroller *_buttonScroller;
-    UIScrollView *_tagButtonScrollView;
-}
+@interface NTWriteViewController : NTNoteController 
 
-@property (strong, nonatomic) IBOutlet UITextView *noteTextView;
 @property (strong, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *saveButton;
 
 @property (assign, nonatomic) NSInteger noteDepth;
 @property (strong, nonatomic) Note *parentNote;
-
-@property (strong, nonatomic) StyleApplicationService *styleApplicationService;
 
 - (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note;
 
