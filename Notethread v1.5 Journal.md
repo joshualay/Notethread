@@ -2,6 +2,20 @@
 
 The goal of this release is to attempt to get tags into play.
 
+## 30/05/2012
+
+Refactor NTNoteViewController to use NTNoteController.
+
+### Work log
+
+Pretty simple. Just need to pluck out what I've pushed up into the super class and make sure it runs a-ok.
+
+All done and it works!
+
+Noticed an issue though. When typing a #tag and deleting some text and typing again. It doesn't check against the list of tags again!! 
+
+At least I only have to try out code in one place now: TagTracker. That's for tomorrow though. 
+
 ## 29/05/2012
 
 Refactoring. I'm duplicating too much code for the tags. I want to create a super class and then have the Write and NoteView controllers tack on what else they need to do; if required.

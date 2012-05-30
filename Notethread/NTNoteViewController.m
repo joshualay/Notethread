@@ -10,15 +10,11 @@
 
 #import "NTNoteViewController.h"
 #import "NTWriteViewController.h"
-#import "StyleApplicationService.h"
 #import "AlertApplicationService.h"
 #import "AppDelegate.h"
 #import "UserSettingsConstants.h"
 #import "StyleConstants.h"
 #import "EmailApplicationService.h"
-#import "TagService.h"
-#import "TagTracker.h"
-#import "JLButtonScroller.h"
 
 
 @interface NTNoteViewController()
@@ -33,12 +29,7 @@
 - (void)removeKeyboardNotificationObservers;
 - (void)keyboardWillAppear:(NSNotification *)notification;
 - (void)keyboardWillDisappear:(NSNotification *)notification;
-
-/* 
- http://stackoverflow.com/a/7183223/626078 
-*/
 - (void)moveTextViewForKeyboard:(NSNotification *)aNotification keyboardHidden:(BOOL)keyboardHidden;
-- (void)addButtonTagNameToText:(id)sender;
 @end
 
 @implementation NTNoteViewController
@@ -49,20 +40,14 @@
 @synthesize threadTableView = _threadTableView;
 @synthesize noteThreads     = _noteThreads;
 
-@synthesize styleApplicationService = _styleApplicationService;
-
 @synthesize backButton = _backButton;
 
 const CGFloat threadCellRowHeight = 42.0f;
 
 - (id)init {
-    self = [super initWithNibName:@"NTNoteViewController" bundle:nil];
+    self = [super init];
     if (self) {
         self.noteThreads = nil;
-        self.styleApplicationService = [StyleApplicationService sharedSingleton];
-        _tagService = [[TagService alloc] init];
-        _tagTracker = [[TagTracker alloc] initWithTagService:_tagService];
-        _buttonScroller = [[JLButtonScroller alloc] init];
     }
     return self;  
 }
@@ -160,8 +145,6 @@ const CGFloat threadCellRowHeight = 42.0f;
         
     self.title             = [self titleForNote:self.note.text];
     self.noteTextView.text = self.note.text;
-    self.noteTextView.keyboardType = UIKeyboardTypeTwitter;
-    self.noteTextView.inputAccessoryView = [self.styleApplicationService inputAccessoryViewForTextView:self.noteTextView];
     
     [self viewForNoteThread];
         
@@ -172,23 +155,6 @@ const CGFloat threadCellRowHeight = 42.0f;
     
     self.navigationItem.rightBarButtonItem = [self defaultRightBarButtonItem];
     self.backButton = self.navigationItem.leftBarButtonItem;
-    
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *managedObject = [appDelegate managedObjectContext];
-    self->_existingTags = nil;
-    self->_existingTags = [self->_tagService arrayExistingTagsIn:managedObject];
-    
-    self->_tagButtonScrollView = [self.styleApplicationService scrollViewForTagAtPoint:CGPointZero width:self.view.frame.size.width];
-    
-    CGRect tagLabelRect = CGRectMake(5.0f, 0, self.view.frame.size.width, self->_tagButtonScrollView.frame.size.height);
-    UILabel *tagInfoLabel = [self.styleApplicationService labelForTagScrollBarWithFrame:tagLabelRect];
-    
-    [self->_tagButtonScrollView addSubview:tagInfoLabel];
-    
-    self->_buttonScroller = [[JLButtonScroller alloc] init];
-    self->_buttonScroller.delegate = self;
-    
-    self.noteTextView.inputAccessoryView = self->_tagButtonScrollView;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -312,7 +278,7 @@ const CGFloat threadCellRowHeight = 42.0f;
 }
 
 - (void)viewForNoteThread {
-    self.view.backgroundColor = [self.styleApplicationService blackLinenColor];
+    self.view.backgroundColor = [self->_styleService blackLinenColor];
     
     NSInteger rowsDisplayed = [self rowsForThreadTableView];
     CGFloat threadTableHeightOffset = ((CGFloat)rowsDisplayed * threadCellRowHeight) + NoteThreadActionToolbarHeight;
@@ -327,8 +293,8 @@ const CGFloat threadCellRowHeight = 42.0f;
     self.threadTableView = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
     self.actionToolbar = [[UIToolbar alloc] initWithFrame:actionRect];
     
-    self.noteTextView.font         = [self.styleApplicationService fontNoteView];    
-    self.noteTextView.backgroundColor = [self.styleApplicationService paperColor];
+    self.noteTextView.font         = [self->_styleService fontNoteView];    
+    self.noteTextView.backgroundColor = [self->_styleService paperColor];
     
     self.actionToolbar.tintColor   = [UIColor lightGrayColor];
     self.actionToolbar.translucent = YES;
@@ -376,7 +342,7 @@ const CGFloat threadCellRowHeight = 42.0f;
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     Note *note = [self.noteThreads objectAtIndex:indexPath.row];
-    [self.styleApplicationService configureNoteTableCell:cell note:note];
+    [self->_styleService configureNoteTableCell:cell note:note];
     
     cell.contentView.backgroundColor   = [UIColor whiteColor];
 }
@@ -451,7 +417,7 @@ const CGFloat threadCellRowHeight = 42.0f;
     [self removeKeyboardNotificationObservers];
     NTWriteViewController *threadWriteViewController = [[NTWriteViewController alloc] initWithThreadDepth:threadDepthInteger parent:self.note];
     
-    [self.styleApplicationService modalStyleForThreadWriteView:threadWriteViewController];
+    [self->_styleService modalStyleForThreadWriteView:threadWriteViewController];
     
     [self presentModalViewController:threadWriteViewController animated:YES];    
 }
@@ -480,13 +446,13 @@ const CGFloat threadCellRowHeight = 42.0f;
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    
+    [super textView:textView shouldChangeTextInRange:range replacementText:text];
+    
     if (range.location == 0 && [text isEqualToString:@""]) {
         self.title = [self titleForNote:textView.text];
         self.navigationItem.rightBarButtonItem.enabled = NO;
-    }
-    
-    self->_matchedTags = [self->_tagTracker arrayOfMatchedTagsInEnteredText:text inTextView:textView inRange:range withExistingTags:self->_existingTags];
-    [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];    
+    }   
     
     return YES;
 }
@@ -496,67 +462,12 @@ const CGFloat threadCellRowHeight = 42.0f;
     self.navigationItem.rightBarButtonItem.enabled =  ([textView.text length]) ? YES : NO;
 }
 
-- (void)textViewDidChangeSelection:(UITextView *)textView {
-    NSUInteger location = textView.selectedRange.location;
-    if (location == 0 || ![textView.text length])
-        return;
-    
-    self->_matchedTags = [self->_tagTracker arrayOfMatchedTagsWhenPreviousWordIsTagInText:textView.text fromLocation:location withExistingTags:self->_existingTags];
-    [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
-}
-
-
+#pragma mark @selector
 - (void)addButtonTagNameToText:(id)sender {
-    UIButton *button = (UIButton *)sender;
-    
-    NSString *tagString = button.titleLabel.text;
-    NSUInteger insertionLocation = self.noteTextView.selectedRange.location;
-    
-    NSMutableString *noteText = [self.noteTextView.text mutableCopy];
-    
-    NSString *prevTag = [self->_tagService stringTagPreviousWordInText:noteText fromLocation:insertionLocation];
-    NSUInteger enteredLength = [prevTag length];
-    NSUInteger tagStartLocation = insertionLocation - enteredLength;
-    NSRange range = NSMakeRange(tagStartLocation, enteredLength);
-    
-    [noteText replaceCharactersInRange:range withString:tagString];
-    [noteText appendString:@" "];
-    
-    self.noteTextView.text = noteText;
-    
-    // Tidying up
-    [self setTitle:noteText];
-    [self->_tagTracker setIsTracking:NO withTermOrNil:nil];
-    self->_matchedTags = nil;
-    [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
+    [super addButtonTagNameToText:sender];
+    [self setTitle:self.noteTextView.text];
 }
 
-#pragma mark - JLButtonScrollerDelegate
-- (UIFont *)fontForButton {
-    return [self.styleApplicationService fontTagButton];
-}
-
-- (NSInteger)numberOfButtons {
-    return [self->_matchedTags count];
-}
-
-- (UIButton *)buttonForIndex:(NSInteger)position {
-    UIButton *tagButton = [self.styleApplicationService buttonForTagScrollView];
-    [tagButton addTarget:self action:@selector(addButtonTagNameToText:) forControlEvents:UIControlEventTouchUpInside];
-    return tagButton;
-}
-
-- (NSString *)stringForIndex:(NSInteger)position {
-    return [[self->_matchedTags objectAtIndex:position] name];
-}
-
-- (CGFloat)heightForScrollView {
-    return TagScrollViewHeight;
-}
-
-- (CGFloat)heightForButton {
-    return TagButtonHeight;
-}
 
 #pragma MFMailComposeViewControllerDelegate
 // Dismisses the email composition interface when users tap Cancel or Send. Proceeds to update the message field with the result of the operation.

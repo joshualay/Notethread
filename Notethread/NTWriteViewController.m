@@ -14,7 +14,6 @@
 #import "NSArray+Reverse.h"
 
 @interface NTWriteViewController(Private) 
-- (void)addButtonTagNameToText:(id)sender;
 - (void)setKeyboardNotificationsObservers;
 - (void)removeKeyboardNotificationObservers;
 - (void)keyboardWillAppear:(NSNotification *)notification;
@@ -171,7 +170,6 @@ CGFloat const NoteViewLandscapeSizeHeight = 90.0f;
 }
 
 
-#pragma mark - (Private)
 - (void)addButtonTagNameToText:(id)sender {
     [super addButtonTagNameToText:sender];
     self.navigationBar.topItem.title = self.noteTextView.text;
