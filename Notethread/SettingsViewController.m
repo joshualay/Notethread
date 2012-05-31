@@ -69,6 +69,11 @@ const NSInteger lastSection = 2;
     [self.threadRowSlider setValue:[threadRows floatValue]];
     
     self.fontFamilyName = [self.userDefaults stringForKey:FontFamilyNameDefaultKey];
+    
+    if (![self.userDefaults floatForKey:FontWritingSizeKey])
+        [self.userDefaults setFloat:FontNoteSizeNormal forKey:FontWritingSizeKey];
+    
+    self.fontSize = [self.userDefaults floatForKey:FontWritingSizeKey];
 }
 
 

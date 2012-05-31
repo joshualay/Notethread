@@ -2,6 +2,27 @@
 
 The goal of this release is to attempt to get tags into play.
 
+## 31/05/2012
+
+Adhoc late night coding.
+
+### Work log
+
+[Issue for Notethread (github)](https://github.com/joshualay/Notethread/issues/5)
+
+Going to try and resolve this issue for v1.5 release. I'm fairly sure I'm just not being smart somewhere in the code.
+
+Yep. Not being clever at all in my viewDidLoad method.
+
+When settings is loaded it sets @property's for each possible setting. These are loaded from the user defaults. The property for fontSize is not set! This means when the user saves it will store a null value. Hence empty notes are displayed.
+
+	if (![self.userDefaults floatForKey:FontWritingSizeKey])
+    	[self.userDefaults setFloat:FontNoteSizeNormal forKey:FontWritingSizeKey];
+    
+    self.fontSize = [self.userDefaults floatForKey:FontWritingSizeKey];
+    
+Problem fixed!
+
 ## 30/05/2012
 
 Refactor NTNoteViewController to use NTNoteController.
