@@ -33,8 +33,14 @@
     }
     
     // deleting
-    if (range.length == 1)
-        return [self arrayOfMatchedTagsWhenPreviousWordIsTagInText:textView.text fromLocation:range.location withExistingTags:existingTags];
+    if (range.length == 1) {
+        unichar c = [textView.text characterAtIndex:range.location];
+        NSString *charStr = [NSString stringWithFormat:@"%C", c];
+        
+        if ([charStr rangeOfCharacterFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].location == NSNotFound) {
+            return [self arrayOfMatchedTagsWhenPreviousWordIsTagInText:textView.text fromLocation:range.location withExistingTags:existingTags];
+        }
+    }
     
     // Entering a #tag
     if ([text isEqualToString:@"#"]) {

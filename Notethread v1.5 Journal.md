@@ -23,6 +23,28 @@ When settings is loaded it sets @property's for each possible setting. These are
     
 Problem fixed!
 
+From yesterday's notes I have an issue with tag tracking:
+
+> Noticed an issue though. When typing a #tag and deleting some text and typing again. It doesn't check against the list of tags again!! 
+
+The current logic works on the assumption that when you're deleting you are currently not in a tag. Only if you're going from deleting a space and the word before the space is a #tag. 
+
+Make it a bit smarter. I should only check if the previous word is a tag if I've just deleted a whitespace character. 
+
+    // deleting
+    if (range.length == 1) {
+        unichar c = [textView.text characterAtIndex:range.location];
+        NSString *charStr = [NSString stringWithFormat:@"%C", c];
+        
+        if ([charStr rangeOfCharacterFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].location == NSNotFound) {
+            return [self arrayOfMatchedTagsWhenPreviousWordIsTagInText:textView.text fromLocation:range.location withExistingTags:existingTags];
+        }
+    }
+
+Now I've added this condition; the logic following this will handle everything else.
+
+Another issue: When typing a single character after a #, deleting it and typing another character. Tags are not being matched. It only works if you type more than a couple of characters and delete till the character proceeding the # to see anything.
+
 ## 30/05/2012
 
 Refactor NTNoteViewController to use NTNoteController.
