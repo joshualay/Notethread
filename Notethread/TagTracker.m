@@ -56,7 +56,7 @@
         }
         
         self->_currentTagSearch = [NSString stringWithFormat:@"%@%@", self->_currentTagSearch, text];
-        return [self.tagService arrayOfMatchingTags:self.currentTagSearch inArray:existingTags];
+        return [self.tagService arrayOfMatchingTagsForTerm:self.currentTagSearch inExistingTags:existingTags];
     }
     
     return nil;
@@ -68,9 +68,18 @@
     [self setIsTracking:isTracking withTermOrNil:prevTag];
     
     if (prevTag != nil)
-        return [self.tagService arrayOfMatchingTags:self->_currentTagSearch inArray:existingTags];
+        return [self.tagService arrayOfMatchingTagsForTerm:self->_currentTagSearch inExistingTags:existingTags];
     
     return nil;
+}
+
+- (NSArray *)arrayOfMatchedTagsWhenCurrentWordATagInText:(NSString *)text fromLocation:(NSUInteger)location withExistingTags:(NSArray *)existingTags {
+    NSString *tag = [self->_tagService stringTagCurrentWordInText:text fromLocation:location];
+    if (tag == nil) return nil;
+    
+    [self setIsTracking:YES withTermOrNil:tag];
+    
+    return [self->_tagService arrayOfMatchingTagsForTerm:tag inExistingTags:existingTags];
 }
 
 - (void)setIsTracking:(BOOL)isTracking withTermOrNil:(NSString *)term {

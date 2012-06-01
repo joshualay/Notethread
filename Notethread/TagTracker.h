@@ -18,7 +18,7 @@
 
 - (id)initWithTagService:(TagService *)tagService;
 
-
+- (NSArray *)arrayOfMatchedTagsWhenCurrentWordATagInText:(NSString *)text fromLocation:(NSUInteger)location withExistingTags:(NSArray *)existingTags;
 - (NSArray *)arrayOfMatchedTagsInEnteredText:(NSString *)text inTextView:(UITextView *)textView inRange:(NSRange)range withExistingTags:(NSArray *)existingTags;
 - (NSArray *)arrayOfMatchedTagsWhenPreviousWordIsTagInText:(NSString *)text fromLocation:(NSUInteger)location withExistingTags:(NSArray *)existingTags;
 - (void)setIsTracking:(BOOL)isTracking withTermOrNil:(NSString *)term;

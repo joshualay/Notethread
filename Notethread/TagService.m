@@ -9,19 +9,10 @@
 #import "TagService.h"
 #import "Tag.h"
 #import "Note.h"
+#include "NSArray+Reverse.h"
 
-@implementation NSArray (reverse)
-
-- (NSArray *)reverseArray {
-    NSMutableArray *array =
-    [NSMutableArray arrayWithCapacity:[self count]];
-    NSEnumerator *enumerator = [self reverseObjectEnumerator];
-    for (id element in enumerator) {
-        [array addObject:element];
-    }
-    return array;
-}
-
+@interface TagService ()
+- (NSString *)stringWordTillPreviousSpaceInText:(NSString *)text fromLocation:(NSUInteger)location;
 @end
 
 @implementation TagService
@@ -50,7 +41,7 @@
     return nil;
 }
 
-- (NSArray *)arrayOfMatchingTags:(NSString *)term inArray:(NSArray *)existingTags {
+- (NSArray *)arrayOfMatchingTagsForTerm:(NSString *)term inExistingTags:(NSArray *)existingTags {
     
     NSMutableArray *matchedExistingTags = [[NSMutableArray alloc] initWithCapacity:[existingTags count]];
     for (Tag *tag in existingTags) {
@@ -134,6 +125,28 @@
 }
 
 - (NSString *)stringTagPreviousWordInText:(NSString *)text fromLocation:(NSUInteger)location {
+    NSString *prevWord = [self stringWordTillPreviousSpaceInText:text fromLocation:location];
+    
+    NSArray *tags = [self arrayOfTagsInText:prevWord];
+    if ([tags count])
+        return [tags objectAtIndex:0];
+    
+    return nil;
+}
+
+- (NSString *)stringTagCurrentWordInText:(NSString *)text fromLocation:(NSUInteger)location {
+    NSString *prevWord = [self stringWordTillPreviousSpaceInText:text fromLocation:location];
+    NSArray *matched = [self arrayOfTagsInText:prevWord];
+    
+    if ([matched count])
+        return [matched lastObject];
+    
+    return nil;
+}
+
+
+#pragma mark - Private
+- (NSString *)stringWordTillPreviousSpaceInText:(NSString *)text fromLocation:(NSUInteger)location {
     BOOL isSpaceCharacter = NO;
     
     NSMutableArray *foundCharacters = [[NSMutableArray alloc] init];
@@ -159,11 +172,7 @@
         [prevWord appendString:str];
     }
     
-    NSArray *tags = [self arrayOfTagsInText:prevWord];
-    if ([tags count])
-        return [tags objectAtIndex:0];
-    
-    return nil;
+    return prevWord;
 }
 
 @end

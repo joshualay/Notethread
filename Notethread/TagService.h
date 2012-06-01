@@ -23,7 +23,8 @@
 - (UIFont *)fontTag;
 - (void)storeTags:(NSArray *)tags withRelationship:(Note *)note inManagedContext:(NSManagedObjectContext *)managedObjectContext;
 - (NSArray *)arrayOfTagsInText:(NSString *)text;
-- (NSArray *)arrayOfMatchingTags:(NSString *)term inArray:(NSArray *)existingTags;
+- (NSArray *)arrayOfMatchingTagsForTerm:(NSString *)term inExistingTags:(NSArray *)existingTags;
 - (NSString *)stringTagPreviousWordInText:(NSString *)text fromLocation:(NSUInteger)location;
+- (NSString *)stringTagCurrentWordInText:(NSString *)text fromLocation:(NSUInteger)location;
 
 @end

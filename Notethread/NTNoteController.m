@@ -95,7 +95,13 @@
     if (location == 0 || ![textView.text length])
         return;
     
-    self->_matchedTags = [self->_tagTracker arrayOfMatchedTagsWhenPreviousWordIsTagInText:textView.text fromLocation:location withExistingTags:self->_existingTags];
+    NSArray *tagMatchesForCurrentWord = [self->_tagTracker arrayOfMatchedTagsWhenCurrentWordATagInText:textView.text fromLocation:location withExistingTags:self->_existingTags];
+    
+    if (tagMatchesForCurrentWord != nil)
+        self->_matchedTags = tagMatchesForCurrentWord;
+    else
+        self->_matchedTags = [self->_tagTracker arrayOfMatchedTagsWhenPreviousWordIsTagInText:textView.text fromLocation:location withExistingTags:self->_existingTags];
+    
     [self->_buttonScroller addButtonsForContentAreaIn:self->_tagButtonScrollView];
 }
 

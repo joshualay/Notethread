@@ -10,4 +10,6 @@
 
 @interface NSArray (Reverse)
 
+- (NSArray *)reverseArray;
+
 @end

@@ -2,6 +2,64 @@
 
 The goal of this release is to attempt to get tags into play.
 
+## 1/06/2012
+
+More work on getting tags to function right.
+
+### Work log
+
+Check if the currently selected word is a tag or not.
+
+Noticed that I didn't declare the method in my header for NSArray (Reverse). That kind of makes it impossible to use.
+
+In order to check if the current word is a tag or not I needed to fetch it. Luckily I have code to check if the previous word is a tag or not. All I had to do was refactor part of that method and reuse it.
+
+		- (NSString *)stringTagCurrentWordInText:(NSString *)text fromLocation:(NSUInteger)location {
+	    NSString *prevWord = [self stringWordTillPreviousSpaceInText:text fromLocation:location];
+	    NSArray *matched = [self arrayOfTagsInText:prevWord];
+	    
+	    if ([matched count])
+	        return [matched lastObject];
+	    
+	    return nil;
+	}
+	
+	
+	#pragma mark - Private
+	- (NSString *)stringWordTillPreviousSpaceInText:(NSString *)text fromLocation:(NSUInteger)location {
+	    BOOL isSpaceCharacter = NO;
+	    
+	    NSMutableArray *foundCharacters = [[NSMutableArray alloc] init];
+	    
+	    // Start after
+	    location = location - 1;
+	    while (!isSpaceCharacter) {
+	        unichar prevChar = [text characterAtIndex:location];
+	        NSString *prevCharStr = [NSString stringWithFormat:@"%C", prevChar];
+	        
+	        if ([prevCharStr rangeOfCharacterFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].location != NSNotFound) {
+	            isSpaceCharacter = YES;
+	            break;
+	        }
+	        
+	        [foundCharacters addObject:prevCharStr];
+	        location--;
+	    }
+	    
+	    NSArray *orderedFoundCharacters = [foundCharacters reverseArray];
+	    NSMutableString *prevWord = [[NSMutableString alloc] initWithCapacity:[orderedFoundCharacters count]];
+	    for (NSString *str in orderedFoundCharacters) {
+	        [prevWord appendString:str];
+	    }
+	    
+	    return prevWord;
+	}
+	
+	
+Pretty happy. All the refactoring meant I only had a small area of change in order to get this functionality in. Then it worked for the NTWriteView and NoteViewController. 
+
+Next session will be check list writing.
+
 ## 31/05/2012
 
 Adhoc late night coding.

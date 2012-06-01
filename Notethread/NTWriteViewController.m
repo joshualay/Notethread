@@ -11,7 +11,6 @@
 #import "AlertApplicationService.h"
 #import "Note.h"
 #import "StyleConstants.h"
-#import "NSArray+Reverse.h"
 
 @interface NTWriteViewController(Private) 
 - (void)setKeyboardNotificationsObservers;
