@@ -25,6 +25,7 @@
 - (NSMutableArray *)arrayOfNotesMatchingSearch:(NSString *)search inNote:(Note *)note;
 - (NSMutableArray *)arrayOfNotesThatHaveTag:(NSString *)search inNote:(Note *)note;
 - (BOOL)isSearch:(NSString *)term inString:(NSString *)searchingIn;
+- (BOOL)isSearch:(NSString *)term matchesFromStartString:(NSString *)searchingIn;
 - (BOOL)tagsInNote:(Note *)note haveSearchTerm:(NSString *)search;
 @end
 
@@ -380,8 +381,12 @@ const CGFloat   cellHeight         = 51.0f;
 }
 
 - (BOOL)tagsInNote:(Note *)note haveSearchTerm:(NSString *)search {
+    if (![search length])
+        return NO;
+    
+    search = [[search substringWithRange:NSMakeRange(0, [search length])] stringByReplacingOccurrencesOfString:@"#" withString:@""];
     for (Tag *tag in note.tags) {
-        if ([self isSearch:search inString:tag.name])
+        if ([self isSearch:search matchesFromStartString:tag.name])
             return YES;
     }    
     
@@ -391,6 +396,11 @@ const CGFloat   cellHeight         = 51.0f;
 - (BOOL)isSearch:(NSString *)term inString:(NSString *)searchingIn {
     NSRange result = [searchingIn rangeOfString:term options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
     return result.location != NSNotFound;
+}
+
+- (BOOL)isSearch:(NSString *)term matchesFromStartString:(NSString *)searchingIn {
+    NSRange result = [searchingIn rangeOfString:term options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+    return result.location == 0;
 }
 
 #pragma mark -

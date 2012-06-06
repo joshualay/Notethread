@@ -57,6 +57,28 @@ Like magic we have:
 	- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
 	    [self filterContentForSearchText:searchBar.text scope:[[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
 	}
+	
+I am concerned if users will search by tag and use the # symbol. I'll be on the safe side and filter that out.
+
+Need to fix up searching for tags. Want to be exact. That is; I need to match the search term and the tag has to start with that search string. 
+
+Since we can search for a rangeOfString using NSRange.location == 0 is the best indicator.
+
+	- (BOOL)isSearch:(NSString *)term matchesFromStartString:(NSString *)searchingIn {
+	    NSRange result = [searchingIn rangeOfString:term options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+	    return result.location == 0;
+	}
+
+So if we had the tags:
+
+* todo
+* taco
+* tumtum
+
+A search term of **odo** would not match anything as none of the tag names begin with **o**. This is why I'm using:
+
+	result.location == 0;
+
 
 ## 3/06/2012
 
