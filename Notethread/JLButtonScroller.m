@@ -49,7 +49,7 @@
         if ([delegate respondsToSelector:@selector(heightForButton)])
             heightForButton = [delegate heightForButton];
         
-        button.frame = CGRectMake(xOffset, 2, stringWidth, heightForButton);
+        button.frame = CGRectMake(xOffset, 3, stringWidth, heightForButton);
         
         [button setTitle:text forState:UIControlStateNormal];
         [button setTitle:text forState:UIControlStateHighlighted];

@@ -10,6 +10,7 @@
 
 #import "NTNoteViewController.h"
 #import "Note.h"
+#import "Tag.h"
 #import "NTWriteViewController.h"
 #import "StyleApplicationService.h"
 #import "AlertApplicationService.h"
@@ -22,7 +23,9 @@
 - (IBAction)displaySettingsView;
 - (void)initFilteredListContentArrayCapacity;
 - (NSMutableArray *)arrayOfNotesMatchingSearch:(NSString *)search inNote:(Note *)note;
+- (NSMutableArray *)arrayOfNotesThatHaveTag:(NSString *)search inNote:(Note *)note;
 - (BOOL)isSearch:(NSString *)term inString:(NSString *)searchingIn;
+- (BOOL)tagsInNote:(Note *)note haveSearchTerm:(NSString *)search;
 @end
 
 @implementation NTNoteListViewController
@@ -326,14 +329,22 @@ const CGFloat   cellHeight         = 51.0f;
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
 {
 	[self.filteredListContent removeAllObjects]; // First clear the filtered array.
-	NSLog(@"scope - %@", scope);
     NSArray *listContent = [self.fetchedResultsController fetchedObjects];
 	for (Note *note in listContent)
 	{
-        NSMutableArray *result = [self arrayOfNotesMatchingSearch:searchText inNote:note];
+        NSMutableArray *result = nil;
+        if ([[scope lowercaseString] isEqualToString:@"tags"])
+            result = [self arrayOfNotesThatHaveTag:searchText inNote:note];
+        else
+            result = [self arrayOfNotesMatchingSearch:searchText inNote:note];
+        
         if ([result count])
             [self.filteredListContent addObjectsFromArray:result];
 	}
+}
+
+- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
+    [self filterContentForSearchText:searchBar.text scope:[[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
 }
 
 - (NSMutableArray *)arrayOfNotesMatchingSearch:(NSString *)search inNote:(Note *)note {
@@ -350,6 +361,31 @@ const CGFloat   cellHeight         = 51.0f;
     }
     
     return matchResults;
+}
+
+- (NSMutableArray *)arrayOfNotesThatHaveTag:(NSString *)search inNote:(Note *)note {
+    NSMutableArray *matchResults = [[NSMutableArray alloc] init];
+    if ([note.tags count] && [self tagsInNote:note haveSearchTerm:search]) {
+        [matchResults addObject:note];
+    }
+    
+    if ([note.noteThreads count]) {
+        for (Note *childNote in note.noteThreads) {
+            if ([self tagsInNote:childNote haveSearchTerm:search])
+                [matchResults addObject:note];
+        }
+    }
+    
+    return matchResults;    
+}
+
+- (BOOL)tagsInNote:(Note *)note haveSearchTerm:(NSString *)search {
+    for (Tag *tag in note.tags) {
+        if ([self isSearch:search inString:tag.name])
+            return YES;
+    }    
+    
+    return NO;
 }
 
 - (BOOL)isSearch:(NSString *)term inString:(NSString *)searchingIn {

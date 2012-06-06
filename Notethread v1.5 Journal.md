@@ -2,6 +2,70 @@
 
 The goal of this release is to attempt to get tags into play.
 
+## 6/06/2012
+
+Search bar working with tags in scope.
+
+### Work log
+
+I left this one hanging a while ago. Kind of forgotten what happens.
+
+Here we go:
+
+	- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
+
+The delegate will hit here. Now that I care about scope I'll just need to check to see if it's @"tags" or not.
+
+I already collect all notes to do my search. I will just drill down each note and check its tags relationship to see if it has the search term.
+
+	- (NSMutableArray *)arrayOfNotesThatHaveTag:(NSString *)search inNote:(Note *)note {
+	    NSMutableArray *matchResults = [[NSMutableArray alloc] init];
+	    if ([note.tags count] && [self tagsInNote:note haveSearchTerm:search]) {
+	        [matchResults addObject:note];
+	    }
+	    
+	    if ([note.noteThreads count]) {
+	        for (Note *childNote in note.noteThreads) {
+	            if ([self tagsInNote:childNote haveSearchTerm:search])
+	                [matchResults addObject:note];
+	        }
+	    }
+	    
+	    return matchResults;    
+	}
+	
+	- (BOOL)tagsInNote:(Note *)note haveSearchTerm:(NSString *)search {
+	    for (Tag *tag in note.tags) {
+	        if ([self isSearch:search inString:tag.name])
+	            return YES;
+	    }    
+	    
+	    return NO;
+	}
+	
+Search works!
+
+When switching between the scopes it doesn't update though!
+
+Here we are:
+
+	// UISearchBarDelegate
+	- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope
+	
+Like magic we have:
+
+	- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
+	    [self filterContentForSearchText:searchBar.text scope:[[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
+	}
+
+## 3/06/2012
+
+Not happy with the look and feel of the tags. Going to experiment a little.
+
+* Tag button in scroll view to tap
+* Sliding tags in and out
+* Make it look like a toolbar - or use a UIToolbar?
+
 ## 1/06/2012
 
 More work on getting tags to function right.
