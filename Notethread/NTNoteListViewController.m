@@ -90,7 +90,6 @@ const CGFloat   cellHeight         = 51.0f;
 
     self.tableView.backgroundColor = [self.styleApplicationService paperColor];    
     
-    [self.searchDisplayController.searchBar setShowsScopeBar:YES];
     [self.tableView setContentOffset:CGPointMake(0,self.searchDisplayController.searchBar.frame.size.height)];    
     
     self.searchDisplayController.searchBar.scopeButtonTitles = [NSArray arrayWithObjects:@"All", @"Tags", nil];
