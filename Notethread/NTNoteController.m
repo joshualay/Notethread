@@ -14,6 +14,10 @@
 #import "StyleApplicationService.h"
 #import "StyleConstants.h"
 
+@interface NTNoteController() 
+- (IBAction)addTagToNote:(id)sender;
+@end
+
 @implementation NTNoteController
 
 @synthesize noteTextView=_noteTextView;
@@ -37,7 +41,7 @@
     
     self.noteTextView.font = [self->_styleService fontNoteWrite];
     self.noteTextView.inputAccessoryView = [self->_styleService inputAccessoryViewForTextView:self.noteTextView];
-    self.noteTextView.keyboardType = UIKeyboardTypeTwitter;
+    self.noteTextView.keyboardType = UIKeyboardTypeDefault;
     
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSManagedObjectContext *managedObject = [appDelegate managedObjectContext];
@@ -45,8 +49,22 @@
     self->_existingTags = [self->_tagService arrayExistingTagsIn:managedObject];
     self->_tagButtonScrollView = [self->_styleService scrollViewForTagAtPoint:CGPointZero width:self.view.frame.size.width];
 
+    UIButton *addTagButton = [[UIButton alloc] initWithFrame:CGRectMake(5.0f, 2.0f, 30.0f, 22.0f)];
+    addTagButton.backgroundColor = [UIColor darkGrayColor];
+    addTagButton.titleLabel.font = [UIFont fontWithName:@"Courier-New-Bold" size:15.0f];
+    [addTagButton setTitle:@" # " forState:UIControlStateNormal];
+    [addTagButton setTintColor:[UIColor blackColor]];
+
+    addTagButton.reversesTitleShadowWhenHighlighted = YES;
+    
+    [addTagButton addTarget:self action:@selector(addTagToNote:) forControlEvents:UIControlEventTouchUpInside];
+    
     CGRect tagLabelRect = CGRectMake(5.0f, 0, self.view.frame.size.width, self->_tagButtonScrollView.frame.size.height);
     UILabel *tagInfoLabel = [self->_styleService labelForTagScrollBarWithFrame:tagLabelRect];
+    [tagInfoLabel addSubview:addTagButton];
+    [tagInfoLabel setUserInteractionEnabled:YES];
+    
+    [tagInfoLabel addSubview:addTagButton];
     
     [self->_tagButtonScrollView addSubview:tagInfoLabel];
     
@@ -56,6 +74,10 @@
     self.noteTextView.inputAccessoryView = self->_tagButtonScrollView;
 }
 
+- (IBAction)addTagToNote:(id)sender {
+    self.noteTextView.text = [NSString stringWithFormat:@"%@#", self.noteTextView.text];
+    [self->_tagTracker setIsTracking:YES withTermOrNil:nil];
+}
 
 - (void)addButtonTagNameToText:(id)sender {
     UIButton *button = (UIButton *)sender;

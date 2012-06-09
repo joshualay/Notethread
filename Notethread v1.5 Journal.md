@@ -21,7 +21,23 @@ Being smart again and using the keyboard frame returned from the notification.
     CGRect keyboardFrame;
     [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardFrame];
 
+Testing on my phone. Finally came to the realisation that using the Twitter keyboard results in the return key being two taps away. It's the in secondary keyboard. 
 
+I don't like that experience.
+
+Moving back to the default keyboard. Going to have to add a button to add the tag quickly.
+
+Adding a gesture recogniser to the label itself.
+
+    UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addTagToNote:)];
+    [tagInfoLabel addGestureRecognizer:gesture];
+    [tagInfoLabel setUserInteractionEnabled:YES];
+    
+Actually, it doesn't feel or look right. Going to overlay with a button instead.
+
+Playing around with the button layout. Doesn't look right :(
+
+**Issue: Tag search doesn't seem to go to the child note. Could be how i'm saving them.. but i doubt it.**
 
 ## 6/06/2012
 

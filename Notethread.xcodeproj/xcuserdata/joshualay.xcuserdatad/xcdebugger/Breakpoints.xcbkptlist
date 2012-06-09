@@ -8,11 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Notethread/NTNoteListViewController.m"
-         timestampString = "360682814.133074"
+         timestampString = "360931350.116114"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "397"
-         endingLineNumber = "397"
+         startingLineNumber = "396"
+         endingLineNumber = "396"
          landmarkName = "-isSearch:inString:"
          landmarkType = "5">
       </FileBreakpoint>
