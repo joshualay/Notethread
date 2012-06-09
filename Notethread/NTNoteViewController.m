@@ -44,6 +44,7 @@
 
 const CGFloat threadCellRowHeight = 42.0f;
 
+
 - (id)init {
     self = [super init];
     if (self) {
@@ -92,6 +93,8 @@ const CGFloat threadCellRowHeight = 42.0f;
     [UIView setAnimationCurve:animationCurve];
     
     CGRect newFrame = self.noteTextView.frame;
+    
+    CGSize screenSize = [[UIScreen mainScreen] bounds].size;
 
     CGFloat kbOriginY      = keyboardEndFrame.origin.y;
     if (keyboardHidden) {
@@ -111,7 +114,8 @@ const CGFloat threadCellRowHeight = 42.0f;
         newFrame.size.height = noteViewHeight;
     }
     else {
-        newFrame.size   = CGSizeMake(480.0f, 110.0f - self.noteTextView.inputAccessoryView.frame.size.height);
+        CGFloat landscapeHeight = 0.34 * screenSize.width;
+        newFrame.size   = CGSizeMake(screenSize.height, landscapeHeight - self.noteTextView.inputAccessoryView.frame.size.height);
     }
         
     self.noteTextView.frame = newFrame;

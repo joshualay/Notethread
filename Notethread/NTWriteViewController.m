@@ -26,12 +26,15 @@
 @synthesize noteDepth     = _noteDepth;
 @synthesize parentNote    = _parentNote;
 
+
+#define CGRECTSCREEN [[UIScreen mainScreen] bounds]
+#define VIEWHEIGHT CGRECTSCREEN.size.height
+#define VIEWWIDTH CGRECTSCREEN.size.width
+
+#define PORTRAIT_WIDTH 0.97 * VIEWWIDTH
+
 // For the note view sizings
 CGFloat const NoteViewOriginY = 49.0f;
-CGFloat const NoteViewPortraitSizeWidth = 310.0f;
-CGFloat const NoteViewPortraitSizeHeight = 196.0f;
-CGFloat const NoteViewLandscapeSizeWidth = 480.0f;
-CGFloat const NoteViewLandscapeSizeHeight = 90.0f;
 
 
 - (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note {
@@ -129,15 +132,20 @@ CGFloat const NoteViewLandscapeSizeHeight = 90.0f;
     [UIView setAnimationDuration:animationDuration];
     [UIView setAnimationCurve:animationCurve];
     
+    CGRect keyboardFrame;
+    [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardFrame];
+        
     CGRect newFrame = self.noteTextView.frame;
-
+    
     CGFloat scrollViewHeight = self->_tagButtonScrollView.frame.size.height;
     newFrame.origin.y = NoteViewOriginY;
     if (UIDeviceOrientationIsPortrait(self.interfaceOrientation)) {
-        newFrame.size = CGSizeMake(NoteViewPortraitSizeWidth, NoteViewPortraitSizeHeight - scrollViewHeight);
+        CGFloat height = VIEWHEIGHT - keyboardFrame.size.height - self.navigationBar.frame.size.height - scrollViewHeight;
+        newFrame.size = CGSizeMake(PORTRAIT_WIDTH, height);
     }
     else {
-        newFrame.size = CGSizeMake(NoteViewLandscapeSizeWidth, NoteViewLandscapeSizeHeight - scrollViewHeight);
+        CGFloat height = VIEWWIDTH - keyboardFrame.size.width - self.navigationBar.frame.size.height - scrollViewHeight;
+        newFrame.size = CGSizeMake(VIEWHEIGHT, height);
     }
     self.noteTextView.frame = newFrame;
         

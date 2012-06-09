@@ -127,7 +127,7 @@
     tagInfoLabel.font = [UIFont systemFontOfSize:12.0f];
     tagInfoLabel.textColor = [UIColor colorWithWhite:0.2f alpha:1.0f];
     tagInfoLabel.backgroundColor = [UIColor clearColor];
-    tagInfoLabel.text = NSLocalizedString(@"# to start adding a tag", @"Adding tag");  
+    tagInfoLabel.text = NSLocalizedString(@"Type # to save a tag in your note", @"Adding tag");  
     
     return tagInfoLabel;
 }

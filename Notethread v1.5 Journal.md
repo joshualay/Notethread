@@ -2,6 +2,27 @@
 
 The goal of this release is to attempt to get tags into play.
 
+## 9/06/2012
+
+I want to make the view dimensions a lot less hardcoded. Work off percentages instead and use proper methods to get the view size.
+
+### Work log
+
+[Ahhh UIScreen](http://stackoverflow.com/a/5678199/626078)
+
+Lets write some sweet macro's:
+
+	#define CGRECTSCREEN [[UIScreen mainScreen] bounds]
+	#define VIEWHEIGHT CGRECTSCREEN.size.height
+	#define VIEWWIDTH CGRECTSCREEN.size.width
+
+Being smart again and using the keyboard frame returned from the notification.
+
+    CGRect keyboardFrame;
+    [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardFrame];
+
+
+
 ## 6/06/2012
 
 Search bar working with tags in scope.
