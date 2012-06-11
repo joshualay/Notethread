@@ -107,6 +107,7 @@
 		9848994C15706C36008AF533 /* TagTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagTracker.m; sourceTree = "<group>"; };
 		9848995A1574FE41008AF533 /* NTNoteController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NTNoteController.h; sourceTree = "<group>"; };
 		9848995B1574FE41008AF533 /* NTNoteController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NTNoteController.m; sourceTree = "<group>"; };
+		9848996415863E63008AF533 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		986E806A147E3C06004645CF /* EmailContentApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailContentApplicationService.h; sourceTree = "<group>"; };
 		986E806B147E3C06004645CF /* EmailContentApplicationService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailContentApplicationService.m; sourceTree = "<group>"; };
 		986E8070147E90EC004645CF /* EmailApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailApplicationService.h; sourceTree = "<group>"; };
@@ -183,6 +184,7 @@
 		981821341468026D00DBC1D2 = {
 			isa = PBXGroup;
 			children = (
+				9848996415863E63008AF533 /* QuartzCore.framework */,
 				9815BD2A154812B500E450DA /* Notethread v1.5 Journal.md */,
 				98F911371482066600D421B0 /* icon114x114.png */,
 				98F91134148203FC00D421B0 /* icon57x57.png */,

@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Joshua Lay. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
+
 #import "NTNoteController.h"
 
 #import "AppDelegate.h"
@@ -49,13 +51,10 @@
     self->_existingTags = [self->_tagService arrayExistingTagsIn:managedObject];
     self->_tagButtonScrollView = [self->_styleService scrollViewForTagAtPoint:CGPointZero width:self.view.frame.size.width];
 
-    UIButton *addTagButton = [[UIButton alloc] initWithFrame:CGRectMake(5.0f, 2.0f, 30.0f, 26.0f)];
-    addTagButton.backgroundColor = [UIColor darkGrayColor];
+    UIButton *addTagButton = [self->_styleService customUIButtonStyle];
+    addTagButton.frame =  CGRectMake(5.0f, 2.0f, 30.0f, 26.0f);
     addTagButton.titleLabel.font = [UIFont fontWithName:@"Courier-New-Bold" size:17.0f];
     [addTagButton setTitle:@" # " forState:UIControlStateNormal];
-    [addTagButton setTintColor:[UIColor blackColor]];
-
-    addTagButton.reversesTitleShadowWhenHighlighted = YES;
     
     [addTagButton addTarget:self action:@selector(addTagToNote:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -166,7 +165,7 @@
 }
 
 - (UIButton *)buttonForIndex:(NSInteger)position {
-    UIButton *tagButton = [self->_styleService buttonForTagScrollView];
+    UIButton *tagButton = [self->_styleService customUIButtonStyle];
     [tagButton addTarget:self action:@selector(addButtonTagNameToText:) forControlEvents:UIControlEventTouchUpInside];
     return tagButton;
 }

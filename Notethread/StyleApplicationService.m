@@ -6,6 +6,8 @@
 //  Copyright (c) 2011 Joshua Lay. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
+
 #import "StyleApplicationService.h"
 #import "UserSettingsConstants.h"
 #import "StyleConstants.h"
@@ -143,16 +145,24 @@
     return [UIFont systemFontOfSize:14.0f];
 }
 
-- (UIButton *)buttonForTagScrollView {
-    UIButton *tagButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+
+- (UIButton *)customUIButtonStyle {
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     
-    [tagButton setTintColor:[UIColor lightTextColor]];
-    [tagButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateHighlighted];
+    [button setTintColor:[UIColor lightTextColor]];
     
-    [tagButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-    [tagButton setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
     
-    return tagButton;
+    [button setTitleShadowColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    [button setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    
+    button.backgroundColor = [UIColor darkGrayColor];
+    button.layer.borderColor = [UIColor grayColor].CGColor;
+    button.layer.borderWidth = 0.8f;
+    button.layer.cornerRadius = 3.0f;
+    
+    return button;
 }
 
 @end

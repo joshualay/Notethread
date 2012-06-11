@@ -34,6 +34,6 @@
 - (UILabel *)labelForTagScrollBarWithFrame:(CGRect)frame;
 - (UIScrollView *)scrollViewForTagAtPoint:(CGPoint)point width:(CGFloat)width;
 - (UIFont *)fontTagButton;
-- (UIButton *)buttonForTagScrollView;
+- (UIButton *)customUIButtonStyle;
 
 @end

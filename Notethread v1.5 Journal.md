@@ -122,6 +122,30 @@ This should handle that issue.
 
 Needs more testing and Instruments work before I release this version though. So not tonight.
 
+The button styling was annoying me. Refactored so styles all in one place and just changing to a dark colour.
+
+	// Don't forget #import, this allows us to access layer
+	#import <QuartzCore/QuartzCore.h>
+
+	- (UIButton *)customUIButtonStyle {
+	    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+	    
+	    [button setTintColor:[UIColor lightTextColor]];
+	    
+	    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+	    [button setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+	    
+	    [button setTitleShadowColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+	    [button setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+	    
+	    button.backgroundColor = [UIColor darkGrayColor];
+	    button.layer.borderColor = [UIColor grayColor].CGColor;
+	    button.layer.borderWidth = 0.5f;
+	    button.layer.cornerRadius = 3.0f;
+	    
+	    return button;
+	}
+
 ## 9/06/2012
 
 I want to make the view dimensions a lot less hardcoded. Work off percentages instead and use proper methods to get the view size.
