@@ -107,6 +107,21 @@ Checking out the search again. It looks like I wasn't going beyond the second le
 	
 That's for the tags. Now for just the standard string matching.
 
+More testing on the buttons. # button use case of when the note text view is empty currently handled; but if you go again it's going to get an exception.
+
+    NSMutableString *noteText = [self.noteTextView.text mutableCopy];
+    if ([noteText length] == 0 || [noteText length] < (tagStartLocation + enteredLength)) {
+        [noteText appendString:@"#"];
+        insertionLocation = [noteText length];
+    }
+    else {
+        [noteText replaceCharactersInRange:range withString:@"#"];
+    }
+    
+This should handle that issue.
+
+Needs more testing and Instruments work before I release this version though. So not tonight.
+
 ## 9/06/2012
 
 I want to make the view dimensions a lot less hardcoded. Work off percentages instead and use proper methods to get the view size.

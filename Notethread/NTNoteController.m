@@ -78,17 +78,17 @@
     NSRange selectedRange = self.noteTextView.selectedRange;
     NSUInteger insertionLocation = selectedRange.location;
     
-    NSUInteger enteredLength = 1;
-    NSInteger tagStartLocation = insertionLocation - enteredLength;
+    NSInteger tagStartLocation = selectedRange.location;
     if (tagStartLocation < 0)
         tagStartLocation = 0;
     
+    NSUInteger enteredLength = 1;
     NSRange range = NSMakeRange(tagStartLocation, enteredLength);
     
     NSMutableString *noteText = [self.noteTextView.text mutableCopy];
-    if ([noteText length] == 0) {
-        insertionLocation = 1;
+    if ([noteText length] == 0 || [noteText length] < (tagStartLocation + enteredLength)) {
         [noteText appendString:@"#"];
+        insertionLocation = [noteText length];
     }
     else {
         [noteText replaceCharactersInRange:range withString:@"#"];
@@ -98,7 +98,7 @@
     self.noteTextView.text = noteText;
     self.noteTextView.scrollEnabled = YES;
     
-    NSRange newRange = NSMakeRange(insertionLocation, 0);
+    NSRange newRange = NSMakeRange(insertionLocation + 1, 0);
     self.noteTextView.selectedRange = newRange;
     
     [self->_tagTracker setIsTracking:YES withTermOrNil:nil];
