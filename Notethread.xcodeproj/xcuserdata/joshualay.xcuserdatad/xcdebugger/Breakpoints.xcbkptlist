@@ -8,11 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Notethread/NTNoteListViewController.m"
-         timestampString = "360931350.116114"
+         timestampString = "361109252.630732"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "396"
-         endingLineNumber = "396"
+         startingLineNumber = "424"
+         endingLineNumber = "424"
          landmarkName = "-isSearch:inString:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -47,12 +47,25 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Notethread/NTNoteController.m"
-         timestampString = "361107349.421109"
+         timestampString = "361108011.40349"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "119"
-         endingLineNumber = "119"
+         startingLineNumber = "127"
+         endingLineNumber = "127"
          landmarkName = "-addButtonTagNameToText:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Notethread/NTNoteController.m"
+         timestampString = "361107880.833531"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "86"
+         endingLineNumber = "86"
+         landmarkName = "-addTagToNote:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

@@ -27,6 +27,8 @@
 - (BOOL)isSearch:(NSString *)term inString:(NSString *)searchingIn;
 - (BOOL)isSearch:(NSString *)term matchesFromStartString:(NSString *)searchingIn;
 - (BOOL)tagsInNote:(Note *)note haveSearchTerm:(NSString *)search;
+- (NSArray *)arrayOfNotesTagMatchingInChildNotesOf:(Note *)note haveSearchTerm:(NSString *)search;
+- (NSArray *)arrayOfNotesTextMatchingInChildNotesOf:(Note *)note haveSearchTerm:(NSString *)search;
 @end
 
 @implementation NTNoteListViewController
@@ -352,13 +354,7 @@ const CGFloat   cellHeight         = 51.0f;
     if ([self isSearch:search inString:note.text])
         [matchResults addObject:note];
     
-    if ([note.noteThreads count]) {
-        for (Note *childNote in note.noteThreads) {
-            NSMutableArray *childResult = [self arrayOfNotesMatchingSearch:search inNote:childNote];
-            if ([childResult count])
-                [matchResults addObjectsFromArray:childResult];
-        }
-    }
+    [matchResults addObjectsFromArray:[self arrayOfNotesTextMatchingInChildNotesOf:note haveSearchTerm:search]];
     
     return matchResults;
 }
@@ -369,14 +365,46 @@ const CGFloat   cellHeight         = 51.0f;
         [matchResults addObject:note];
     }
     
+    [matchResults addObjectsFromArray:[self arrayOfNotesTagMatchingInChildNotesOf:note haveSearchTerm:search]];
+    
+    return matchResults;    
+}
+
+
+- (NSArray *)arrayOfNotesTextMatchingInChildNotesOf:(Note *)note haveSearchTerm:(NSString *)search {
+    NSMutableArray *matches = [[NSMutableArray alloc] init];
+    if ([note.noteThreads count]) {
+        for (Note *childNote in note.noteThreads) {
+            if ([self isSearch:search inString:childNote.text])
+                [matches addObject:childNote];
+                        
+            NSArray *otherMatches = [self arrayOfNotesTextMatchingInChildNotesOf:childNote haveSearchTerm:search];
+            if ([otherMatches count])
+                [matches addObjectsFromArray:otherMatches];
+            
+            otherMatches = nil;
+        }
+        return matches;
+    }
+    return matches;
+}
+
+- (NSArray *)arrayOfNotesTagMatchingInChildNotesOf:(Note *)note haveSearchTerm:(NSString *)search {
+    NSMutableArray *matches = [[NSMutableArray alloc] init];
     if ([note.noteThreads count]) {
         for (Note *childNote in note.noteThreads) {
             if ([self tagsInNote:childNote haveSearchTerm:search])
-                [matchResults addObject:note];
+                [matches addObject:childNote];
+            
+            NSArray *otherMatches = [self arrayOfNotesTagMatchingInChildNotesOf:childNote haveSearchTerm:search];
+            if ([otherMatches count])
+                [matches addObjectsFromArray:otherMatches];
+            
+            otherMatches = nil;
         }
+        return matches;
     }
-    
-    return matchResults;    
+    return matches;
 }
 
 - (BOOL)tagsInNote:(Note *)note haveSearchTerm:(NSString *)search {

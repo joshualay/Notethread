@@ -79,12 +79,20 @@
     NSUInteger insertionLocation = selectedRange.location;
     
     NSUInteger enteredLength = 1;
-    NSUInteger tagStartLocation = insertionLocation - enteredLength;
+    NSInteger tagStartLocation = insertionLocation - enteredLength;
+    if (tagStartLocation < 0)
+        tagStartLocation = 0;
+    
     NSRange range = NSMakeRange(tagStartLocation, enteredLength);
     
     NSMutableString *noteText = [self.noteTextView.text mutableCopy];
-    
-    [noteText replaceCharactersInRange:range withString:@"#"];
+    if ([noteText length] == 0) {
+        insertionLocation = 1;
+        [noteText appendString:@"#"];
+    }
+    else {
+        [noteText replaceCharactersInRange:range withString:@"#"];
+    }
     
     self.noteTextView.scrollEnabled = NO;
     self.noteTextView.text = noteText;

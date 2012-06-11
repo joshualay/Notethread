@@ -52,7 +52,60 @@ In order to move the cursor I just update the selectedRange property.
 	NSRange newRange = NSMakeRange(insertionLocation + [tagString length], 0);
     self.noteTextView.selectedRange = newRange;
 
+Now to fix the tag searching not displaying the children notes which actually have the tag.
 
+Yep. I was an idiot. I was adding the parent note to the array rather than the child…
+
+Found a bug with adding the # symbol as the first thing. The text view will be empty so I can't replace any range. Will just append.
+
+    NSUInteger enteredLength = 1;
+    NSInteger tagStartLocation = insertionLocation - enteredLength;
+    if (tagStartLocation < 0)
+        tagStartLocation = 0;
+    
+    NSRange range = NSMakeRange(tagStartLocation, enteredLength);
+    
+    NSMutableString *noteText = [self.noteTextView.text mutableCopy];
+    if ([noteText length] == 0) {
+        insertionLocation = 1;
+        [noteText appendString:@"#"];
+    }
+    else {
+        [noteText replaceCharactersInRange:range withString:@"#"];
+    }
+    
+Checking out the search again. It looks like I wasn't going beyond the second level of notes!!! Recursion to the rescue. 
+
+	- (NSMutableArray *)arrayOfNotesThatHaveTag:(NSString *)search inNote:(Note *)note {
+	    NSMutableArray *matchResults = [[NSMutableArray alloc] init];
+	    if ([note.tags count] && [self tagsInNote:note haveSearchTerm:search]) {
+	        [matchResults addObject:note];
+	    }
+	    
+	    [matchResults addObjectsFromArray:[self arrayTagMatchesRecurseChildNotes:note haveSearchTerm:search]];
+	    
+	    return matchResults;    
+	}
+	
+	- (NSArray *)arrayTagMatchesRecurseChildNotes:(Note *)note haveSearchTerm:(NSString *)search {
+	    NSMutableArray *matches = [[NSMutableArray alloc] init];
+	    if ([note.noteThreads count]) {
+	        for (Note *childNote in note.noteThreads) {
+	            if ([self tagsInNote:childNote haveSearchTerm:search])
+	                [matches addObject:childNote];
+	            
+	            NSArray *otherMatches = [self arrayTagMatchesRecurseChildNotes:childNote haveSearchTerm:search];
+	            if ([otherMatches count])
+	                [matches addObjectsFromArray:otherMatches];
+	            
+	            otherMatches = nil;
+	        }
+	        return matches;
+	    }
+	    return matches;
+	}
+	
+That's for the tags. Now for just the standard string matching.
 
 ## 9/06/2012
 
