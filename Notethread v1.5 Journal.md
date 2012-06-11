@@ -2,6 +2,58 @@
 
 The goal of this release is to attempt to get tags into play.
 
+## 11/06/2012
+
+Increase the size of the tag scroll view and fix up the tag searching.
+
+### Work log
+
+Going to make the bar the same size as the action bar when viewing notes. The reason for this is I want to make things feel consistent. Bar in the middle of your screen will be the same size.
+
+    CGRect tagButtonScrollFrame = CGRectMake(point.x, point.y, width, NoteThreadActionToolbarHeight);
+
+Bump up the size of the tag fonts.
+
+Need to:
+
+* Increase their height
+* Buffer
+* Adjust the y origin
+
+Decided to add #'s in front of the tags when they appear as buttons. Had to strip it from the buttons title text when receiving it in the @selector.
+
+The tag scroll view doesn't seem to reset itself.
+
+In JLButtonScroller
+
+	if (!maxButtons) {
+        [scrollView scrollRectToVisible:CGRectMake(0, 0, 1, 1)
+                                animated:YES];
+        return;
+    }
+
+Need to:
+
+* Fix up sizing of note thread view. Too small currently.
+* Fix up when adding a tag via button and '#' button to not reset to the end
+
+Tweaked my multipliers to get the right sizing.
+
+When you set the text in a UITextView it will jump to the end. The way to stop it is:
+
+[SO answer](http://stackoverflow.com/a/2757655/626078)
+
+	self.noteTextView.scrollEnabled = NO;
+    self.noteTextView.text = noteText;
+    self.noteTextView.scrollEnabled = YES;
+
+In order to move the cursor I just update the selectedRange property.
+
+	NSRange newRange = NSMakeRange(insertionLocation + [tagString length], 0);
+    self.noteTextView.selectedRange = newRange;
+
+
+
 ## 9/06/2012
 
 I want to make the view dimensions a lot less hardcoded. Work off percentages instead and use proper methods to get the view size.

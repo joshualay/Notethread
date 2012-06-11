@@ -133,14 +133,14 @@
 }
 
 - (UIScrollView *)scrollViewForTagAtPoint:(CGPoint)point width:(CGFloat)width {
-    CGRect tagButtonScrollFrame = CGRectMake(point.x, point.y, width, 26.0f);
+    CGRect tagButtonScrollFrame = CGRectMake(point.x, point.y, width, NoteThreadActionToolbarHeight);
     UIScrollView *tagScrollView = [[UIScrollView alloc] initWithFrame:tagButtonScrollFrame];
     tagScrollView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];  
     return tagScrollView;
 }
 
 - (UIFont *)fontTagButton {
-    return [UIFont systemFontOfSize:12.0f];
+    return [UIFont systemFontOfSize:14.0f];
 }
 
 - (UIButton *)buttonForTagScrollView {

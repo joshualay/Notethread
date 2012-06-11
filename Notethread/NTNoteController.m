@@ -49,9 +49,9 @@
     self->_existingTags = [self->_tagService arrayExistingTagsIn:managedObject];
     self->_tagButtonScrollView = [self->_styleService scrollViewForTagAtPoint:CGPointZero width:self.view.frame.size.width];
 
-    UIButton *addTagButton = [[UIButton alloc] initWithFrame:CGRectMake(5.0f, 2.0f, 30.0f, 22.0f)];
+    UIButton *addTagButton = [[UIButton alloc] initWithFrame:CGRectMake(5.0f, 2.0f, 30.0f, 26.0f)];
     addTagButton.backgroundColor = [UIColor darkGrayColor];
-    addTagButton.titleLabel.font = [UIFont fontWithName:@"Courier-New-Bold" size:15.0f];
+    addTagButton.titleLabel.font = [UIFont fontWithName:@"Courier-New-Bold" size:17.0f];
     [addTagButton setTitle:@" # " forState:UIControlStateNormal];
     [addTagButton setTintColor:[UIColor blackColor]];
 
@@ -75,15 +75,33 @@
 }
 
 - (IBAction)addTagToNote:(id)sender {
-    self.noteTextView.text = [NSString stringWithFormat:@"%@#", self.noteTextView.text];
+    NSRange selectedRange = self.noteTextView.selectedRange;
+    NSUInteger insertionLocation = selectedRange.location;
+    
+    NSUInteger enteredLength = 1;
+    NSUInteger tagStartLocation = insertionLocation - enteredLength;
+    NSRange range = NSMakeRange(tagStartLocation, enteredLength);
+    
+    NSMutableString *noteText = [self.noteTextView.text mutableCopy];
+    
+    [noteText replaceCharactersInRange:range withString:@"#"];
+    
+    self.noteTextView.scrollEnabled = NO;
+    self.noteTextView.text = noteText;
+    self.noteTextView.scrollEnabled = YES;
+    
+    NSRange newRange = NSMakeRange(insertionLocation, 0);
+    self.noteTextView.selectedRange = newRange;
+    
     [self->_tagTracker setIsTracking:YES withTermOrNil:nil];
 }
 
 - (void)addButtonTagNameToText:(id)sender {
     UIButton *button = (UIButton *)sender;
     
-    NSString *tagString = button.titleLabel.text;
-    NSUInteger insertionLocation = self.noteTextView.selectedRange.location;
+    NSString *tagString = [button.titleLabel.text stringByReplacingOccurrencesOfString:@"#" withString:@""];
+    NSRange selectedRange = self.noteTextView.selectedRange;
+    NSUInteger insertionLocation = selectedRange.location;
     
     NSMutableString *noteText = [self.noteTextView.text mutableCopy];
     
@@ -92,10 +110,13 @@
     NSUInteger tagStartLocation = insertionLocation - enteredLength;
     NSRange range = NSMakeRange(tagStartLocation, enteredLength);
     
-    [noteText replaceCharactersInRange:range withString:tagString];
-    [noteText appendString:@" "];
+    [noteText replaceCharactersInRange:range withString:[NSString stringWithFormat:@"%@ ",tagString]];
     
+    self.noteTextView.scrollEnabled = NO;
     self.noteTextView.text = noteText;
+    self.noteTextView.scrollEnabled = YES;
+    NSRange newRange = NSMakeRange(insertionLocation + [tagString length], 0);
+    self.noteTextView.selectedRange = newRange;
     
     // Tidying up
     [self->_tagTracker setIsTracking:NO withTermOrNil:nil];
@@ -143,7 +164,7 @@
 }
 
 - (NSString *)stringForIndex:(NSInteger)position {
-    return [[self->_matchedTags objectAtIndex:position] name];
+    return [NSString stringWithFormat:@"#%@", [[self->_matchedTags objectAtIndex:position] name]];
 }
 
 - (CGFloat)heightForScrollView {
@@ -152,6 +173,10 @@
 
 - (CGFloat)heightForButton {
     return TagButtonHeight;
+}
+
+- (CGFloat)paddingForButton {
+    return 12.0f;
 }
 
 

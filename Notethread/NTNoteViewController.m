@@ -102,7 +102,7 @@ const CGFloat threadCellRowHeight = 42.0f;
     }
     else if (UIDeviceOrientationIsPortrait(self.interfaceOrientation)) {
         CGFloat noteViewHeight = self->_tagButtonScrollView.frame.origin.y - newFrame.origin.y;
-        CGFloat offset = (self->_tagButtonScrollView.frame.size.height * 1.3) + self.actionToolbar.frame.size.height;
+        CGFloat offset = (self->_tagButtonScrollView.frame.size.height * 1.15) + self.actionToolbar.frame.size.height;
         if (noteViewHeight < kbOriginY) {
             CGFloat diff = kbOriginY - noteViewHeight;
             noteViewHeight += (diff - offset);
@@ -114,7 +114,7 @@ const CGFloat threadCellRowHeight = 42.0f;
         newFrame.size.height = noteViewHeight;
     }
     else {
-        CGFloat landscapeHeight = 0.34 * screenSize.width;
+        CGFloat landscapeHeight = 0.33 * screenSize.width;
         newFrame.size   = CGSizeMake(screenSize.height, landscapeHeight - self.noteTextView.inputAccessoryView.frame.size.height);
     }
         

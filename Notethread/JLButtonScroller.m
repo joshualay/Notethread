@@ -6,7 +6,7 @@
 //
 
 #import "JLButtonScroller.h"
-
+#import "StyleConstants.h"
 
 @implementation JLButtonScroller
 
@@ -16,6 +16,8 @@
     scrollView.delegate = nil;
     scrollView.delegate = self;
     
+    scrollView.showsVerticalScrollIndicator = NO;
+        
     NSInteger maxButtons = [delegate numberOfButtons];
     for (UIView *view in scrollView.subviews) {
         if ([view isKindOfClass:[UIButton class]])
@@ -25,7 +27,11 @@
             [view setHidden:(maxButtons) ? YES : NO];
     }
     
-    if (!maxButtons) return;
+    if (!maxButtons) {
+        [scrollView scrollRectToVisible:CGRectMake(0, 0, 1, 1)
+                                animated:YES];
+        return;
+    }
     
     UIFont *font = [delegate fontForButton];
     
@@ -49,7 +55,7 @@
         if ([delegate respondsToSelector:@selector(heightForButton)])
             heightForButton = [delegate heightForButton];
         
-        button.frame = CGRectMake(xOffset, 3, stringWidth, heightForButton);
+        button.frame = CGRectMake(xOffset, 4.0f, stringWidth, heightForButton);
         
         [button setTitle:text forState:UIControlStateNormal];
         [button setTitle:text forState:UIControlStateHighlighted];
