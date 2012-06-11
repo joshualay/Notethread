@@ -145,6 +145,13 @@ The button styling was annoying me. Refactored so styles all in one place and ju
 	    
 	    return button;
 	}
+	
+Finding all the errors today aren't I. In the settings I'm reloading the table view when changing font. This causes the font size option to change.
+
+Just need to be smart and reload the section only.
+
+        [tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
+
 
 ## 9/06/2012
 

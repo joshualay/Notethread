@@ -177,9 +177,8 @@ const NSInteger lastSection = 2;
             case 1:
                 self.fontFamilyName = FontFamilySansSerif;
                 break;
-        }
-        
-        [tableView reloadData];
+        }        
+        [tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
     }
 }
 
