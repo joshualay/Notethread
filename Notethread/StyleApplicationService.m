@@ -126,8 +126,8 @@
 
 - (UILabel *)labelForTagScrollBarWithFrame:(CGRect)frame {
     UILabel *tagInfoLabel = [[UILabel alloc] initWithFrame:frame];
-    tagInfoLabel.font = [UIFont boldSystemFontOfSize:13.0f];
-    tagInfoLabel.textColor = [UIColor colorWithWhite:0.2f alpha:1.0f];
+    //tagInfoLabel.font = [UIFont boldSystemFontOfSize:13.0f];
+    //tagInfoLabel.textColor = [UIColor colorWithWhite:0.2f alpha:1.0f];
     tagInfoLabel.backgroundColor = [UIColor clearColor];
     //tagInfoLabel.text = NSLocalizedString(@"Type # to save a tag in your note", @"Adding tag");  
     
