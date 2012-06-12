@@ -49,3 +49,25 @@ Now to break out these into different files.
 Hmm. Doesn't seem to be work. I'll leave it for now as it's side tracking.
 
 But because I'm pedantic I've created the methods according to the category definitions.
+
+So then. What is required for the list view!
+
+* Button
+* New view controller
+
+Lets go with **NTTagListViewController**:
+
+**NTTagListViewController**
+
+* Read in tags
+* Sort by how many notes a tag has a relationship to
+* Load the main table view with the tags as rows
+* Strip out the #tag from the note text when displaying it in the row
+* Selecting the row will load all the notes in another table view?
+* Tapping on the note in there will load it up in NTNoteViewController
+
+		NTTagViewController
+		- (void)didSelect
+			NTTagDetailViewController
+
+Something like that. 

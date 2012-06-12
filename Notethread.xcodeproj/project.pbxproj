@@ -57,6 +57,8 @@
 		98EC88FB15397EB3007D92A7 /* JLButtonScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 98EC88F81539797C007D92A7 /* JLButtonScroller.m */; };
 		98F911361482066300D421B0 /* icon57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 98F91134148203FC00D421B0 /* icon57x57.png */; };
 		98F911381482066600D421B0 /* icon114x114.png in Resources */ = {isa = PBXBuildFile; fileRef = 98F911371482066600D421B0 /* icon114x114.png */; };
+		98FDA07B1587823E0045E31A /* NTTagListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98FDA07A1587823E0045E31A /* NTTagListViewController.m */; };
+		98FDA07F158782910045E31A /* NTTagListDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98FDA07E158782910045E31A /* NTTagListDetailViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -142,6 +144,10 @@
 		98EC88F81539797C007D92A7 /* JLButtonScroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JLButtonScroller.m; sourceTree = "<group>"; };
 		98F91134148203FC00D421B0 /* icon57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon57x57.png; sourceTree = "<group>"; };
 		98F911371482066600D421B0 /* icon114x114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon114x114.png; sourceTree = "<group>"; };
+		98FDA0791587823E0045E31A /* NTTagListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NTTagListViewController.h; sourceTree = "<group>"; };
+		98FDA07A1587823E0045E31A /* NTTagListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NTTagListViewController.m; sourceTree = "<group>"; };
+		98FDA07D158782910045E31A /* NTTagListDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NTTagListDetailViewController.h; sourceTree = "<group>"; };
+		98FDA07E158782910045E31A /* NTTagListDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NTTagListDetailViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -238,6 +244,10 @@
 				980055A1146AB884004C4802 /* NTWriteViewController.m */,
 				9871255E14700AA0007D56D6 /* NTNoteViewController.h */,
 				9871255F14700AA0007D56D6 /* NTNoteViewController.m */,
+				98FDA0791587823E0045E31A /* NTTagListViewController.h */,
+				98FDA07A1587823E0045E31A /* NTTagListViewController.m */,
+				98FDA07D158782910045E31A /* NTTagListDetailViewController.h */,
+				98FDA07E158782910045E31A /* NTTagListDetailViewController.m */,
 				98EB1F02147D0CB70018FF08 /* SettingsViewController.h */,
 				98EB1F03147D0CB70018FF08 /* SettingsViewController.m */,
 				98EB1F07147D35330018FF08 /* AboutMeViewController.h */,
@@ -471,6 +481,8 @@
 				98489949156B8F33008AF533 /* NSArray+Reverse.m in Sources */,
 				9848994D15706C36008AF533 /* TagTracker.m in Sources */,
 				9848995C1574FE41008AF533 /* NTNoteController.m in Sources */,
+				98FDA07B1587823E0045E31A /* NTTagListViewController.m in Sources */,
+				98FDA07F158782910045E31A /* NTTagListDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
