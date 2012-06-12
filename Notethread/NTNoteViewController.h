@@ -14,7 +14,6 @@
 
 #import "Note.h"
 #import "NTThreadWriteViewDelegate.h"
-#import "NTThreadViewDelegate.h"
 
 @class NTWriteViewController;
 
@@ -22,7 +21,7 @@
                                                     < 
                                                      UITableViewDelegate,
                                                      UITableViewDataSource, 
-                                                     NTThreadWriteViewDelegate, NTThreadViewDelegate,
+                                                     NTThreadWriteViewDelegate,
                                                      UITextViewDelegate,
                                                      MFMailComposeViewControllerDelegate,
                                                      UIActionSheetDelegate

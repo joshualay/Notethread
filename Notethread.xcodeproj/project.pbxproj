@@ -36,6 +36,7 @@
 		9848994D15706C36008AF533 /* TagTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 9848994C15706C36008AF533 /* TagTracker.m */; };
 		9848995C1574FE41008AF533 /* NTNoteController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9848995B1574FE41008AF533 /* NTNoteController.m */; };
 		9848996715873B01008AF533 /* Notethread v1.6 Journal.md in Resources */ = {isa = PBXBuildFile; fileRef = 9848996615873B00008AF533 /* Notethread v1.6 Journal.md */; };
+		9848996E15874B6D008AF533 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9848996D15874B6D008AF533 /* Twitter.framework */; };
 		986E806C147E3C06004645CF /* EmailContentApplicationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 986E806B147E3C06004645CF /* EmailContentApplicationService.m */; };
 		986E8072147E90EC004645CF /* EmailApplicationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 986E8071147E90EC004645CF /* EmailApplicationService.m */; };
 		986E8074147E98C5004645CF /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 986E8073147E98C5004645CF /* MessageUI.framework */; };
@@ -110,6 +111,7 @@
 		9848995B1574FE41008AF533 /* NTNoteController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NTNoteController.m; sourceTree = "<group>"; };
 		9848996415863E63008AF533 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		9848996615873B00008AF533 /* Notethread v1.6 Journal.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Notethread v1.6 Journal.md"; sourceTree = "<group>"; };
+		9848996D15874B6D008AF533 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		986E806A147E3C06004645CF /* EmailContentApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailContentApplicationService.h; sourceTree = "<group>"; };
 		986E806B147E3C06004645CF /* EmailContentApplicationService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailContentApplicationService.m; sourceTree = "<group>"; };
 		986E8070147E90EC004645CF /* EmailApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailApplicationService.h; sourceTree = "<group>"; };
@@ -138,7 +140,6 @@
 		98EB1F09147D35340018FF08 /* AboutMeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutMeViewController.xib; sourceTree = "<group>"; };
 		98EC88F71539797C007D92A7 /* JLButtonScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JLButtonScroller.h; sourceTree = "<group>"; };
 		98EC88F81539797C007D92A7 /* JLButtonScroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JLButtonScroller.m; sourceTree = "<group>"; };
-		98F911321481EF3200D421B0 /* NTThreadViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NTThreadViewDelegate.h; sourceTree = "<group>"; };
 		98F91134148203FC00D421B0 /* icon57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon57x57.png; sourceTree = "<group>"; };
 		98F911371482066600D421B0 /* icon114x114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon114x114.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -148,6 +149,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9848996E15874B6D008AF533 /* Twitter.framework in Frameworks */,
 				986E8074147E98C5004645CF /* MessageUI.framework in Frameworks */,
 				981821441468026D00DBC1D2 /* UIKit.framework in Frameworks */,
 				981821461468026D00DBC1D2 /* Foundation.framework in Frameworks */,
@@ -186,6 +188,7 @@
 		981821341468026D00DBC1D2 = {
 			isa = PBXGroup;
 			children = (
+				9848996D15874B6D008AF533 /* Twitter.framework */,
 				9848996415863E63008AF533 /* QuartzCore.framework */,
 				9815BD2A154812B500E450DA /* Notethread v1.5 Journal.md */,
 				9848996615873B00008AF533 /* Notethread v1.6 Journal.md */,
@@ -224,7 +227,6 @@
 		9818214B1468026D00DBC1D2 /* Notethread */ = {
 			isa = PBXGroup;
 			children = (
-				98F911321481EF3200D421B0 /* NTThreadViewDelegate.h */,
 				987125711473D881007D56D6 /* NTThreadWriteViewDelegate.h */,
 				981821541468026D00DBC1D2 /* AppDelegate.h */,
 				981821551468026D00DBC1D2 /* AppDelegate.m */,
