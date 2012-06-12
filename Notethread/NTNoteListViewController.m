@@ -10,6 +10,7 @@
 
 #import "NTNoteViewController.h"
 #import "Note.h"
+#import "Tag.h"
 #import "NTWriteViewController.h"
 #import "StyleApplicationService.h"
 #import "AlertApplicationService.h"
@@ -22,7 +23,12 @@
 - (IBAction)displaySettingsView;
 - (void)initFilteredListContentArrayCapacity;
 - (NSMutableArray *)arrayOfNotesMatchingSearch:(NSString *)search inNote:(Note *)note;
+- (NSMutableArray *)arrayOfNotesThatHaveTag:(NSString *)search inNote:(Note *)note;
 - (BOOL)isSearch:(NSString *)term inString:(NSString *)searchingIn;
+- (BOOL)isSearch:(NSString *)term matchesFromStartString:(NSString *)searchingIn;
+- (BOOL)tagsInNote:(Note *)note haveSearchTerm:(NSString *)search;
+- (NSArray *)arrayOfNotesTagMatchingInChildNotesOf:(Note *)note haveSearchTerm:(NSString *)search;
+- (NSArray *)arrayOfNotesTextMatchingInChildNotesOf:(Note *)note haveSearchTerm:(NSString *)search;
 @end
 
 @implementation NTNoteListViewController
@@ -51,8 +57,7 @@ const CGFloat   cellHeight         = 51.0f;
         if (self.savedSearchTerm)
         {
             [self.searchDisplayController setActive:self.searchWasActive];
-            //[self.searchDisplayController.searchBar setSelectedScopeButtonIndex:self.savedScopeButtonIndex];
-            self.searchDisplayController.searchBar.scopeButtonTitles = nil;
+            [self.searchDisplayController.searchBar setSelectedScopeButtonIndex:self.savedScopeButtonIndex];
             [self.searchDisplayController.searchBar setText:savedSearchTerm];
             
             self.savedSearchTerm = nil;
@@ -88,6 +93,8 @@ const CGFloat   cellHeight         = 51.0f;
     self.tableView.backgroundColor = [self.styleApplicationService paperColor];    
     
     [self.tableView setContentOffset:CGPointMake(0,self.searchDisplayController.searchBar.frame.size.height)];    
+    
+    self.searchDisplayController.searchBar.scopeButtonTitles = [NSArray arrayWithObjects:@"All", @"Tags", nil];
 }
 
 - (void)viewDidUnload {
@@ -293,7 +300,7 @@ const CGFloat   cellHeight         = 51.0f;
 
 // Top level note: UIModalTransitionStyleCoverVertical
 - (void)displayWriteView {
-    NTWriteViewController *writeViewController = [[NTWriteViewController alloc] initWithDepth:0 parent:nil];
+    NTWriteViewController *writeViewController = [[NTWriteViewController alloc] initWithThreadDepth:0 parent:nil];
     
     writeViewController.modalTransitionStyle   = UIModalTransitionStyleCoverVertical;
     writeViewController.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -324,14 +331,22 @@ const CGFloat   cellHeight         = 51.0f;
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
 {
 	[self.filteredListContent removeAllObjects]; // First clear the filtered array.
-	
     NSArray *listContent = [self.fetchedResultsController fetchedObjects];
 	for (Note *note in listContent)
 	{
-        NSMutableArray *result = [self arrayOfNotesMatchingSearch:searchText inNote:note];
+        NSMutableArray *result = nil;
+        if ([[scope lowercaseString] isEqualToString:@"tags"])
+            result = [self arrayOfNotesThatHaveTag:searchText inNote:note];
+        else
+            result = [self arrayOfNotesMatchingSearch:searchText inNote:note];
+        
         if ([result count])
             [self.filteredListContent addObjectsFromArray:result];
 	}
+}
+
+- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
+    [self filterContentForSearchText:searchBar.text scope:[[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
 }
 
 - (NSMutableArray *)arrayOfNotesMatchingSearch:(NSString *)search inNote:(Note *)note {
@@ -339,20 +354,80 @@ const CGFloat   cellHeight         = 51.0f;
     if ([self isSearch:search inString:note.text])
         [matchResults addObject:note];
     
-    if ([note.noteThreads count]) {
-        for (Note *childNote in note.noteThreads) {
-            NSMutableArray *childResult = [self arrayOfNotesMatchingSearch:search inNote:childNote];
-            if ([childResult count])
-                [matchResults addObjectsFromArray:childResult];
-        }
-    }
+    [matchResults addObjectsFromArray:[self arrayOfNotesTextMatchingInChildNotesOf:note haveSearchTerm:search]];
     
     return matchResults;
+}
+
+- (NSMutableArray *)arrayOfNotesThatHaveTag:(NSString *)search inNote:(Note *)note {
+    NSMutableArray *matchResults = [[NSMutableArray alloc] init];
+    if ([note.tags count] && [self tagsInNote:note haveSearchTerm:search]) {
+        [matchResults addObject:note];
+    }
+    
+    [matchResults addObjectsFromArray:[self arrayOfNotesTagMatchingInChildNotesOf:note haveSearchTerm:search]];
+    
+    return matchResults;    
+}
+
+
+- (NSArray *)arrayOfNotesTextMatchingInChildNotesOf:(Note *)note haveSearchTerm:(NSString *)search {
+    NSMutableArray *matches = [[NSMutableArray alloc] init];
+    if ([note.noteThreads count]) {
+        for (Note *childNote in note.noteThreads) {
+            if ([self isSearch:search inString:childNote.text])
+                [matches addObject:childNote];
+                        
+            NSArray *otherMatches = [self arrayOfNotesTextMatchingInChildNotesOf:childNote haveSearchTerm:search];
+            if ([otherMatches count])
+                [matches addObjectsFromArray:otherMatches];
+            
+            otherMatches = nil;
+        }
+        return matches;
+    }
+    return matches;
+}
+
+- (NSArray *)arrayOfNotesTagMatchingInChildNotesOf:(Note *)note haveSearchTerm:(NSString *)search {
+    NSMutableArray *matches = [[NSMutableArray alloc] init];
+    if ([note.noteThreads count]) {
+        for (Note *childNote in note.noteThreads) {
+            if ([self tagsInNote:childNote haveSearchTerm:search])
+                [matches addObject:childNote];
+            
+            NSArray *otherMatches = [self arrayOfNotesTagMatchingInChildNotesOf:childNote haveSearchTerm:search];
+            if ([otherMatches count])
+                [matches addObjectsFromArray:otherMatches];
+            
+            otherMatches = nil;
+        }
+        return matches;
+    }
+    return matches;
+}
+
+- (BOOL)tagsInNote:(Note *)note haveSearchTerm:(NSString *)search {
+    if (![search length])
+        return NO;
+    
+    search = [[search substringWithRange:NSMakeRange(0, [search length])] stringByReplacingOccurrencesOfString:@"#" withString:@""];
+    for (Tag *tag in note.tags) {
+        if ([self isSearch:search matchesFromStartString:tag.name])
+            return YES;
+    }    
+    
+    return NO;
 }
 
 - (BOOL)isSearch:(NSString *)term inString:(NSString *)searchingIn {
     NSRange result = [searchingIn rangeOfString:term options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
     return result.location != NSNotFound;
+}
+
+- (BOOL)isSearch:(NSString *)term matchesFromStartString:(NSString *)searchingIn {
+    NSRange result = [searchingIn rangeOfString:term options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+    return result.location == 0;
 }
 
 #pragma mark -

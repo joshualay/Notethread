@@ -25,7 +25,7 @@
 - (CGFloat)heightForButton;
 @end
 
-@interface JLButtonScroller : NSObject {
+@interface JLButtonScroller : NSObject <UIScrollViewDelegate> {
 }
 
 @property (nonatomic, assign) id<JLButtonScrollerDelegate> delegate;

@@ -6,9 +6,13 @@
 //  Copyright (c) 2011 Joshua Lay. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
+
 #import "StyleApplicationService.h"
 #import "UserSettingsConstants.h"
 #import "StyleConstants.h"
+#import "NTWriteViewController.h"
+#import "Note.h"
 
 @interface StyleApplicationService()
 - (UIFont *)fontDefault;
@@ -104,19 +108,6 @@
 }
 
 - (UIToolbar *)inputAccessoryViewForTextView:(UITextView *)textView {
-    /*UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, textView.frame.origin.y, textView.frame.size.width, InputAccessoryViewForTextViewHeight)];
-    
-    toolbar.tintColor   = [UIColor lightGrayColor];*/
-    //toolbar.translucent = YES;
-
-    /*
-    UIBarButtonItem *addTagButton = [[UIBarButtonItem alloc] initWithTitle:@"tag note" style:UIBarButtonItemStyleBordered target:self action:@selector(willTagNote:)];
-    
-    UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    
-    [toolbar setItems:[NSArray arrayWithObjects:addTagButton, flexibleSpace , nil]];
-    */
-    //FIXME -- remove when ready for tags
     UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
     return toolbar;
 }
@@ -131,6 +122,47 @@
 
 - (UIColor *)blackLinenColor {
     return [UIColor colorWithPatternImage:[UIImage imageNamed:@"black-Linen.png"]];
+}
+
+- (UILabel *)labelForTagScrollBarWithFrame:(CGRect)frame {
+    UILabel *tagInfoLabel = [[UILabel alloc] initWithFrame:frame];
+    //tagInfoLabel.font = [UIFont boldSystemFontOfSize:13.0f];
+    //tagInfoLabel.textColor = [UIColor colorWithWhite:0.2f alpha:1.0f];
+    tagInfoLabel.backgroundColor = [UIColor clearColor];
+    //tagInfoLabel.text = NSLocalizedString(@"Type # to save a tag in your note", @"Adding tag");  
+    
+    return tagInfoLabel;
+}
+
+- (UIScrollView *)scrollViewForTagAtPoint:(CGPoint)point width:(CGFloat)width {
+    CGRect tagButtonScrollFrame = CGRectMake(point.x, point.y, width, NoteThreadActionToolbarHeight);
+    UIScrollView *tagScrollView = [[UIScrollView alloc] initWithFrame:tagButtonScrollFrame];
+    tagScrollView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];  
+    return tagScrollView;
+}
+
+- (UIFont *)fontTagButton {
+    return [UIFont systemFontOfSize:14.0f];
+}
+
+
+- (UIButton *)customUIButtonStyle {
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    [button setTintColor:[UIColor lightTextColor]];
+    
+    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+    
+    [button setTitleShadowColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    [button setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    
+    button.backgroundColor = [UIColor darkGrayColor];
+    button.layer.borderColor = [UIColor grayColor].CGColor;
+    button.layer.borderWidth = 0.8f;
+    button.layer.cornerRadius = 3.0f;
+    
+    return button;
 }
 
 @end

@@ -10,7 +10,6 @@
 
 #import "NTNoteViewController.h"
 #import "NTWriteViewController.h"
-#import "StyleApplicationService.h"
 #import "AlertApplicationService.h"
 #import "AppDelegate.h"
 #import "UserSettingsConstants.h"
@@ -30,7 +29,6 @@
 - (void)removeKeyboardNotificationObservers;
 - (void)keyboardWillAppear:(NSNotification *)notification;
 - (void)keyboardWillDisappear:(NSNotification *)notification;
-// http://stackoverflow.com/a/7183223/626078 
 - (void)moveTextViewForKeyboard:(NSNotification *)aNotification keyboardHidden:(BOOL)keyboardHidden;
 @end
 
@@ -42,17 +40,15 @@
 @synthesize threadTableView = _threadTableView;
 @synthesize noteThreads     = _noteThreads;
 
-@synthesize styleApplicationService = _styleApplicationService;
-
 @synthesize backButton = _backButton;
 
 const CGFloat threadCellRowHeight = 42.0f;
 
+
 - (id)init {
-    self = [super initWithNibName:@"NTNoteViewController" bundle:nil];
+    self = [super init];
     if (self) {
         self.noteThreads = nil;
-        self.styleApplicationService = [StyleApplicationService sharedSingleton];
     }
     return self;  
 }
@@ -66,7 +62,7 @@ const CGFloat threadCellRowHeight = 42.0f;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)moveTextViewForKeyboard:(NSNotification *)aNotification keyboardHidden:(BOOL)keyboardHidden {
+- (void)moveTextViewForKeyboard:(NSNotification *)aNotification keyboardHidden:(BOOL)keyboardHidden {    
     float opacity = 0.0f;
     if (keyboardHidden) {
         self.actionToolbar.hidden = NO;
@@ -97,21 +93,32 @@ const CGFloat threadCellRowHeight = 42.0f;
     [UIView setAnimationCurve:animationCurve];
     
     CGRect newFrame = self.noteTextView.frame;
-    CGRect keyboardFrame = [self.view convertRect:keyboardEndFrame toView:nil];
-    NSLog(@"newFrame before - %@", NSStringFromCGRect(newFrame));
-    if (UIDeviceOrientationIsPortrait(self.interfaceOrientation)) {
-        newFrame.size.height -= 65.0f * (keyboardHidden ? -1 : 1);
+    
+    CGSize screenSize = [[UIScreen mainScreen] bounds].size;
+
+    CGFloat kbOriginY      = keyboardEndFrame.origin.y;
+    if (keyboardHidden) {
+        newFrame.size.height = self.actionToolbar.frame.origin.y;
+    }
+    else if (UIDeviceOrientationIsPortrait(self.interfaceOrientation)) {
+        CGFloat noteViewHeight = self->_tagButtonScrollView.frame.origin.y - newFrame.origin.y;
+        CGFloat offset = (self->_tagButtonScrollView.frame.size.height * 1.15) + self.actionToolbar.frame.size.height;
+        if (noteViewHeight < kbOriginY) {
+            CGFloat diff = kbOriginY - noteViewHeight;
+            noteViewHeight += (diff - offset);
+        }
+        else {
+            CGFloat diff = noteViewHeight - kbOriginY;
+            noteViewHeight -= (diff + offset);
+        }
+        newFrame.size.height = noteViewHeight;
     }
     else {
-        newFrame.size.height -= 105.0f * (keyboardHidden ? -1 : 1);
+        CGFloat landscapeHeight = 0.33 * screenSize.width;
+        newFrame.size   = CGSizeMake(screenSize.height, landscapeHeight - self.noteTextView.inputAccessoryView.frame.size.height);
     }
-    
-    newFrame.size.height -= keyboardFrame.size.height * (keyboardHidden ? 1 : -1);    
+        
     self.noteTextView.frame = newFrame;
-    
-    NSLog(@"keyboardFrame - %@", NSStringFromCGRect(keyboardFrame));
-    NSLog(@"newFrame - %@", NSStringFromCGRect(newFrame));
-    
     [UIView commitAnimations];  
 }
 
@@ -143,8 +150,6 @@ const CGFloat threadCellRowHeight = 42.0f;
     self.title             = [self titleForNote:self.note.text];
     self.noteTextView.text = self.note.text;
     
-    self.noteTextView.inputAccessoryView = [self.styleApplicationService inputAccessoryViewForTextView:self.noteTextView];
-    
     [self viewForNoteThread];
         
     self.threadTableView.delegate   = self;
@@ -158,9 +163,7 @@ const CGFloat threadCellRowHeight = 42.0f;
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-    NSLog(@"viewDidAppear");
-    
+        
     [self setKeyboardNotificationsObservers];
     
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -178,6 +181,9 @@ const CGFloat threadCellRowHeight = 42.0f;
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
+    if (interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)
+        return NO;
+    
     return YES;
 }
 
@@ -276,7 +282,7 @@ const CGFloat threadCellRowHeight = 42.0f;
 }
 
 - (void)viewForNoteThread {
-    self.view.backgroundColor = [self.styleApplicationService blackLinenColor];
+    self.view.backgroundColor = [self->_styleService blackLinenColor];
     
     NSInteger rowsDisplayed = [self rowsForThreadTableView];
     CGFloat threadTableHeightOffset = ((CGFloat)rowsDisplayed * threadCellRowHeight) + NoteThreadActionToolbarHeight;
@@ -291,8 +297,8 @@ const CGFloat threadCellRowHeight = 42.0f;
     self.threadTableView = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
     self.actionToolbar = [[UIToolbar alloc] initWithFrame:actionRect];
     
-    self.noteTextView.font         = [self.styleApplicationService fontNoteView];    
-    self.noteTextView.backgroundColor = [self.styleApplicationService paperColor];
+    self.noteTextView.font         = [self->_styleService fontNoteView];    
+    self.noteTextView.backgroundColor = [self->_styleService paperColor];
     
     self.actionToolbar.tintColor   = [UIColor lightGrayColor];
     self.actionToolbar.translucent = YES;
@@ -340,7 +346,7 @@ const CGFloat threadCellRowHeight = 42.0f;
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     Note *note = [self.noteThreads objectAtIndex:indexPath.row];
-    [self.styleApplicationService configureNoteTableCell:cell note:note];
+    [self->_styleService configureNoteTableCell:cell note:note];
     
     cell.contentView.backgroundColor   = [UIColor whiteColor];
 }
@@ -415,7 +421,7 @@ const CGFloat threadCellRowHeight = 42.0f;
     [self removeKeyboardNotificationObservers];
     NTWriteViewController *threadWriteViewController = [[NTWriteViewController alloc] initWithThreadDepth:threadDepthInteger parent:self.note];
     
-    [self.styleApplicationService modalStyleForThreadWriteView:threadWriteViewController];
+    [self->_styleService modalStyleForThreadWriteView:threadWriteViewController];
     
     [self presentModalViewController:threadWriteViewController animated:YES];    
 }
@@ -426,6 +432,10 @@ const CGFloat threadCellRowHeight = 42.0f;
     
     self.note.text             = self.noteTextView.text;
     self.note.lastModifiedDate = [NSDate date];
+    
+    NSArray *tagsInNote = [self->_tagService arrayOfTagsInText:self.note.text];
+    
+    [self->_tagService storeTags:tagsInNote withRelationship:self.note inManagedContext:managedObjectContext];
     
     NSError *error = nil;
     if (![managedObjectContext save:&error]) {
@@ -439,11 +449,29 @@ const CGFloat threadCellRowHeight = 42.0f;
     return YES;
 }
 
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    
+    [super textView:textView shouldChangeTextInRange:range replacementText:text];
+    
+    if (range.location == 0 && [text isEqualToString:@""]) {
+        self.title = [self titleForNote:textView.text];
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+    }   
+    
+    return YES;
+}
+
 - (void)textViewDidChange:(UITextView *)textView {
     self.title = [self titleForNote:textView.text];
-    
     self.navigationItem.rightBarButtonItem.enabled =  ([textView.text length]) ? YES : NO;
 }
+
+#pragma mark @selector
+- (void)addButtonTagNameToText:(id)sender {
+    [super addButtonTagNameToText:sender];
+    [self setTitle:self.noteTextView.text];
+}
+
 
 #pragma MFMailComposeViewControllerDelegate
 // Dismisses the email composition interface when users tap Cancel or Send. Proceeds to update the message field with the result of the operation.
