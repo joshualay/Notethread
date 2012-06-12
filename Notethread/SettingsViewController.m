@@ -69,6 +69,11 @@ const NSInteger lastSection = 2;
     [self.threadRowSlider setValue:[threadRows floatValue]];
     
     self.fontFamilyName = [self.userDefaults stringForKey:FontFamilyNameDefaultKey];
+    
+    if (![self.userDefaults floatForKey:FontWritingSizeKey])
+        [self.userDefaults setFloat:FontNoteSizeNormal forKey:FontWritingSizeKey];
+    
+    self.fontSize = [self.userDefaults floatForKey:FontWritingSizeKey];
 }
 
 
@@ -172,9 +177,8 @@ const NSInteger lastSection = 2;
             case 1:
                 self.fontFamilyName = FontFamilySansSerif;
                 break;
-        }
-        
-        [tableView reloadData];
+        }        
+        [tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
     }
 }
 

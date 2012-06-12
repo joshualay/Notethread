@@ -10,30 +10,30 @@
 #import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
 
-@class NTWriteViewController;
-@class StyleApplicationService;
+#import "NTNoteController.h"
 
 #import "Note.h"
 #import "NTThreadWriteViewDelegate.h"
 #import "NTThreadViewDelegate.h"
 
-@interface NTNoteViewController : UIViewController 
-                                                    <UITableViewDelegate, 
+@class NTWriteViewController;
+
+@interface NTNoteViewController : NTNoteController 
+                                                    < 
+                                                     UITableViewDelegate,
                                                      UITableViewDataSource, 
-                                                     NTThreadWriteViewDelegate, 
+                                                     NTThreadWriteViewDelegate, NTThreadViewDelegate,
                                                      UITextViewDelegate,
                                                      MFMailComposeViewControllerDelegate,
-                                                     NTThreadViewDelegate,
-                                                     UIActionSheetDelegate>
+                                                     UIActionSheetDelegate
+                                                     > 
+
 
 @property (strong, nonatomic) Note *note;
 
-@property (strong, nonatomic) IBOutlet UITextView *noteTextView;
 @property (strong, nonatomic) UIToolbar *actionToolbar;
 @property (strong, nonatomic) UITableView *threadTableView;
 @property (strong, nonatomic) NSArray *noteThreads;
-
-@property (strong, nonatomic) StyleApplicationService *styleApplicationService;
 
 @property (strong, nonatomic) UIBarButtonItem *backButton;
 

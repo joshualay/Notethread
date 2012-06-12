@@ -1,19 +1,38 @@
 //
 //  JLButtonScroller.m
-//  aporterapp
 //
 //  Created by Joshua Lay on 7/09/11.
 //  Copyright 2011 Joshua Lay. All rights reserved.
 //
 
 #import "JLButtonScroller.h"
-
+#import "StyleConstants.h"
 
 @implementation JLButtonScroller
 
 @synthesize delegate;
 
 - (void)addButtonsForContentAreaIn:(UIScrollView *)scrollView {
+    scrollView.delegate = nil;
+    scrollView.delegate = self;
+    
+    scrollView.showsVerticalScrollIndicator = NO;
+        
+    NSInteger maxButtons = [delegate numberOfButtons];
+    for (UIView *view in scrollView.subviews) {
+        if ([view isKindOfClass:[UIButton class]])
+            [view removeFromSuperview];
+        
+        if ([view isKindOfClass:[UILabel class]])
+            [view setHidden:(maxButtons) ? YES : NO];
+    }
+    
+    if (!maxButtons) {
+        [scrollView scrollRectToVisible:CGRectMake(0, 0, 1, 1)
+                                animated:YES];
+        return;
+    }
+    
     UIFont *font = [delegate fontForButton];
     
     NSInteger buttonOffset = 10.0f;
@@ -21,9 +40,9 @@
         buttonOffset = [delegate paddingForButton];
     }
     
-    NSInteger maxButtons = [delegate numberOfButtons];
     
-    NSInteger xOffset = 0;
+    NSUInteger xBuffer = 4.0f;
+    NSInteger xOffset = 5.0f;
     for (int i = 0; i < maxButtons; i++) {
         UIButton *button = [delegate buttonForIndex:i];
         button.titleLabel.font = font;
@@ -36,7 +55,7 @@
         if ([delegate respondsToSelector:@selector(heightForButton)])
             heightForButton = [delegate heightForButton];
         
-        button.frame = CGRectMake(xOffset, 0, stringWidth, heightForButton);
+        button.frame = CGRectMake(xOffset, 4.0f, stringWidth, heightForButton);
         
         [button setTitle:text forState:UIControlStateNormal];
         [button setTitle:text forState:UIControlStateHighlighted];
@@ -57,11 +76,15 @@
         
         [scrollView addSubview:button];
         
-        xOffset += stringWidth;
+        xOffset += stringWidth + xBuffer;
     }
     
     [scrollView setContentSize:CGSizeMake(xOffset, [delegate heightForScrollView])];
 }
 
+#pragma mark - UIScrollViewDelegate 
+- (void)scrollViewDidScroll:(UIScrollView *)aScrollView {
+    [aScrollView setContentOffset: CGPointMake(aScrollView.contentOffset.x, 0)];
+}
 
 @end

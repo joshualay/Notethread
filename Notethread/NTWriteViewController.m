@@ -8,10 +8,11 @@
 
 #import "NTWriteViewController.h"
 #import "AppDelegate.h"
-#import "StyleApplicationService.h"
 #import "AlertApplicationService.h"
+#import "Note.h"
+#import "StyleConstants.h"
 
-@interface NTWriteViewController(Private)
+@interface NTWriteViewController(Private) 
 - (void)setKeyboardNotificationsObservers;
 - (void)removeKeyboardNotificationObservers;
 - (void)keyboardWillAppear:(NSNotification *)notification;
@@ -20,24 +21,24 @@
 
 @implementation NTWriteViewController
 
-@synthesize noteTextView  = _noteTextView;
 @synthesize navigationBar = _navigationBar;
 @synthesize saveButton    = _saveButton;
 @synthesize noteDepth     = _noteDepth;
 @synthesize parentNote    = _parentNote;
 
 
-- (id)initWithDepth:(NSInteger)noteDepth parent:(Note *)note {
-    self = [super initWithNibName:@"NTWriteViewController" bundle:nil];
-    if (self) {
-        _noteDepth  = noteDepth;
-        _parentNote = note;
-    }
-    return self;
-}
+#define CGRECTSCREEN [[UIScreen mainScreen] bounds]
+#define VIEWHEIGHT CGRECTSCREEN.size.height
+#define VIEWWIDTH CGRECTSCREEN.size.width
+
+#define PORTRAIT_WIDTH 0.97 * VIEWWIDTH
+
+// For the note view sizings
+CGFloat const NoteViewOriginY = 49.0f;
+
 
 - (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note {
-    self = [super initWithNibName:@"NTWriteViewController" bundle:nil];
+    self = [super init];
     if (self) {
         _noteDepth  = threadDepth;
         _parentNote = note;
@@ -54,26 +55,11 @@
     [self.noteTextView becomeFirstResponder];
     
     self.navigationBar.topItem.title = NSLocalizedString(@"Writing...", @"Writing...");
-    
-    StyleApplicationService *styleApplicationService = [StyleApplicationService sharedSingleton];
-    
-    self.noteTextView.font = [styleApplicationService fontNoteWrite];
-    self.noteTextView.inputAccessoryView = [styleApplicationService inputAccessoryViewForTextView:self.noteTextView];
-    
+
     self.noteTextView.backgroundColor = [UIColor clearColor];
-    self.view.backgroundColor = [styleApplicationService paperColor];
+    self.view.backgroundColor = [self->_styleService paperColor];
 
     self.saveButton.enabled = ([self.noteTextView.text length]) ? YES : NO;
-    
-    /*UIScrollView *tagButtonScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 32.0f)];
-    tagButtonScrollView.backgroundColor = [UIColor blackColor];
-    
-    JLButtonScroller *buttonScroller = [[JLButtonScroller alloc] init];
-    buttonScroller.delegate = self;
-    [buttonScroller addButtonsForContentAreaIn:tagButtonScrollView];
-    
-    self.noteTextView.inputAccessoryView = tagButtonScrollView;
-     */
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -103,6 +89,10 @@
     newNote.lastModifiedDate = [NSDate date];
     newNote.depth = [NSNumber numberWithInteger:self.noteDepth];
     newNote.text = self.noteTextView.text;
+    
+    NSArray *tagsInNote = [self->_tagService arrayOfTagsInText:newNote.text];
+    
+    [self->_tagService storeTags:tagsInNote withRelationship:newNote inManagedContext:managedObjectContext];
     
     if (self.parentNote != nil) {
         NSMutableArray *noteThreads = [[self.parentNote.noteThreads array] mutableCopy];
@@ -142,15 +132,20 @@
     [UIView setAnimationDuration:animationDuration];
     [UIView setAnimationCurve:animationCurve];
     
+    CGRect keyboardFrame;
+    [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardFrame];
+        
     CGRect newFrame = self.noteTextView.frame;
-
+    
+    CGFloat scrollViewHeight = self->_tagButtonScrollView.frame.size.height;
+    newFrame.origin.y = NoteViewOriginY;
     if (UIDeviceOrientationIsPortrait(self.interfaceOrientation)) {
-        newFrame.origin.y = 49.0f;
-        newFrame.size = CGSizeMake(310.0f, 196.0f);
+        CGFloat height = VIEWHEIGHT - keyboardFrame.size.height - self.navigationBar.frame.size.height - scrollViewHeight;
+        newFrame.size = CGSizeMake(PORTRAIT_WIDTH, height);
     }
     else {
-        newFrame.origin.y = 49.0f;
-        newFrame.size = CGSizeMake(480.0f, 90.0f);
+        CGFloat height = VIEWWIDTH - keyboardFrame.size.width - self.navigationBar.frame.size.height - scrollViewHeight;
+        newFrame.size = CGSizeMake(VIEWHEIGHT, height);
     }
     self.noteTextView.frame = newFrame;
         
@@ -163,12 +158,16 @@
 
 
 #pragma UITextViewDelegate
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {    
+    [super textView:textView shouldChangeTextInRange:range replacementText:text];
+
     self.navigationBar.topItem.title = [NSString stringWithFormat:@"%@%@", textView.text, text];
     self.saveButton.enabled = ([textView.text length]) ? YES : NO;
     
-    if (range.location == 0 && [text isEqualToString:@""])
+    if (range.location == 0 && [text isEqualToString:@""]) {
+        self.navigationBar.topItem.title = @"";
         self.saveButton.enabled = NO;
+    }
     
     return YES;
 }
@@ -178,25 +177,10 @@
 }
 
 
-#pragma mark - JLButtonScrollerDelegate
-- (UIFont *)fontForButton {
-    return [UIFont systemFontOfSize:14.0f];
+- (void)addButtonTagNameToText:(id)sender {
+    [super addButtonTagNameToText:sender];
+    self.navigationBar.topItem.title = self.noteTextView.text;
 }
 
-- (NSInteger)numberOfButtons {
-    return 20;
-}
-
-- (UIButton *)buttonForIndex:(NSInteger)position {
-    return [UIButton buttonWithType:UIButtonTypeRoundedRect];
-}
-
-- (NSString *)stringForIndex:(NSInteger)position {
-    return @"tag";
-}
-
-- (CGFloat)heightForScrollView {
-    return 32.0f;
-}
 
 @end
