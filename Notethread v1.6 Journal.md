@@ -4,6 +4,37 @@ The goal of this release is give more power to #tags. I want to be able to creat
 
 As you may have a certain tag in different notes this will just show them all in the one list; making it easy to have a quick overview.
 
+## 13/06/2012
+
+Playing around with getting the NTTagListViewController displaying something.
+
+### Worklog
+
+Decided I may as well have a xib instead of doing everything programatically. Probably not required; but it matches the current style for the view controllers anyhow.
+
+Adding a button to the NTNoteListViewController to bring up this new tag list view. In order to keep behaviour consistent I will make it do the UIModalTransitionStyleFlipHorizontal transition.
+
+	- (IBAction)displayTagListView:(id)sender {
+	    NTTagListViewController *tagListViewController = [[NTTagListViewController alloc] initWithNibName:@"NTTagListViewController" bundle:nil];
+	    tagListViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+	    [self presentModalViewController:tagListViewController animated:YES];
+	}
+
+Well that's daft. I don't have a way of exiting the NTTagListViewController view do I.
+
+Adding a Navigation Bar in IB. 
+
+Adding a @selector to dimiss the Tag List view.
+
+Now to work out how to grab all the Tag objects to load this jazz up. 
+
+Going to copy over a few methods from NTNoteListViewController for gathering the data.
+
+Now to fetch the data. I think this NSPredicate will work:
+
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"notes.@count > 0"];
+
+And that worked. All the tags are now displaying in the table view.
 
 ## 12/06/2012
 

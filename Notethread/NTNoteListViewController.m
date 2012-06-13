@@ -15,12 +15,12 @@
 #import "StyleApplicationService.h"
 #import "AlertApplicationService.h"
 #import "SettingsViewController.h"
+#import "NTTagListViewController.h"
 
 
 @interface NTNoteListViewController ()
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath inTableView:(UITableView *)tableView;
 - (void)displayWriteView;
-- (IBAction)displaySettingsView;
 - (void)initFilteredListContentArrayCapacity;
 - (NSMutableArray *)arrayOfNotesMatchingSearch:(NSString *)search inNote:(Note *)note;
 - (NSMutableArray *)arrayOfNotesThatHaveTag:(NSString *)search inNote:(Note *)note;
@@ -29,6 +29,11 @@
 - (BOOL)tagsInNote:(Note *)note haveSearchTerm:(NSString *)search;
 - (NSArray *)arrayOfNotesTagMatchingInChildNotesOf:(Note *)note haveSearchTerm:(NSString *)search;
 - (NSArray *)arrayOfNotesTextMatchingInChildNotesOf:(Note *)note haveSearchTerm:(NSString *)search;
+@end
+
+@interface NTNoteListViewController(Selectors)
+- (IBAction)displaySettingsView;
+- (IBAction)displayTagListView:(id)sender;
 @end
 
 @implementation NTNoteListViewController
@@ -66,7 +71,7 @@ const CGFloat   cellHeight         = 51.0f;
     return self;
 }
 
-
+#pragma mark - NTNoteListViewController(Selectors)
 - (IBAction)displaySettingsView {
     SettingsViewController *settingsViewController = [[SettingsViewController alloc] initWithNibName:@"SettingsViewController" bundle:nil];
     
@@ -74,6 +79,13 @@ const CGFloat   cellHeight         = 51.0f;
     
     [self presentModalViewController:settingsViewController animated:YES];
 }
+
+- (IBAction)displayTagListView:(id)sender {
+    NTTagListViewController *tagListViewController = [[NTTagListViewController alloc] initWithNibName:@"NTTagListViewController" bundle:nil];
+    tagListViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    [self presentModalViewController:tagListViewController animated:YES];
+}
+
 
 - (void)initFilteredListContentArrayCapacity {
     self.filteredListContent = [[NSMutableArray alloc] init]; 

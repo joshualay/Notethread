@@ -7,16 +7,24 @@
 //
 
 #import "NTTagListViewController.h"
+#import "AlertApplicationService.h"
+#import "AppDelegate.h"
+#import "Tag.h"
 
-@interface NTTagListViewController ()
+@interface NTTagListViewController (CoreData)
+- (NSFetchedResultsController *)fetchedResultsController;
+- (NSManagedObjectContext *)managedObjectContext;
+@end
 
+@interface NTTagListViewController (Selectors)
+- (IBAction)dismissView:(id)sender;
 @end
 
 @implementation NTTagListViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithStyle:style];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
     }
@@ -50,16 +58,13 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[[self fetchedResultsController] sections] objectAtIndex:section];
+    return [sectionInfo numberOfObjects];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -67,7 +72,16 @@
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    // Configure the cell...
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    
+    Tag *tag = [[self fetchedResultsController] objectAtIndexPath:indexPath];  
+    cell.textLabel.text = tag.name;
+    
+    // Using the note count as frequency denotes how often the tag is used for all time
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"Count: %i", [tag.notes count]];
     
     return cell;
 }
@@ -123,5 +137,57 @@
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
 }
+
+
+#pragma mark - UITagListViewController(Selectors)
+- (IBAction)dismissView:(id)sender {
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+
+- (NSFetchedResultsController *)fetchedResultsController
+{
+    if (__fetchedResultsController != nil) {
+        return __fetchedResultsController;
+    }
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];// Edit the entity name as appropriate.
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Tag" inManagedObjectContext:[self managedObjectContext]];
+    [fetchRequest setEntity:entity];
+    
+    [fetchRequest setFetchBatchSize:20];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"notes.@count > 0"];
+    
+    [fetchRequest setPredicate:predicate];
+    
+    // Edit the sort key as appropriate.
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"frequency" ascending:NO];
+    NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    
+    [fetchRequest setSortDescriptors:sortDescriptors];
+    
+    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:[self managedObjectContext] sectionNameKeyPath:nil cacheName:@"NotethreadTags"];
+    aFetchedResultsController.delegate = self;
+    __fetchedResultsController = aFetchedResultsController;
+    
+	NSError *error = nil;
+	if (![self.fetchedResultsController performFetch:&error]) {
+        [AlertApplicationService alertViewForCoreDataError:nil];
+	}
+    
+    return __fetchedResultsController;
+}    
+
+- (NSManagedObjectContext *)managedObjectContext {
+    if (__managedObjectContext != nil)
+        return __managedObjectContext;
+    
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    __managedObjectContext = [appDelegate managedObjectContext];
+    
+    return __managedObjectContext;
+}
+
 
 @end

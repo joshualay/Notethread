@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface NTTagListViewController : UITableViewController
+@interface NTTagListViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate> {
+    NSFetchedResultsController *__fetchedResultsController;
+    NSManagedObjectContext *__managedObjectContext;
+}
 
 @end

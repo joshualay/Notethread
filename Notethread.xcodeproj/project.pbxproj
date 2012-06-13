@@ -59,6 +59,7 @@
 		98F911381482066600D421B0 /* icon114x114.png in Resources */ = {isa = PBXBuildFile; fileRef = 98F911371482066600D421B0 /* icon114x114.png */; };
 		98FDA07B1587823E0045E31A /* NTTagListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98FDA07A1587823E0045E31A /* NTTagListViewController.m */; };
 		98FDA07F158782910045E31A /* NTTagListDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98FDA07E158782910045E31A /* NTTagListDetailViewController.m */; };
+		98FDA0811588AF890045E31A /* NTTagListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98FDA0801588AF890045E31A /* NTTagListViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -148,6 +149,7 @@
 		98FDA07A1587823E0045E31A /* NTTagListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NTTagListViewController.m; sourceTree = "<group>"; };
 		98FDA07D158782910045E31A /* NTTagListDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NTTagListDetailViewController.h; sourceTree = "<group>"; };
 		98FDA07E158782910045E31A /* NTTagListDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NTTagListDetailViewController.m; sourceTree = "<group>"; };
+		98FDA0801588AF890045E31A /* NTTagListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NTTagListViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,6 +189,7 @@
 				980055A2146AB884004C4802 /* NTWriteViewController.xib */,
 				981821601468026D00DBC1D2 /* MasterViewController.xib */,
 				98190BCE149B72EC00E96126 /* NTNoteListViewController.xib */,
+				98FDA0801588AF890045E31A /* NTTagListViewController.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -426,6 +429,7 @@
 				983816A614C04FDD000A644C /* README.md in Resources */,
 				9815BD2B154812B500E450DA /* Notethread v1.5 Journal.md in Resources */,
 				9848996715873B01008AF533 /* Notethread v1.6 Journal.md in Resources */,
+				98FDA0811588AF890045E31A /* NTTagListViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
