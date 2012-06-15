@@ -23,6 +23,8 @@ Fixed.
 
 Autoresizing. I'm not sure if this is really required. I'm getting the view bound already. I can't just change around the height only. I'll leave this for now. It's working so I'm not going to break it.
 
+I have a constant that defines the Y origin of the note's UITextView. Going to remove that and use the height of the navigationBar instead.
+
 ## 13/06/2012
 
 Playing around with getting the NTTagListViewController displaying something.

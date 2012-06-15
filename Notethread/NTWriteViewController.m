@@ -33,9 +33,6 @@
 
 #define PORTRAIT_WIDTH 0.97 * VIEWWIDTH
 
-// For the note view sizings
-CGFloat const NoteViewOriginY = 49.0f;
-
 
 - (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note {
     self = [super init];
@@ -138,7 +135,7 @@ CGFloat const NoteViewOriginY = 49.0f;
     CGRect newFrame = self.noteTextView.frame;
     
     CGFloat scrollViewHeight = self->_tagButtonScrollView.frame.size.height;
-    newFrame.origin.y = NoteViewOriginY;
+    newFrame.origin.y = self.navigationBar.frame.size.height;
     if (UIDeviceOrientationIsPortrait(self.interfaceOrientation)) {
         CGFloat height = VIEWHEIGHT - keyboardFrame.size.height - self.navigationBar.frame.size.height - scrollViewHeight;
         newFrame.size = CGSizeMake(PORTRAIT_WIDTH, height);
