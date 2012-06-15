@@ -81,7 +81,7 @@
     if (tagStartLocation < 0)
         tagStartLocation = 0;
     
-    NSUInteger enteredLength = 1;
+    NSUInteger enteredLength = 0;
     NSRange range = NSMakeRange(tagStartLocation, enteredLength);
     
     NSMutableString *noteText = [self.noteTextView.text mutableCopy];

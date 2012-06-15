@@ -4,6 +4,25 @@ The goal of this release is give more power to #tags. I want to be able to creat
 
 As you may have a certain tag in different notes this will just show them all in the one list; making it easy to have a quick overview.
 
+## 16/06/2012
+
+Few bug fixes for issues I've noticed:
+
+* \# button insertion will write over the next character with a space
+* Not being smart and using UIAutoResizingMask; may be better than UIScreen dimensions
+
+## Worklog
+
+How to be smart about the # insertion?
+
+Ahh!! My mistake is I've created an NSRange of length 1. This meant it was going to write over any character following the start location. 
+
+	NSUInteger enteredLength = 0;
+
+Fixed.
+
+Autoresizing. I'm not sure if this is really required. I'm getting the view bound already. I can't just change around the height only. I'll leave this for now. It's working so I'm not going to break it.
+
 ## 13/06/2012
 
 Playing around with getting the NTTagListViewController displaying something.

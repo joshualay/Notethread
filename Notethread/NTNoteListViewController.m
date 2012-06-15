@@ -21,6 +21,14 @@
 @interface NTNoteListViewController ()
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath inTableView:(UITableView *)tableView;
 - (void)displayWriteView;
+@end
+
+@interface NTNoteListViewController (Selectors)
+- (IBAction)displaySettingsView;
+- (IBAction)displayTagListView:(id)sender;
+@end
+
+@interface NTNoteListViewController (SearchBar)
 - (void)initFilteredListContentArrayCapacity;
 - (NSMutableArray *)arrayOfNotesMatchingSearch:(NSString *)search inNote:(Note *)note;
 - (NSMutableArray *)arrayOfNotesThatHaveTag:(NSString *)search inNote:(Note *)note;
@@ -29,11 +37,6 @@
 - (BOOL)tagsInNote:(Note *)note haveSearchTerm:(NSString *)search;
 - (NSArray *)arrayOfNotesTagMatchingInChildNotesOf:(Note *)note haveSearchTerm:(NSString *)search;
 - (NSArray *)arrayOfNotesTextMatchingInChildNotesOf:(Note *)note haveSearchTerm:(NSString *)search;
-@end
-
-@interface NTNoteListViewController(Selectors)
-- (IBAction)displaySettingsView;
-- (IBAction)displayTagListView:(id)sender;
 @end
 
 @implementation NTNoteListViewController
@@ -337,7 +340,7 @@ const CGFloat   cellHeight         = 51.0f;
     [self presentModalViewController:threadWriteViewController animated:YES];
 }
 
-#pragma mark -
+#pragma mark - NTNoteListViewController (SearchBar)
 #pragma mark Content Filtering
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
