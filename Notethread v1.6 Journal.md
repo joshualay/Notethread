@@ -74,6 +74,8 @@ Trying out an instance var to store the tags. I'll utilise the fetch controller 
         
 That looks like it has worked! 
 
+For the sake of consistency I'm updating all (Private) categories; instead of just empty braces.
+
 ## 13/06/2012
 
 Playing around with getting the NTTagListViewController displaying something.

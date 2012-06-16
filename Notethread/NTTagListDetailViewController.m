@@ -8,7 +8,7 @@
 
 #import "NTTagListDetailViewController.h"
 
-@interface NTTagListDetailViewController ()
+@interface NTTagListDetailViewController (Private)
 
 @end
 

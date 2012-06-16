@@ -16,7 +16,7 @@
 #import "StyleApplicationService.h"
 #import "StyleConstants.h"
 
-@interface NTNoteController() 
+@interface NTNoteController(Private) 
 - (IBAction)addTagToNote:(id)sender;
 @end
 

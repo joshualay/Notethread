@@ -18,7 +18,7 @@
 #import "NTTagListViewController.h"
 
 
-@interface NTNoteListViewController ()
+@interface NTNoteListViewController (Private)
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath inTableView:(UITableView *)tableView;
 - (void)displayWriteView;
 @end

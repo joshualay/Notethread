@@ -14,7 +14,7 @@
 #import "NTWriteViewController.h"
 #import "Note.h"
 
-@interface StyleApplicationService()
+@interface StyleApplicationService(Private)
 - (UIFont *)fontDefault;
 @end
 

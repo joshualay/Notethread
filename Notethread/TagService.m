@@ -11,7 +11,7 @@
 #import "Note.h"
 #include "NSArray+Reverse.h"
 
-@interface TagService ()
+@interface TagService (Private)
 - (NSString *)stringWordTillPreviousSpaceInText:(NSString *)text fromLocation:(NSUInteger)location;
 @end
 
