@@ -28,6 +28,21 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _styleService = [StyleApplicationService sharedSingleton];
+        NSMutableArray *tmpTags = [[[self fetchedResultsController] fetchedObjects] mutableCopy];
+        [tmpTags sortUsingComparator:^(id tag1, id tag2) {
+            Tag *tagOne = (Tag *)tag1;
+            Tag *tagTwo = (Tag *)tag2;
+            
+            if ([tagOne.notes count] < [tagTwo.notes count])
+                return (NSComparisonResult)NSOrderedDescending;
+            
+            if ([tagOne.notes count] > [tagTwo.notes count])
+                return (NSComparisonResult)NSOrderedAscending;
+            
+            return (NSComparisonResult)NSOrderedSame;
+        }];
+        _tags = [tmpTags copy];
+        tmpTags = nil;
     }
     return self;
 }
@@ -64,8 +79,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    id <NSFetchedResultsSectionInfo> sectionInfo = [[[self fetchedResultsController] sections] objectAtIndex:section];
-    return [sectionInfo numberOfObjects];
+    return [self->_tags count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -81,7 +95,7 @@
     cell.textLabel.font       = [self->_styleService fontTextLabelPrimary];
     cell.detailTextLabel.font = [self->_styleService fontDetailTextLabelPrimary];
     
-    Tag *tag = [[self fetchedResultsController] objectAtIndexPath:indexPath];  
+    Tag *tag = [self->_tags objectAtIndex:[indexPath row]];
     cell.textLabel.text = tag.name;
     
     // Using the note count as frequency denotes how often the tag is used for all time

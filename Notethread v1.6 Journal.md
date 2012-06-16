@@ -44,6 +44,36 @@ Ahhh of course. I'm sorting by frequency; which is not decremented when a note i
     
 **Need to check documentation to see if I can sort by relationships**
 
+NSSortDescriptor
+
+I think I can use this: 
+
+	+ (id)sortDescriptorWithKey:(NSString *)key ascending:(BOOL)ascending comparator:(NSComparator)cmptr
+	
+Bonedd! I want to sort by a property that I have to dynamically resolve. It doesn't want to work. Will have to use frequency. 
+
+Actually. I can attempt to do the sorting post retrieval. Though this may be expensive. 
+
+Trying out an instance var to store the tags. I'll utilise the fetch controller results to store on init and then sort with a comparision on notes count.
+
+        NSMutableArray *tmpTags = [[[self fetchedResultsController] fetchedObjects] mutableCopy];
+        [tmpTags sortUsingComparator:^(id tag1, id tag2) {
+            Tag *tagOne = (Tag *)tag1;
+            Tag *tagTwo = (Tag *)tag2;
+            
+            if ([tagOne.notes count] < [tagTwo.notes count])
+                return (NSComparisonResult)NSOrderedDescending;
+            
+            if ([tagOne.notes count] > [tagTwo.notes count])
+                return (NSComparisonResult)NSOrderedAscending;
+            
+            return (NSComparisonResult)NSOrderedSame;
+        }];
+        _tags = [tmpTags copy];
+        tmpTags = nil;
+        
+That looks like it has worked! 
+
 ## 13/06/2012
 
 Playing around with getting the NTTagListViewController displaying something.
