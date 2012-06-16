@@ -19,6 +19,27 @@
 @property (assign, nonatomic) NSInteger noteDepth;
 @property (strong, nonatomic) Note *parentNote;
 
+/*
+ 
+ Note structure
+ --------------
+ 
+ Note: (depth 0)
+    noteThreads:
+        Note: (depth 1)
+            noteThreads:
+                Note: (depth 2)
+
+ parent:
+    The note that is currently open on screen. 
+ 
+ threadDepth:
+    This indicates what the new note's depth will be. In all cases this is going to be
+    a simple + 1 to parent.depth. 
+ 
+ TODO: Investigate and determine if threadDepth is required and replace with dynamic solution.
+ 
+ */
 - (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note;
 
 - (IBAction)cancelWriting:(id)sender;

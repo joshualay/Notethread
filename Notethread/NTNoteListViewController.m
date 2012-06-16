@@ -23,11 +23,17 @@
 - (void)displayWriteView;
 @end
 
+// Buttons on the toolbar of the page - see NTNoteListViewController.xib
 @interface NTNoteListViewController (Selectors)
 - (IBAction)displaySettingsView;
 - (IBAction)displayTagListView:(id)sender;
 @end
 
+// Search looks like it's a bit more complex than it really is. Since I'm searching just notes and also tags
+// 
+// I require different ways to:
+//  * Search for the entered text
+//  * Retrieving the notes to present
 @interface NTNoteListViewController (SearchBar)
 - (void)initFilteredListContentArrayCapacity;
 - (NSMutableArray *)arrayOfNotesMatchingSearch:(NSString *)search inNote:(Note *)note;
@@ -49,8 +55,13 @@
 
 @synthesize filteredListContent, savedSearchTerm, savedScopeButtonIndex, searchWasActive;
 
+// Core data has a flat object model. If I look for all Notes I will get top level and all of the 
+// children as well. This value is to specify that I only care about top level notes.
 const NSInteger rootDepthInteger   = 0;
+// Used by NTWriteViewController, all notes at depth 0 will have child notes at depth 1. 
+// When the user taps on a row, any new childthreads created are going to be at this depth.
 const NSInteger threadDepthInteger = 1;
+
 const CGFloat   cellHeight         = 51.0f;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -385,7 +396,24 @@ const CGFloat   cellHeight         = 51.0f;
     return matchResults;    
 }
 
-
+/* 
+ For the search methods there's a little complexity incurred due to the relationships
+ 
+ Note: (depth 0)
+    noteThreads:
+        Note: (depth 1)
+            noteThreads:
+                Note: (depth 2)
+        Note: (depth 1)
+            noteThreads:
+                Note: (depth 2)
+                    noteThreads:
+                        Note: (depth 3)
+ 
+ I have a list of Notes at depth 0. In order to search for text in all notes I have to traverse down the tree. 
+ The same concept works with tags as well.
+ 
+ */
 - (NSArray *)arrayOfNotesTextMatchingInChildNotesOf:(Note *)note haveSearchTerm:(NSString *)search {
     NSMutableArray *matches = [[NSMutableArray alloc] init];
     if ([note.noteThreads count]) {
@@ -426,6 +454,7 @@ const CGFloat   cellHeight         = 51.0f;
     if (![search length])
         return NO;
     
+    // In case the user wants to include the # symbol. Remove it.
     search = [[search substringWithRange:NSMakeRange(0, [search length])] stringByReplacingOccurrencesOfString:@"#" withString:@""];
     for (Tag *tag in note.tags) {
         if ([self isSearch:search matchesFromStartString:tag.name])

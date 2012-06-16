@@ -16,6 +16,10 @@
 - (void)setKeyboardNotificationsObservers;
 - (void)removeKeyboardNotificationObservers;
 - (void)keyboardWillAppear:(NSNotification *)notification;
+
+// When the keyboard displays the note view must be resized. Hooking into keyboard notifications
+// provide knowledge of the keyboards frame. This method will use keyboard.frame.origin.y to work 
+// out the note view's height.
 - (void)moveTextViewForKeyboard:(NSNotification *)aNotification keyboardHidden:(BOOL)keyboardHidden;
 @end
 

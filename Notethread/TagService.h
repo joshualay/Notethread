@@ -5,6 +5,12 @@
 //  Created by Joshua Lay on 24/09/11.
 //  Copyright 2011 Joshua Lay. All rights reserved.
 //
+/* 
+    This class understands:
+        * How to retrieve tags
+        * How to save tags
+        * What a tag looks like
+ */
 
 #import <Foundation/Foundation.h>
 

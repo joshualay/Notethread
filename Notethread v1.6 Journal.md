@@ -76,6 +76,8 @@ That looks like it has worked!
 
 For the sake of consistency I'm updating all (Private) categories; instead of just empty braces.
 
+Documentation has been neglected. Just updating that now.
+
 ## 13/06/2012
 
 Playing around with getting the NTTagListViewController displaying something.
