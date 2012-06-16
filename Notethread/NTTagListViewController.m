@@ -64,6 +64,12 @@
     // e.g. self.myOutlet = nil;
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [self->_tableView deselectRowAtIndexPath:[self->_tableView indexPathForSelectedRow] animated:YES];
+    [super viewDidDisappear:animated];
+}
+
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -90,6 +96,8 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleGray;
     
     cell.textLabel.font       = [self->_styleService fontTextLabelPrimary];
     cell.detailTextLabel.font = [self->_styleService fontDetailTextLabelPrimary];

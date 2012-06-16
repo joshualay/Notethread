@@ -121,6 +121,37 @@ E.g.
 
 Without having to add any features; tags can express the state of the notes. 
 
+First things first however. Time to fix up the tag note listing view. 
+
+Thought: If I'm using tags to express a category of note - should I keep it in the note? It depends on how people will use it. But best not mess with the contents of the notes just yet. I would consider stripping out the tag from the note as you've already opened it up based on that tag.
+
+When selecting a tag and going back the selection remains. I can't remember why this is happening nor what I've done to fix it in the past.
+
+Needed access to the UITableView. Created an ivar and linked to via I.B. Then added the following:
+
+	- (void)viewDidDisappear:(BOOL)animated {
+	    [self->_tableView deselectRowAtIndexPath:[self->_tableView indexPathForSelectedRow] animated:YES];
+	    [super viewDidDisappear:animated];
+	}
+
+Just playing around withe expanding the cell height on selection.
+
+Used [this as a reference](http://locassa.com/animate-uitableview-cell-height-change/)
+
+	- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	    if ( indexPath.row == [tableView indexPathForSelectedRow].row) {
+	        return 100.0f;
+	    }
+	    
+	    return 42.0f;
+	}
+	
+	- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+	{    
+	    [tableView beginUpdates];
+	    [tableView endUpdates];
+	}
+
 
 ## 13/06/2012
 

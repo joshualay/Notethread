@@ -8,11 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+@class StyleApplicationService;
 @class Tag;
 
 @interface NTTagListDetailViewController : UIViewController <UITableViewDelegate, UITableViewDataSource> {
     Tag *_tag;
     NSArray *_notes;
+    
+    StyleApplicationService *_styleService;
 }
 
 - (id)initWithTag:(Tag *)tag;
