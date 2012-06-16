@@ -25,6 +25,25 @@ Autoresizing. I'm not sure if this is really required. I'm getting the view boun
 
 I have a constant that defines the Y origin of the note's UITextView. Going to remove that and use the height of the navigationBar instead.
 
+Thinking of just having text instead of an icon for the tag list.
+
+Currently I have the tag list cells displaying the tag name and count. I think that's enough. I need a style service in the view controller to match the settings.
+
+    cell.textLabel.font       = [self->_styleService fontTextLabelPrimary];
+    cell.detailTextLabel.font = [self->_styleService fontDetailTextLabelPrimary];
+    
+Now it will look the same.
+
+The tag list doesn't look right. It doesn't seem to be really sorted by count at all.
+
+Ahhh of course. I'm sorting by frequency; which is not decremented when a note is deleted. So this is wrong:
+
+    // Edit the sort key as appropriate.
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"frequency" ascending:NO];
+    NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    
+**Need to check documentation to see if I can sort by relationships**
+
 ## 13/06/2012
 
 Playing around with getting the NTTagListViewController displaying something.

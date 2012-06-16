@@ -10,6 +10,7 @@
 #import "AlertApplicationService.h"
 #import "AppDelegate.h"
 #import "Tag.h"
+#import "StyleApplicationService.h"
 
 @interface NTTagListViewController (CoreData)
 - (NSFetchedResultsController *)fetchedResultsController;
@@ -26,7 +27,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        _styleService = [StyleApplicationService sharedSingleton];
     }
     return self;
 }
@@ -76,6 +77,9 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
+    
+    cell.textLabel.font       = [self->_styleService fontTextLabelPrimary];
+    cell.detailTextLabel.font = [self->_styleService fontDetailTextLabelPrimary];
     
     Tag *tag = [[self fetchedResultsController] objectAtIndexPath:indexPath];  
     cell.textLabel.text = tag.name;
