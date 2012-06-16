@@ -7,6 +7,8 @@
 //
 
 #import "NTTagListDetailViewController.h"
+#import "Tag.h"
+#import "Note.h"
 
 @interface NTTagListDetailViewController (Private)
 
@@ -14,11 +16,11 @@
 
 @implementation NTTagListDetailViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
+- (id)initWithTag:(Tag *)tag {
+    self = [super initWithNibName:@"NTTagListDetailViewController" bundle:nil];
     if (self) {
-        // Custom initialization
+        _tag = tag;
+        _notes = [tag.notes allObjects];
     }
     return self;
 }
@@ -50,24 +52,24 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
+    return [self->_notes count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-    // Configure the cell...
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    }
+
+    Note *note = [self->_notes objectAtIndex:indexPath.row];
+    cell.textLabel.text = note.text;
     
     return cell;
 }

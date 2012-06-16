@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface NTTagListDetailViewController : UITableViewController
+@class Tag;
+
+@interface NTTagListDetailViewController : UIViewController <UITableViewDelegate, UITableViewDataSource> {
+    Tag *_tag;
+    NSArray *_notes;
+}
+
+- (id)initWithTag:(Tag *)tag;
 
 @end

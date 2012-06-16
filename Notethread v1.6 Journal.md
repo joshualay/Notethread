@@ -11,6 +11,13 @@ Few bug fixes for issues I've noticed:
 * \# button insertion will write over the next character with a space
 * Not being smart and using UIAutoResizingMask; may be better than UIScreen dimensions
 
+Documentation.
+
+Crafting the detail view for the tag list.
+
+**I want to consider adding a proper help section. I can just section off the settings page. Just change button or the like.**
+
+
 ## Worklog
 
 How to be smart about the # insertion?
@@ -77,6 +84,43 @@ That looks like it has worked!
 For the sake of consistency I'm updating all (Private) categories; instead of just empty braces.
 
 Documentation has been neglected. Just updating that now.
+
+Adding a view for NTTagListDetailViewController.
+
+Now the issue I had with my tinkering is that I had no self.navigationViewController. To work around this when I first init NTTagListViewController I create a UINavigationViewController as well.
+
+	- (IBAction)displayTagListView:(id)sender {
+	    NTTagListViewController *tagListViewController = [[NTTagListViewController alloc] initWithNibName:@"NTTagListViewController" bundle:nil];
+	    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:tagListViewController];
+	    navController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+	    [self presentModalViewController:navController animated:YES];
+	}
+
+Now we can drill down the tags.
+
+Since NTTagListDetailViewController needs to know about the Tag selected I'll make a constructor for it. Rather than assigning a property. I feel it makes it more obvious on what dependencies this class has.
+
+	- (id)initWithTag:(Tag *)tag {
+	    self = [super initWithNibName:@"NTTagListDetailViewController" bundle:nil];
+	    if (self) {
+	        _tag = [tag copy];
+	    }
+	    return self;
+	}
+
+I'm thinking of allocating some keywords for this tagging system to work nicely. Each note opened up from this tag list will display the note and then on selection event drop down a new row for actions on the cell OR just display always and make the row bigger. 
+
+E.g.
+
+    ------------------------
+	| NoteText             |
+	|                      |
+	------------------------
+    |[delete]       [#done]|
+    ------------------------
+
+Without having to add any features; tags can express the state of the notes. 
+
 
 ## 13/06/2012
 

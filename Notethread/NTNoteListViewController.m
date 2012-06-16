@@ -96,8 +96,9 @@ const CGFloat   cellHeight         = 51.0f;
 
 - (IBAction)displayTagListView:(id)sender {
     NTTagListViewController *tagListViewController = [[NTTagListViewController alloc] initWithNibName:@"NTTagListViewController" bundle:nil];
-    tagListViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-    [self presentModalViewController:tagListViewController animated:YES];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:tagListViewController];
+    navController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    [self presentModalViewController:navController animated:YES];
 }
 
 

@@ -47,6 +47,7 @@
 		989D514C1488F45A002B27AB /* StyleConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 989D514B1488F45A002B27AB /* StyleConstants.m */; };
 		989D514E1488FECC002B27AB /* fabric_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 989D514D1488FECC002B27AB /* fabric_1.png */; };
 		989D5150148900FD002B27AB /* handmadepaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 989D514F148900FD002B27AB /* handmadepaper.png */; };
+		98BC4A39158C8E2900B48D38 /* NTTagListDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98BC4A38158C8E2900B48D38 /* NTTagListDetailViewController.xib */; };
 		98EB1EF9147BBF160018FF08 /* AlertApplicationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 98EB1EF8147BBF160018FF08 /* AlertApplicationService.m */; };
 		98EB1F01147CE9930018FF08 /* UserSettingsConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 98EB1F00147CE9930018FF08 /* UserSettingsConstants.m */; };
 		98EB1F05147D0CB70018FF08 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98EB1F03147D0CB70018FF08 /* SettingsViewController.m */; };
@@ -131,6 +132,7 @@
 		989D514B1488F45A002B27AB /* StyleConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StyleConstants.m; sourceTree = "<group>"; };
 		989D514D1488FECC002B27AB /* fabric_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fabric_1.png; sourceTree = "<group>"; };
 		989D514F148900FD002B27AB /* handmadepaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = handmadepaper.png; sourceTree = "<group>"; };
+		98BC4A38158C8E2900B48D38 /* NTTagListDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NTTagListDetailViewController.xib; sourceTree = "<group>"; };
 		98EB1EF7147BBF160018FF08 /* AlertApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertApplicationService.h; sourceTree = "<group>"; };
 		98EB1EF8147BBF160018FF08 /* AlertApplicationService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlertApplicationService.m; sourceTree = "<group>"; };
 		98EB1EFF147CE9930018FF08 /* UserSettingsConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserSettingsConstants.h; sourceTree = "<group>"; };
@@ -190,6 +192,7 @@
 				981821601468026D00DBC1D2 /* MasterViewController.xib */,
 				98190BCE149B72EC00E96126 /* NTNoteListViewController.xib */,
 				98FDA0801588AF890045E31A /* NTTagListViewController.xib */,
+				98BC4A38158C8E2900B48D38 /* NTTagListDetailViewController.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -430,6 +433,7 @@
 				9815BD2B154812B500E450DA /* Notethread v1.5 Journal.md in Resources */,
 				9848996715873B01008AF533 /* Notethread v1.6 Journal.md in Resources */,
 				98FDA0811588AF890045E31A /* NTTagListViewController.xib in Resources */,
+				98BC4A39158C8E2900B48D38 /* NTTagListDetailViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

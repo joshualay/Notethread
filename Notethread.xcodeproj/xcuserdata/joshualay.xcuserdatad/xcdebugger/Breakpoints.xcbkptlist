@@ -8,12 +8,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Notethread/NTNoteListViewController.m"
-         timestampString = "361496187.628891"
+         timestampString = "361534154.777545"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "439"
-         endingLineNumber = "439"
-         landmarkName = "-isSearch:inString:"
+         startingLineNumber = "440"
+         endingLineNumber = "440"
+         landmarkName = "-arrayOfNotesTagMatchingInChildNotesOf:haveSearchTerm:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
