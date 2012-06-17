@@ -59,6 +59,8 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"heightForRowAtIndexPath:: selected row: %i, indexPath row: %i", [tableView indexPathForSelectedRow].row, indexPath.row);
+
     if ( indexPath.row == [tableView indexPathForSelectedRow].row) {
         return 100.0f;
     }
@@ -69,9 +71,21 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    
+    NSIndexPath *selected = [tableView indexPathForSelectedRow];
+    BOOL isSelectedRow = (indexPath.row == selected.row);
+    
+    NSLog(@"cellForRowAtIndexPath:: selected row: %i, indexPath row: %i", selected.row, indexPath.row);
+        
+    UITableViewCell *cell = nil;
+    switch (isSelectedRow) {
+        case YES:
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier];
+            break;
+            
+        default:
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+            break;
     }
 
     Note *note = [self->_notes objectAtIndex:indexPath.row];
@@ -93,8 +107,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {    
-    [tableView beginUpdates];
-    [tableView endUpdates];
+    [tableView reloadData];
 }
 
 @end

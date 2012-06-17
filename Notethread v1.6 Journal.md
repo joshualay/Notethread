@@ -4,6 +4,34 @@ The goal of this release is give more power to #tags. I want to be able to creat
 
 As you may have a certain tag in different notes this will just show them all in the one list; making it easy to have a quick overview.
 
+## 17/06/2012
+
+Play around with how the TagDetailViewController will look like. Considering adding an add new note button there where the tag is automatically added on creation. 
+
+### Worklog
+
+In order to get the cell resizing I was using:
+
+	[tableView beginUpdate]
+	[tableView endUpdate]
+	
+I'm not sure if that's really required. I'm indicating that the entire table is being updated. Where in reality it's only a single row (the selected row). I haven't seen any real performance hits though; but it's worth making this part smarter.
+
+	- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+	{    
+	    [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[tableView indexPathForSelectedRow]] withRowAnimation:UITableViewRowAnimationNone];
+	}
+
+Now I'm just doing the selected row.
+
+I want a different style cell so I can add the extra buttons. Reloading that row will force it to be redrawn. What I need to do is work out if this is the currently selected row; if it is then use a different cell type.
+
+Hmmm. My assumptions of just reloading the selected row are wrong. The previous cell style will remain. I'm going back to the update block as before.
+
+That didn't fix it. The first selected cell has remained exactly the same. It should be redrawing the cell.
+
+Doesn't look like the selected row is updating at all in cellForRowAtIndexPath, however it is for heightForRowAtIndexPath. In wondering if it's because the table view is reloading it has nothing selected.
+
 ## 16/06/2012
 
 Few bug fixes for issues I've noticed:
