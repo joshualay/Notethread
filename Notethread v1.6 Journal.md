@@ -4,6 +4,53 @@ The goal of this release is give more power to #tags. I want to be able to creat
 
 As you may have a certain tag in different notes this will just show them all in the one list; making it easy to have a quick overview.
 
+## 18/06/2012
+
+Fix up the tag list detail cell resizing. Doesn't work for the first row.
+
+### Worklog
+
+I'm using the selected index and have a check if it's nil or not to somewhat toggle the state. 
+
+Fixed it: 
+
+* Set _selectedIndexPath to nil on init. 
+* Used the method compare: to test if the index paths were equal
+
+Previously I was using indexPath.row @property.
+
+NTTagListViewController - since I'm doing a custom sort there's no point in adding an NSSortDescriptor when fetching from Core Data.
+
+Well aren't I silly. You require sort descriptors :)
+
+Trying to be a bit more clever on how I reload the table data in TagListDetail. If the selected row has changed there will be two rows that require animation. If the selected row is tapped again; only one. 
+
+I'm going back to only wanting to update what is required in this.
+
+	- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+	{    
+	    NSIndexPath *newSelectedIndexPath = [tableView indexPathForSelectedRow];
+	    
+	    [tableView beginUpdates];
+	
+	    NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:2];
+	    [indexPaths addObject:newSelectedIndexPath];
+	
+	    if ([newSelectedIndexPath compare:self->_selectedIndexPath] == NSOrderedSame) {
+	        self->_selectedIndexPath = nil;
+	    }
+	    else {
+	        if (self->_selectedIndexPath != nil)
+	            [indexPaths addObject:self->_selectedIndexPath];
+	        
+	        self->_selectedIndexPath = [tableView indexPathForSelectedRow];
+	    }
+	
+	    [tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
+	    [tableView endUpdates];
+	}
+
+
 ## 17/06/2012
 
 Play around with how the TagDetailViewController will look like. Considering adding an add new note button there where the tag is automatically added on creation. 
@@ -31,6 +78,8 @@ Hmmm. My assumptions of just reloading the selected row are wrong. The previous 
 That didn't fix it. The first selected cell has remained exactly the same. It should be redrawing the cell.
 
 Doesn't look like the selected row is updating at all in cellForRowAtIndexPath, however it is for heightForRowAtIndexPath. In wondering if it's because the table view is reloading it has nothing selected.
+
+I'm going to add an ivar to maintain the knowledge of selectedIndexRow.
 
 ## 16/06/2012
 

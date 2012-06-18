@@ -23,6 +23,7 @@
         _tag = tag;
         _notes = [tag.notes allObjects];
         _styleService = [StyleApplicationService sharedSingleton];
+        _selectedIndexPath = nil;
     }
     return self;
 }
@@ -59,10 +60,10 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"heightForRowAtIndexPath:: selected row: %i, indexPath row: %i", [tableView indexPathForSelectedRow].row, indexPath.row);
-
-    if ( indexPath.row == [tableView indexPathForSelectedRow].row) {
-        return 100.0f;
+    if (self->_selectedIndexPath != nil) {
+        if ([indexPath compare:self->_selectedIndexPath] == NSOrderedSame) {
+            return 100.0f;
+        }
     }
     
     return 42.0f;
@@ -72,15 +73,15 @@
 {
     static NSString *CellIdentifier = @"Cell";
     
-    NSIndexPath *selected = [tableView indexPathForSelectedRow];
-    BOOL isSelectedRow = (indexPath.row == selected.row);
-    
-    NSLog(@"cellForRowAtIndexPath:: selected row: %i, indexPath row: %i", selected.row, indexPath.row);
-        
+    NSIndexPath *selected = self->_selectedIndexPath;
+    BOOL isSelectedRow = NO;
+    if (selected != nil) 
+        isSelectedRow = (indexPath.row == selected.row);
+            
     UITableViewCell *cell = nil;
     switch (isSelectedRow) {
         case YES:
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier];
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
             break;
             
         default:
@@ -94,9 +95,7 @@
     
     cell.textLabel.font       = [self->_styleService fontTextLabelPrimary];
     cell.detailTextLabel.font = [self->_styleService fontDetailTextLabelPrimary];
-    
-    cell.textLabel.numberOfLines = 2;
-    
+        
     cell.textLabel.text = note.text;
     
     return cell;
@@ -107,7 +106,25 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {    
-    [tableView reloadData];
+    NSIndexPath *newSelectedIndexPath = [tableView indexPathForSelectedRow];
+    
+    [tableView beginUpdates];
+
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:2];
+    [indexPaths addObject:newSelectedIndexPath];
+
+    if ([newSelectedIndexPath compare:self->_selectedIndexPath] == NSOrderedSame) {
+        self->_selectedIndexPath = nil;
+    }
+    else {
+        if (self->_selectedIndexPath != nil)
+            [indexPaths addObject:self->_selectedIndexPath];
+        
+        self->_selectedIndexPath = [tableView indexPathForSelectedRow];
+    }
+
+    [tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
+    [tableView endUpdates];
 }
 
 @end

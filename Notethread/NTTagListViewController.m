@@ -12,6 +12,7 @@
 #import "AppDelegate.h"
 #import "Tag.h"
 #import "StyleApplicationService.h"
+#import "StyleConstants.h"
 
 @interface NTTagListViewController (CoreData)
 - (NSFetchedResultsController *)fetchedResultsController;
@@ -53,6 +54,8 @@
     [super viewDidLoad];
 
     self.title = @"tag list";
+    
+    self->_tableView.backgroundColor = [self->_styleService paperColor];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismissView:)];
 }
@@ -111,6 +114,9 @@
     return cell;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return DefaultCellHeight;
+}
 
 #pragma mark - Table view delegate
 
@@ -121,12 +127,13 @@
 }
 
 
-#pragma mark - UITagListViewController(Selectors)
+#pragma mark - NTTagListViewController (Selectors)
 - (IBAction)dismissView:(id)sender {
     [self dismissModalViewControllerAnimated:YES];
 }
 
 
+#pragma markt - NTTagListViewController (CoreData)
 - (NSFetchedResultsController *)fetchedResultsController
 {
     if (__fetchedResultsController != nil) {
@@ -140,7 +147,6 @@
     [fetchRequest setFetchBatchSize:20];
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"notes.@count > 0"];
-    
     [fetchRequest setPredicate:predicate];
     
     // Edit the sort key as appropriate.

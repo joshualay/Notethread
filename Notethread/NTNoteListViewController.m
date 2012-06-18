@@ -16,6 +16,7 @@
 #import "AlertApplicationService.h"
 #import "SettingsViewController.h"
 #import "NTTagListViewController.h"
+#import "StyleConstants.h"
 
 
 @interface NTNoteListViewController (Private)
@@ -61,8 +62,6 @@ const NSInteger rootDepthInteger   = 0;
 // Used by NTWriteViewController, all notes at depth 0 will have child notes at depth 1. 
 // When the user taps on a row, any new childthreads created are going to be at this depth.
 const NSInteger threadDepthInteger = 1;
-
-const CGFloat   cellHeight         = 51.0f;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -215,7 +214,7 @@ const CGFloat   cellHeight         = 51.0f;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return cellHeight;
+    return DefaultCellHeight;
 }
 
 
