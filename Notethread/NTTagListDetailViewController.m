@@ -10,6 +10,7 @@
 #import "Tag.h"
 #import "Note.h"
 #import "StyleApplicationService.h"
+#import "StyleConstants.h"
 
 @interface NTTagListDetailViewController (Private)
 
@@ -62,11 +63,19 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self->_selectedIndexPath != nil) {
         if ([indexPath compare:self->_selectedIndexPath] == NSOrderedSame) {
-            return 100.0f;
+            Note *note = [self->_notes objectAtIndex:indexPath.row];
+            NSString *text = note.text;
+            
+            CGSize labelSize = [text sizeWithFont:[self->_styleService  fontTextLabelPrimary]
+                                         constrainedToSize:CGSizeMake(tableView.frame.size.width, MAXFLOAT) 
+                                             lineBreakMode:UILineBreakModeWordWrap];
+            
+            // TODO change to cell toolbar height
+            return labelSize.height + 20.0f;
         }
     }
     
-    return 42.0f;
+    return DefaultCellHeight;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -79,14 +88,20 @@
         isSelectedRow = (indexPath.row == selected.row);
             
     UITableViewCell *cell = nil;
-    switch (isSelectedRow) {
-        case YES:
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
-            break;
-            
-        default:
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-            break;
+    if (isSelectedRow) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+        
+        cell.backgroundColor = [UIColor clearColor];
+        cell.contentView.backgroundColor = [self->_styleService blackLinenColor];
+        
+        cell.detailTextLabel.backgroundColor = [UIColor clearColor];
+        
+        cell.textLabel.backgroundColor = [UIColor clearColor];
+        cell.textLabel.numberOfLines = 0;
+        cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+    }
+    else {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
 
     Note *note = [self->_notes objectAtIndex:indexPath.row];

@@ -4,6 +4,58 @@ The goal of this release is give more power to #tags. I want to be able to creat
 
 As you may have a certain tag in different notes this will just show them all in the one list; making it easy to have a quick overview.
 
+## 19/06/2012
+
+A functionality journey where I add buttons on the tag list detail cells and make them resize properly to the note in them somehow. These buttons add the special keyword #tag to the notes which I can then filter out. 
+
+Really depends if this is going to turn into a todo list or not. I think not. I'd rather have a generic #archived tag to filter things out. Probably need to make that show at the bottom as it will have the largest count in the end :/ … **TODO**
+
+Implementation details to consider:
+
+* What if I want people to use something besides #archived to filter notes?
+	* I'd need a user setting for that -- create now; future functionality possible
+* What if I want people to have multiple filter #tags?
+* What if I want people to have a "priority tag inbox (ala gMail)"?
+	* All tags
+	* Priority mode - select what tags are displayed here only; display filter
+	* Star a tag?
+	* Potential hook into Reminders?
+	
+Lots of food for thought. Going to try one way; use it; and then go again.
+
+### Worklog
+
+I'm using the inbuilt styles currently. I really want something that will expand to the size of the text. I'll play around with that first. 
+
+Firstly though. I need the actual text. Since I've stored my notes in an ivar I can look that up quite easily.
+
+Ahhh it's so obvious when you find [the solution](http://stackoverflow.com/a/4732135/626078)
+
+	Note *note = [self->_notes objectAtIndex:indexPath.row];
+	NSString *text = note.text;
+	
+	CGSize labelSize = [text sizeWithFont:[self->_styleService  fontTextLabelPrimary]
+	                             constrainedToSize:CGSizeMake(tableView.frame.size.width, MAXFLOAT) 
+	                                 lineBreakMode:UILineBreakModeWordWrap];
+	return labelSize.height + 20.0f;
+
+Now the text is still on one line. So I better change that.
+
+    switch (isSelectedRow) {
+        case YES:
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+            cell.textLabel.numberOfLines = 0;
+            cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+            break;
+            
+Key things here is setting numberOfLines to 0.
+
+Now if I want a Toolbox I need to add it as a subview in the cell. I'll need to make the height of that bar a constant so I can add it as my buffer when working out the height of the selected cell.
+
+But, I want to make a selected cell a different colour at least to make it easier to work with.
+
+I'm having issues with getting the textLabel's background being clear. It remains white.
+
 ## 18/06/2012
 
 Fix up the tag list detail cell resizing. Doesn't work for the first row.
