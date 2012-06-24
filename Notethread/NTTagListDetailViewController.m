@@ -104,7 +104,7 @@
                                              lineBreakMode:UILineBreakModeWordWrap];
             
             // TODO change to cell toolbar height
-            return labelSize.height + 20.0f;
+            return labelSize.height + 44.0f;
         }
     }
     
@@ -124,8 +124,8 @@
     UITableViewCell *cell = (isSelectedRow) ? [tableView dequeueReusableCellWithIdentifier:CellIdentifierExpanded] :
                                               [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         
-    if (isSelectedRow) {
-        if (cell == nil) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+    if (isSelectedRow) {        
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierExpanded];
         
         cell.backgroundColor = [UIColor clearColor];
         cell.contentView.backgroundColor = [self->_styleService blackLinenColor];
@@ -135,6 +135,11 @@
         cell.textLabel.backgroundColor = [UIColor clearColor];
         cell.textLabel.numberOfLines = 0;
         cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        button.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, 50.0f, 50.0f);
+        button.titleLabel.text = @"#archive";
+        [cell.contentView addSubview:button];
     }
     else {
         if (cell == nil) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];

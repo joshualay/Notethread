@@ -37,6 +37,8 @@ This has done the trick on displaying #archive in last position. However this do
 
 Going to do the filtering on the detail view. Do it so it works then see what can be done better.
 
+Added a button in the content view. Not sure what's best here. Adding another row below for the menu; or just increasing the size of the content view.
+
 
 ## 19/06/2012
 
