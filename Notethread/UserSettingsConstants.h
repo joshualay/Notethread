@@ -23,3 +23,4 @@ extern CGFloat const    FontNoteSizeSmall;
 extern CGFloat const    FontNoteSizeNormal;
 extern CGFloat const    FontNoteSizeLarge;
 
+extern NSString *const  KeywordTagsKey;

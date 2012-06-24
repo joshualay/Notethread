@@ -13,6 +13,7 @@
 #import "Tag.h"
 #import "StyleApplicationService.h"
 #import "StyleConstants.h"
+#import "UserSettingsConstants.h"
 
 @interface NTTagListViewController (CoreData)
 - (NSFetchedResultsController *)fetchedResultsController;
@@ -30,11 +31,28 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _styleService = [StyleApplicationService sharedSingleton];
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        
+        NSArray *filtered = [userDefaults arrayForKey:KeywordTagsKey];
+        if (filtered == nil) {
+            filtered = [[NSArray alloc] initWithObjects:@"archive", nil];
+            [userDefaults setObject:filtered forKey:KeywordTagsKey];
+        }
+        
         NSMutableArray *tmpTags = [[[self fetchedResultsController] fetchedObjects] mutableCopy];
         [tmpTags sortUsingComparator:^(id tag1, id tag2) {
             Tag *tagOne = (Tag *)tag1;
             Tag *tagTwo = (Tag *)tag2;
             
+            /* Tag keyword filtering */
+            if ([filtered containsObject:tagOne.name])
+                return (NSComparisonResult)NSOrderedDescending;
+            
+            if ([filtered containsObject:tagTwo.name])
+                return (NSComparisonResult)NSOrderedAscending;
+            
+            
+            /* Normal sorting by count */
             if ([tagOne.notes count] < [tagTwo.notes count])
                 return (NSComparisonResult)NSOrderedDescending;
             

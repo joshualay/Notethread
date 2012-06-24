@@ -11,9 +11,10 @@
 #import "Note.h"
 #import "StyleApplicationService.h"
 #import "StyleConstants.h"
+#import "UserSettingsConstants.h"
 
 @interface NTTagListDetailViewController (Private)
-
+- (NSArray *)arrayNotesForDataSourceFromTag:(Tag *)tag;
 @end
 
 @implementation NTTagListDetailViewController
@@ -22,7 +23,7 @@
     self = [super initWithNibName:@"NTTagListDetailViewController" bundle:nil];
     if (self) {
         _tag = tag;
-        _notes = [tag.notes allObjects];
+        _notes = [self arrayNotesForDataSourceFromTag:_tag];
         _styleService = [StyleApplicationService sharedSingleton];
         _selectedIndexPath = nil;
     }
@@ -45,8 +46,40 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return YES;
 }
+
+
+
+#pragma mark - NTTagListDetailViewController (Private)
+- (NSArray *)arrayNotesForDataSourceFromTag:(Tag *)tag {    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSArray *filtered = [userDefaults arrayForKey:KeywordTagsKey];
+    
+    NSMutableArray *dirtyNotes = [[tag.notes allObjects] mutableCopy];
+    NSMutableArray *filteredNotes = [[NSMutableArray alloc] initWithCapacity:[dirtyNotes count]];
+    
+    BOOL shouldFilter = NO;
+    for (Note *dirtyNote in dirtyNotes) {
+        for (Tag *tag in dirtyNote.tags) {
+            if ([filtered containsObject:tag.name]) {
+                shouldFilter = YES;
+                break;
+            }
+        }
+        
+        if (!shouldFilter)
+            [filteredNotes addObject:dirtyNote];
+        
+        shouldFilter = NO;
+    }
+    
+    dirtyNotes = nil;
+
+    return [filteredNotes copy];   
+}
+
+
 
 #pragma mark - Table view data source
 
@@ -81,15 +114,18 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifierExpanded = @"CellExpanded";
     
     NSIndexPath *selected = self->_selectedIndexPath;
     BOOL isSelectedRow = NO;
     if (selected != nil) 
         isSelectedRow = (indexPath.row == selected.row);
             
-    UITableViewCell *cell = nil;
+    UITableViewCell *cell = (isSelectedRow) ? [tableView dequeueReusableCellWithIdentifier:CellIdentifierExpanded] :
+                                              [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        
     if (isSelectedRow) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+        if (cell == nil) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
         
         cell.backgroundColor = [UIColor clearColor];
         cell.contentView.backgroundColor = [self->_styleService blackLinenColor];
@@ -101,7 +137,7 @@
         cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
     }
     else {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        if (cell == nil) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
 
     Note *note = [self->_notes objectAtIndex:indexPath.row];
@@ -112,7 +148,7 @@
     cell.detailTextLabel.font = [self->_styleService fontDetailTextLabelPrimary];
         
     cell.textLabel.text = note.text;
-    
+         
     return cell;
 }
 

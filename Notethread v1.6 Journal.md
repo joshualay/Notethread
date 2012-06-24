@@ -4,6 +4,40 @@ The goal of this release is give more power to #tags. I want to be able to creat
 
 As you may have a certain tag in different notes this will just show them all in the one list; making it easy to have a quick overview.
 
+## 24/06/2012
+
+* Add button to #archive
+* Add #tag keyword filter
+
+### Worklog
+
+NTTagListViewController - ignore keywords in sorting so they'll be last… hopefully.
+
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        
+        NSArray *filtered = [userDefaults arrayForKey:KeywordTagsKey];
+        if (filtered == nil) {
+            filtered = [[NSArray alloc] initWithObjects:@"archive", nil];
+            [userDefaults setObject:filtered forKey:KeywordTagsKey];
+        }
+        
+        NSMutableArray *tmpTags = [[[self fetchedResultsController] fetchedObjects] mutableCopy];
+        [tmpTags sortUsingComparator:^(id tag1, id tag2) {
+            Tag *tagOne = (Tag *)tag1;
+            Tag *tagTwo = (Tag *)tag2;
+            
+            /* Tag keyword filtering */
+            if ([filtered containsObject:tagOne.name])
+                return (NSComparisonResult)NSOrderedDescending;
+            
+            if ([filtered containsObject:tagTwo.name])
+                return (NSComparisonResult)NSOrderedAscending;
+                
+This has done the trick on displaying #archive in last position. However this doesn't really solve the issue of removing the notes with #archive from the tag list.
+
+Going to do the filtering on the detail view. Do it so it works then see what can be done better.
+
+
 ## 19/06/2012
 
 A functionality journey where I add buttons on the tag list detail cells and make them resize properly to the note in them somehow. These buttons add the special keyword #tag to the notes which I can then filter out. 

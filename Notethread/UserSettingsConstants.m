@@ -25,3 +25,5 @@ CGFloat const    FontLabelSizeDefault = 16.0f;
 CGFloat const    FontNoteSizeSmall = 16.0f;
 CGFloat const    FontNoteSizeNormal = 18.0f;
 CGFloat const    FontNoteSizeLarge = 20.0f;
+
+NSString *const KeywordTagsKey = @"KeywordTags";

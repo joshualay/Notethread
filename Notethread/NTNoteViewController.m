@@ -253,7 +253,7 @@ const CGFloat threadCellRowHeight = 42.0f;
                                                              delegate:self 
                                                     cancelButtonTitle:@"Cancel" 
                                                destructiveButtonTitle:nil 
-                                                    otherButtonTitles:@"Email", @"Tweet", nil];
+                                                    otherButtonTitles:@"Email", @"Tweet note", nil];
     
     [actionSheet showInView:self.view];
 }
