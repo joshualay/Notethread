@@ -75,9 +75,11 @@
     
     self->_tableView.backgroundColor = [self->_styleService paperColor];
     
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismissView:)];
+    UIBarButtonItem *leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Home" style:UIBarButtonItemStyleDone target:self action:@selector(dismissView:)];
+    
+    self.navigationItem.leftBarButtonItem = leftBarButtonItem;
 }
-
+    
 - (void)viewDidUnload
 {
     [super viewDidUnload];

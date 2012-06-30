@@ -17,6 +17,8 @@
 - (NSArray *)arrayNotesForDataSourceFromTag:(Tag *)tag;
 @end
 
+#define SELECTED_CELL_PADDING 44.0f
+
 @implementation NTTagListDetailViewController
 
 - (id)initWithTag:(Tag *)tag {
@@ -35,6 +37,8 @@
     [super viewDidLoad];
 
     self.title = self->_tag.name;
+    
+    self->_tableView.backgroundColor = [self->_styleService paperColor];
 }
 
 - (void)viewDidUnload
@@ -102,9 +106,8 @@
             CGSize labelSize = [text sizeWithFont:[self->_styleService  fontTextLabelPrimary]
                                          constrainedToSize:CGSizeMake(tableView.frame.size.width, MAXFLOAT) 
                                              lineBreakMode:UILineBreakModeWordWrap];
-            
-            // TODO change to cell toolbar height
-            return labelSize.height + 44.0f;
+
+            return labelSize.height + SELECTED_CELL_PADDING + NoteThreadActionToolbarHeight;
         }
     }
     
@@ -124,11 +127,13 @@
     UITableViewCell *cell = (isSelectedRow) ? [tableView dequeueReusableCellWithIdentifier:CellIdentifierExpanded] :
                                               [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         
+    Note *note = [self->_notes objectAtIndex:indexPath.row];
+    
     if (isSelectedRow) {        
+        // As the sizing is dynamic I can't reuse the cells
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierExpanded];
         
         cell.backgroundColor = [UIColor clearColor];
-        cell.contentView.backgroundColor = [self->_styleService blackLinenColor];
         
         cell.detailTextLabel.backgroundColor = [UIColor clearColor];
         
@@ -136,16 +141,31 @@
         cell.textLabel.numberOfLines = 0;
         cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
 
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        button.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, 50.0f, 50.0f);
-        button.titleLabel.text = @"#archive";
-        [cell.contentView addSubview:button];
+        CGSize labelSize = [note.text sizeWithFont:[self->_styleService fontTextLabelPrimary]
+                            constrainedToSize:CGSizeMake(tableView.frame.size.width, MAXFLOAT) 
+                                lineBreakMode:UILineBreakModeWordWrap];
+        
+        //TODO - make it a dynamic scroll view of buttons if I allow customisation for this
+        UIView *barView = [[UIView alloc] initWithFrame:CGRectMake(cell.contentView.frame.origin.x, labelSize.height + SELECTED_CELL_PADDING, cell.frame.size.width, NoteThreadActionToolbarHeight)];
+        // TODO - refactor into style service
+        barView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];
+        
+        NSString *archiveString = @"#archive";
+        
+        UIButton *button = [self->_styleService customUIButtonStyle];
+        CGSize stringSize = [archiveString sizeWithFont:[self->_styleService fontTagButton]];
+        
+        button.frame = CGRectMake(10.0f, 2.0f, stringSize.width + 10.0f, NoteThreadActionToolbarHeight - 5.0f);
+        [button setTitle:archiveString forState:UIControlStateNormal];
+        button.titleLabel.font = [self->_styleService fontTagButton];
+        
+        [barView addSubview:button];
+        
+        [cell addSubview:barView];
     }
     else {
         if (cell == nil) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
-
-    Note *note = [self->_notes objectAtIndex:indexPath.row];
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     

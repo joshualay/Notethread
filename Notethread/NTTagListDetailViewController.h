@@ -20,6 +20,8 @@
     // Maintaining selected index path so tableView:cellForRowAtIndexPath: can have this knowledge.
     // indexPathForSelectedRow always resolves to the first row for that method.
     NSIndexPath *_selectedIndexPath;
+    
+    IBOutlet UITableView *_tableView;
 }
 
 - (id)initWithTag:(Tag *)tag;

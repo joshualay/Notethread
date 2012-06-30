@@ -4,6 +4,44 @@ The goal of this release is give more power to #tags. I want to be able to creat
 
 As you may have a certain tag in different notes this will just show them all in the one list; making it easy to have a quick overview.
 
+## 1/07/2012
+
+Playing around with getting the toolbar in place.
+
+### Worklog
+
+I need to get the height of the text label twice. So when I'm creating a selected cell I add the action bar at the right location. Then when working out the height it's all okay. 
+
+Seem to have gotten the bar to turn up properly. Made it red so I can actually see what's going on. 
+
+Adjustment for the button:
+
+        button.frame = CGRectMake(0, 0, 25.0f, NoteThreadActionToolbarHeight);
+
+origin.x and origin.y are now 0. This is relative to the view this button is added to.
+
+Just playing around with the button sizing and positioning.
+
+Changing the wording on the left bar button item to "Home". Better than "Cancel".
+
+
+## 25/06/2012
+
+Push the button.
+
+Well. Get it in the right place first for the Tag Detail View Table View Cell.
+
+### Worklog
+
+If I try and add the button in "properly" I can't do it. I believe the cell is drawn first and then the height is checked. This is an issue as I need to increase the size of the cell to accomodate for the toolbar. Trying to do this in tableView:cellForRowAtIndexPath: won't work as it's using the dimensions of a standard cell. It's going to draw it in the wrong place all the time.
+
+I think I need to add a row in.
+
+Should be a matter of knowing where I am and inserting it. Need to associate actions on that bar with the row though. Probably have to maintain some state. Shouldn't be too hard..
+
+http://stackoverflow.com/questions/5952691/how-to-create-a-toolbar-between-uitableview-rows
+
+
 ## 24/06/2012
 
 * Add button to #archive
