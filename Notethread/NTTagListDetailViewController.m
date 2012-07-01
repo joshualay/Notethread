@@ -19,6 +19,7 @@
 @interface NTTagListDetailViewController (Private)
 - (NSArray *)arrayNotesForDataSourceFromTag:(Tag *)tag;
 - (IBAction)addFilteredTagToNote:(id)sender;
+- (BOOL)hasNoteTagFromSet:(NSSet *)tags inFilter:(NSArray *)filter;
 @end
 
 #define SELECTED_CELL_PADDING 44.0f
@@ -67,27 +68,28 @@
 
 
 #pragma mark - NTTagListDetailViewController (Private)
-- (NSArray *)arrayNotesForDataSourceFromTag:(Tag *)tag {    
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSArray *filtered = [userDefaults arrayForKey:KeywordTagsKey];
-    
+
+- (BOOL)hasNoteTagFromSet:(NSSet *)tags inFilter:(NSArray *)filter {
+    for (Tag *tag in tags) {
+        if ([filter containsObject:tag.name]) {
+            return YES;
+        }
+    }    
+    return NO;
+}
+
+- (NSArray *)arrayNotesForDataSourceFromTag:(Tag *)tag {        
     NSMutableArray *dirtyNotes = [[tag.notes allObjects] mutableCopy];
     NSMutableArray *filteredNotes = [[NSMutableArray alloc] initWithCapacity:[dirtyNotes count]];
     
     // TODO - check if this tag is a filtered tag - then we don't do anything
-    BOOL shouldFilter = NO;
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSArray *filtered = [userDefaults arrayForKey:KeywordTagsKey];
+    
     for (Note *dirtyNote in dirtyNotes) {
-        for (Tag *tag in dirtyNote.tags) {
-            if ([filtered containsObject:tag.name]) {
-                shouldFilter = YES;
-                break;
-            }
+        if ([self hasNoteTagFromSet:dirtyNote.tags inFilter:filtered]) {
+            [filteredNotes addObject:dirtyNote];        
         }
-        
-        if (!shouldFilter)
-            [filteredNotes addObject:dirtyNote];
-        
-        shouldFilter = NO;
     }
     
     dirtyNotes = nil;
@@ -137,17 +139,13 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self->_selectedIndexPath != nil) {
-        if ([indexPath compare:self->_selectedIndexPath] == NSOrderedSame) {
-            Note *note = [self->_notes objectAtIndex:indexPath.row];
-            NSString *text = note.text;
-            
-            CGSize labelSize = [text sizeWithFont:[self->_styleService  fontTextLabelPrimary]
-                                         constrainedToSize:CGSizeMake(tableView.frame.size.width, MAXFLOAT) 
-                                             lineBreakMode:UILineBreakModeWordWrap];
+    if (self->_selectedIndexPath != nil && ([indexPath compare:self->_selectedIndexPath] == NSOrderedSame)) {
+        Note *note = [self->_notes objectAtIndex:indexPath.row];
+        CGSize labelSize = [note.text sizeWithFont:[self->_styleService  fontTextLabelPrimary]
+                                     constrainedToSize:CGSizeMake(tableView.frame.size.width, MAXFLOAT) 
+                                         lineBreakMode:UILineBreakModeWordWrap];
 
-            return labelSize.height + SELECTED_CELL_PADDING + NoteThreadActionToolbarHeight;
-        }
+        return labelSize.height + SELECTED_CELL_PADDING + NoteThreadActionToolbarHeight;
     }
     
     return DefaultCellHeight;
@@ -159,15 +157,13 @@
     static NSString *CellIdentifierExpanded = @"CellExpanded";
     
     NSIndexPath *selected = self->_selectedIndexPath;
-    BOOL isSelectedRow = NO;
-    if (selected != nil) 
-        isSelectedRow = (indexPath.row == selected.row);
-            
+    BOOL isSelectedRow = (selected != nil && (indexPath.row == selected.row));
+    
     UITableViewCell *cell = (isSelectedRow) ? [tableView dequeueReusableCellWithIdentifier:CellIdentifierExpanded] :
                                               [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         
     Note *note = [self->_notes objectAtIndex:indexPath.row];
-    
+
     if (isSelectedRow) {        
         // As the height of the cell is dynamic I can't reuse the cells
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierExpanded];
@@ -210,18 +206,19 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {    
     NSIndexPath *newSelectedIndexPath = [tableView indexPathForSelectedRow];
-    
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:2];
+
     [tableView beginUpdates];
 
-    NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:2];
     [indexPaths addObject:newSelectedIndexPath];
-
+    
     if ([newSelectedIndexPath compare:self->_selectedIndexPath] == NSOrderedSame) {
         self->_selectedIndexPath = nil;
     }
     else {
-        if (self->_selectedIndexPath != nil)
+        if (self->_selectedIndexPath != nil) {
             [indexPaths addObject:self->_selectedIndexPath];
+        }
         
         self->_selectedIndexPath = [tableView indexPathForSelectedRow];
     }

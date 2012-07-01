@@ -40,6 +40,6 @@
 @property (strong, nonatomic) IBOutlet UITextView *noteTextView;
 
 - (void)addButtonTagNameToText:(id)sender;
-
+- (NSString *)titleForNote:(NSString *)text;
 
 @end

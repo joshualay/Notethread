@@ -64,7 +64,7 @@ Just updated all my core data alert services to use the error message.
 
 	[error localizedDescription]
 
-
+Playing around with a little refactoring and just making things a bit more readable and consistent.
 
 ## 25/06/2012
 

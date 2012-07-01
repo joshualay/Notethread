@@ -146,25 +146,27 @@
 
 
 #pragma mark - Private
-- (NSString *)stringWordTillPreviousSpaceInText:(NSString *)text fromLocation:(NSUInteger)location {
-    BOOL isSpaceCharacter = NO;
-    
+- (NSString *)stringWordTillPreviousSpaceInText:(NSString *)text fromLocation:(NSUInteger)location {    
     NSMutableArray *foundCharacters = [[NSMutableArray alloc] init];
     
-    // Start after
+    // Start after the current location
     location = location - 1;
-    while (!isSpaceCharacter) {
+    
+    BOOL isSpaceCharacter = NO;
+    do {
         unichar prevChar = [text characterAtIndex:location];
         NSString *prevCharStr = [NSString stringWithFormat:@"%C", prevChar];
         
         if ([prevCharStr rangeOfCharacterFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].location != NSNotFound) {
             isSpaceCharacter = YES;
-            break;
+        }
+        else {        
+            [foundCharacters addObject:prevCharStr];
         }
         
-        [foundCharacters addObject:prevCharStr];
-        location--;
-    }
+        location -= 1;
+        
+    } while (!isSpaceCharacter);
     
     NSArray *orderedFoundCharacters = [foundCharacters reverseArray];
     NSMutableString *prevWord = [[NSMutableString alloc] initWithCapacity:[orderedFoundCharacters count]];

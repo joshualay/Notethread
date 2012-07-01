@@ -73,6 +73,17 @@
     self.noteTextView.inputAccessoryView = self->_tagButtonScrollView;
 }
 
+- (NSString *)titleForNote:(NSString *)text {
+    NSRange newLineRange = [text rangeOfString:@"\n"];
+    if (newLineRange.location != NSNotFound) {
+        NSRange headingRange   = NSMakeRange(0, newLineRange.location);
+        
+        return [text substringWithRange:headingRange];
+    }
+    
+    return text;
+}
+
 - (IBAction)addTagToNote:(id)sender {
     NSRange selectedRange = self.noteTextView.selectedRange;
     NSUInteger insertionLocation = selectedRange.location;
@@ -93,11 +104,13 @@
         [noteText replaceCharactersInRange:range withString:@"#"];
     }
     
+    // This is so the UITextView doesn't scroll to the bottom when text is changed
     self.noteTextView.scrollEnabled = NO;
     self.noteTextView.text = noteText;
     self.noteTextView.scrollEnabled = YES;
     
-    NSRange newRange = NSMakeRange(insertionLocation + 1, 0);
+    NSUInteger afterHashSymbolLocation = insertionLocation + 1;
+    NSRange newRange = NSMakeRange(afterHashSymbolLocation, 0);
     self.noteTextView.selectedRange = newRange;
     
     [self->_tagTracker setIsTracking:YES withTermOrNil:nil];
@@ -122,7 +135,9 @@
     self.noteTextView.scrollEnabled = NO;
     self.noteTextView.text = noteText;
     self.noteTextView.scrollEnabled = YES;
-    NSRange newRange = NSMakeRange(insertionLocation + [tagString length], 0);
+    
+    NSUInteger newCursorLocation = insertionLocation + [tagString length];
+    NSRange newRange = NSMakeRange(newCursorLocation, 0);
     self.noteTextView.selectedRange = newRange;
     
     // Tidying up

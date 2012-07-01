@@ -71,8 +71,7 @@
     [self removeKeyboardNotificationObservers];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return YES;
 }
 
@@ -162,7 +161,7 @@
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {    
     [super textView:textView shouldChangeTextInRange:range replacementText:text];
 
-    self.navigationBar.topItem.title = [NSString stringWithFormat:@"%@%@", textView.text, text];
+    self.navigationBar.topItem.title = [self titleForNote:textView.text];
     self.saveButton.enabled = ([textView.text length]) ? YES : NO;
     
     if (range.location == 0 && [text isEqualToString:@""]) {

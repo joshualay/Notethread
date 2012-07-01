@@ -48,7 +48,7 @@
     
     NSUInteger xBuffer = 4.0f;
     NSInteger xOffset = 5.0f;
-    for (int i = 0; i < maxButtons; i++) {
+    for (int i = 0; i < maxButtons; ++i) {
         UIButton *button = [delegate buttonForIndex:i];
         button.titleLabel.font = font;
         

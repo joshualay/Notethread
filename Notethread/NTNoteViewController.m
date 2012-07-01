@@ -22,7 +22,6 @@
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 - (UIBarButtonItem *)defaultRightBarButtonItem;
 - (void)resetNavigationItemFromEditing;
-- (NSString *)titleForNote:(NSString *)text;
 - (void)willEditNoteTextView:(id)sender;
 - (void)navigationBarForNoteEditing;
 @end
@@ -146,17 +145,6 @@ const CGFloat threadCellRowHeight = 42.0f;
     [self.noteTextView resignFirstResponder];     
 }
 
-- (NSString *)titleForNote:(NSString *)text {
-    NSRange newLineRange = [text rangeOfString:@"\n"];
-    if (newLineRange.location != NSNotFound) {
-        NSRange headingRange   = NSMakeRange(0, newLineRange.location);
-        
-        return [text substringWithRange:headingRange];
-    }
-    
-    return text;
-}
-
 - (void)navigationBarForNoteEditing {
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(editingNoteDone:)];
     self.navigationItem.leftBarButtonItem  = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(editingNoteCancel:)];
@@ -271,16 +259,22 @@ const CGFloat threadCellRowHeight = 42.0f;
 
 #pragma mark - NTNoteViewController(NoteViewDisplay_and_Actions)
 - (void)editingNoteDone:(id)sender {
-    if ([self respondsToSelector:@selector(saveNote:)])
+    if ([self respondsToSelector:@selector(saveNote:)]) {
         [self saveNote:sender];
+    }
 
     self.title = [self titleForNote:self.noteTextView.text];
     [self resetNavigationItemFromEditing];
 }
 
 - (void)editingNoteCancel:(id)sender {
+    // Disable scrolling when reverting the changes to text
+    self.noteTextView.scrollEnabled = NO;
     self.noteTextView.text = self.note.text;
+    self.noteTextView.scrollEnabled = YES;
+    
     self.title = [self titleForNote:self.noteTextView.text];
+    
     [self resetNavigationItemFromEditing];
 }
 
@@ -364,8 +358,9 @@ const CGFloat threadCellRowHeight = 42.0f;
 
 #pragma UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (self.noteThreads == nil)
+    if (self.noteThreads == nil) {
         return 0;
+    }
     
     return [self.noteThreads count];
 }
@@ -502,7 +497,7 @@ const CGFloat threadCellRowHeight = 42.0f;
 
 - (void)textViewDidChange:(UITextView *)textView {
     self.title = [self titleForNote:textView.text];
-    self.navigationItem.rightBarButtonItem.enabled =  ([textView.text length]) ? YES : NO;
+    self.navigationItem.rightBarButtonItem.enabled =  ([textView.text length]);
 }
 
 #pragma mark @selector
