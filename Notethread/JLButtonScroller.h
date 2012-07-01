@@ -14,7 +14,6 @@
 - (NSInteger)numberOfButtons;
 - (UIButton *)buttonForIndex:(NSInteger)position;
 - (NSString *)stringForIndex:(NSInteger)position;
-- (CGFloat)heightForScrollView;
 
 @optional
 - (void)setTitleForStateNormalFor:(UIButton *)button atIndex:(NSInteger)position;
@@ -23,6 +22,7 @@
 - (void)setTitleForStateDisabledFor:(UIButton *)button atIndex:(NSInteger)position;
 - (CGFloat)paddingForButton;
 - (CGFloat)heightForButton;
+- (CGFloat)heightForScrollView;
 @end
 
 @interface JLButtonScroller : NSObject <UIScrollViewDelegate> {

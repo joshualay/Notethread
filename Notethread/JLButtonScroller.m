@@ -41,6 +41,11 @@
     }
     
     
+    CGFloat scrollViewHeight = scrollView.frame.size.height;
+    if ([delegate respondsToSelector:@selector(heightForScrollView)])
+        scrollViewHeight = [delegate heightForScrollView];
+    
+    
     NSUInteger xBuffer = 4.0f;
     NSInteger xOffset = 5.0f;
     for (int i = 0; i < maxButtons; i++) {
@@ -55,7 +60,10 @@
         if ([delegate respondsToSelector:@selector(heightForButton)])
             heightForButton = [delegate heightForButton];
         
-        button.frame = CGRectMake(xOffset, 4.0f, stringWidth, heightForButton);
+        CGFloat gap = scrollViewHeight - heightForButton;
+        CGFloat yOffset = roundf(gap/2.0f);
+        
+        button.frame = CGRectMake(xOffset, yOffset, stringWidth, heightForButton);
         
         [button setTitle:text forState:UIControlStateNormal];
         [button setTitle:text forState:UIControlStateHighlighted];
@@ -79,7 +87,7 @@
         xOffset += stringWidth + xBuffer;
     }
     
-    [scrollView setContentSize:CGSizeMake(xOffset, [delegate heightForScrollView])];
+    [scrollView setContentSize:CGSizeMake(xOffset, scrollViewHeight)];
 }
 
 #pragma mark - UIScrollViewDelegate 

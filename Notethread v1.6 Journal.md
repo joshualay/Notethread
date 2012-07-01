@@ -24,6 +24,47 @@ Just playing around with the button sizing and positioning.
 
 Changing the wording on the left bar button item to "Home". Better than "Cancel".
 
+Since I've created this with tag filters settable as a user setting. I'm going to create a scroll view instead and dynamically add those tags to the bar below. It's going to just be #archive for now; but this is in the event people want custom tag exlusion for different notes.
+
+Needed to change JLButtonScroller:
+ 
+* Have the scroll view height as an optional method for the delegate
+* Calculate the y origin of the button dynamically
+
+All work now. Just need to add the functionality to the button.
+
+	- (IBAction)addFilteredTagToNote:(id)sender {
+	    UIButton *button = (UIButton *)sender;
+	    NSString *tagString = button.titleLabel.text;
+	    
+	    Note *selectedNote = [self->_notes objectAtIndex:self->_selectedIndexPath.row];
+	    selectedNote.text = [NSString stringWithFormat:@"%@ %@", selectedNote.text, tagString];
+	    
+	    NSArray *tagsInNote = [self->_tagService arrayOfTagsInText:selectedNote.text];
+	    
+	    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
+	    
+	    [self->_tagService storeTags:tagsInNote withRelationship:selectedNote inManagedContext:managedObjectContext];
+	    
+	    NSError *error = nil;
+	    if (![managedObjectContext save:&error]) {
+	        [AlertApplicationService alertViewForCoreDataError:nil];
+	    } 
+	    
+	    self->_notes = [self arrayNotesForDataSourceFromTag:self->_tag];
+	    
+	    [self->_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:self->_selectedIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+	    self->_selectedIndexPath = nil;
+	}
+
+Now I have the issue that my filtering in TagDetailView will not display anything when viewing the actual filtered tags!!! E.g. #archive shows nothing!
+
+Just updated all my core data alert services to use the error message.
+
+	[error localizedDescription]
+
+
 
 ## 25/06/2012
 

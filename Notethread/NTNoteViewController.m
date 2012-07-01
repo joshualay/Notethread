@@ -410,7 +410,7 @@ const CGFloat threadCellRowHeight = 42.0f;
                 
         NSError *error = nil;
         if (![managedObjectContext save:&error]) {
-            [AlertApplicationService alertViewForCoreDataError:nil];
+            [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
         }
     }   
 }
@@ -436,7 +436,7 @@ const CGFloat threadCellRowHeight = 42.0f;
     
     NSError *error = nil;
     if (![managedObjectContext save:&error]) {
-        [AlertApplicationService alertViewForCoreDataError:nil];
+        [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
     }
 }
 
@@ -478,7 +478,7 @@ const CGFloat threadCellRowHeight = 42.0f;
     
     NSError *error = nil;
     if (![managedObjectContext save:&error]) {
-        [AlertApplicationService alertViewForCoreDataError:nil];
+        [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
     }    
 }
 

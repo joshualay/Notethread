@@ -76,7 +76,7 @@
     {
         if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error])
         {
-            [AlertApplicationService alertViewForCoreDataError:nil];
+            [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
         } 
     }
 }
@@ -135,7 +135,7 @@
     __persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
     if (![__persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error])
     {
-        [AlertApplicationService alertViewForCoreDataError:nil];
+        [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
     }    
     
     return __persistentStoreCoordinator;

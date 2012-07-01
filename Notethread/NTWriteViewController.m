@@ -107,7 +107,7 @@
     
     NSError *error = nil;
     if (![managedObjectContext save:&error]) {
-        [AlertApplicationService alertViewForCoreDataError:nil];
+        [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
     } 
     
     [self dismissModalViewControllerAnimated:YES];

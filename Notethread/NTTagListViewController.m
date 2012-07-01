@@ -24,6 +24,10 @@
 - (IBAction)dismissView:(id)sender;
 @end
 
+@interface NTTagListViewController (Private)
+- (void)reloadTagDataStore;
+@end
+
 @implementation NTTagListViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -31,38 +35,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _styleService = [StyleApplicationService sharedSingleton];
-        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-        
-        NSArray *filtered = [userDefaults arrayForKey:KeywordTagsKey];
-        if (filtered == nil) {
-            filtered = [[NSArray alloc] initWithObjects:@"archive", nil];
-            [userDefaults setObject:filtered forKey:KeywordTagsKey];
-        }
-        
-        NSMutableArray *tmpTags = [[[self fetchedResultsController] fetchedObjects] mutableCopy];
-        [tmpTags sortUsingComparator:^(id tag1, id tag2) {
-            Tag *tagOne = (Tag *)tag1;
-            Tag *tagTwo = (Tag *)tag2;
-            
-            /* Tag keyword filtering */
-            if ([filtered containsObject:tagOne.name])
-                return (NSComparisonResult)NSOrderedDescending;
-            
-            if ([filtered containsObject:tagTwo.name])
-                return (NSComparisonResult)NSOrderedAscending;
-            
-            
-            /* Normal sorting by count */
-            if ([tagOne.notes count] < [tagTwo.notes count])
-                return (NSComparisonResult)NSOrderedDescending;
-            
-            if ([tagOne.notes count] > [tagTwo.notes count])
-                return (NSComparisonResult)NSOrderedAscending;
-            
-            return (NSComparisonResult)NSOrderedSame;
-        }];
-        _tags = [tmpTags copy];
-        tmpTags = nil;
+        [self reloadTagDataStore];
     }
     return self;
 }
@@ -87,6 +60,11 @@
     // e.g. self.myOutlet = nil;
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self reloadTagDataStore];
+}
+
 - (void)viewDidDisappear:(BOOL)animated {
     [self->_tableView deselectRowAtIndexPath:[self->_tableView indexPathForSelectedRow] animated:YES];
     [super viewDidDisappear:animated];
@@ -96,6 +74,43 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+#pragma mark - NTTagListViewController (Private)
+
+- (void)reloadTagDataStore {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    
+    NSArray *filtered = [userDefaults arrayForKey:KeywordTagsKey];
+    if (filtered == nil) {
+        filtered = [[NSArray alloc] initWithObjects:@"archive", nil];
+        [userDefaults setObject:filtered forKey:KeywordTagsKey];
+    }
+    
+    NSMutableArray *tmpTags = [[[self fetchedResultsController] fetchedObjects] mutableCopy];
+    [tmpTags sortUsingComparator:^(id tag1, id tag2) {
+        Tag *tagOne = (Tag *)tag1;
+        Tag *tagTwo = (Tag *)tag2;
+        
+        /* Tag keyword filtering */
+        if ([filtered containsObject:tagOne.name])
+            return (NSComparisonResult)NSOrderedDescending;
+        
+        if ([filtered containsObject:tagTwo.name])
+            return (NSComparisonResult)NSOrderedAscending;
+        
+        
+        /* Normal sorting by count */
+        if ([tagOne.notes count] < [tagTwo.notes count])
+            return (NSComparisonResult)NSOrderedDescending;
+        
+        if ([tagOne.notes count] > [tagTwo.notes count])
+            return (NSComparisonResult)NSOrderedAscending;
+        
+        return (NSComparisonResult)NSOrderedSame;
+    }];
+    _tags = [tmpTags copy];
+    tmpTags = nil;    
 }
 
 #pragma mark - Table view data source
@@ -127,9 +142,6 @@
     
     Tag *tag = [self->_tags objectAtIndex:[indexPath row]];
     cell.textLabel.text = tag.name;
-    
-    // Using the note count as frequency denotes how often the tag is used for all time
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"Count: %i", [tag.notes count]];
     
     return cell;
 }
@@ -181,7 +193,7 @@
     
 	NSError *error = nil;
 	if (![self.fetchedResultsController performFetch:&error]) {
-        [AlertApplicationService alertViewForCoreDataError:nil];
+        [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
 	}
     
     return __fetchedResultsController;

@@ -12,9 +12,13 @@
 #import "StyleApplicationService.h"
 #import "StyleConstants.h"
 #import "UserSettingsConstants.h"
+#import "AppDelegate.h"
+#import "AlertApplicationService.h"
+#import "TagService.h"
 
 @interface NTTagListDetailViewController (Private)
 - (NSArray *)arrayNotesForDataSourceFromTag:(Tag *)tag;
+- (IBAction)addFilteredTagToNote:(id)sender;
 @end
 
 #define SELECTED_CELL_PADDING 44.0f
@@ -28,6 +32,13 @@
         _notes = [self arrayNotesForDataSourceFromTag:_tag];
         _styleService = [StyleApplicationService sharedSingleton];
         _selectedIndexPath = nil;
+        _buttonScroller = [[JLButtonScroller alloc] init];
+        _buttonScroller.delegate = self;
+        
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        _filteredTags = [userDefaults arrayForKey:KeywordTagsKey];
+        
+        _tagService = [[TagService alloc] init];                        
     }
     return self;
 }
@@ -63,6 +74,7 @@
     NSMutableArray *dirtyNotes = [[tag.notes allObjects] mutableCopy];
     NSMutableArray *filteredNotes = [[NSMutableArray alloc] initWithCapacity:[dirtyNotes count]];
     
+    // TODO - check if this tag is a filtered tag - then we don't do anything
     BOOL shouldFilter = NO;
     for (Note *dirtyNote in dirtyNotes) {
         for (Tag *tag in dirtyNote.tags) {
@@ -81,6 +93,33 @@
     dirtyNotes = nil;
 
     return [filteredNotes copy];   
+}
+
+
+- (IBAction)addFilteredTagToNote:(id)sender {
+    UIButton *button = (UIButton *)sender;
+    NSString *tagString = button.titleLabel.text;
+    
+    Note *selectedNote = [self->_notes objectAtIndex:self->_selectedIndexPath.row];
+    selectedNote.text = [NSString stringWithFormat:@"%@ %@", selectedNote.text, tagString];
+    
+    NSArray *tagsInNote = [self->_tagService arrayOfTagsInText:selectedNote.text];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
+    
+    [self->_tagService storeTags:tagsInNote withRelationship:selectedNote inManagedContext:managedObjectContext];
+    
+    NSError *error = nil;
+    if (![managedObjectContext save:&error]) {
+        [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
+    } 
+    
+    // Reload the data store
+    self->_notes = [self arrayNotesForDataSourceFromTag:self->_tag];
+    [self->_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:self->_selectedIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    // nil out so we don't get the previous row selected
+    self->_selectedIndexPath = nil;
 }
 
 
@@ -130,7 +169,7 @@
     Note *note = [self->_notes objectAtIndex:indexPath.row];
     
     if (isSelectedRow) {        
-        // As the sizing is dynamic I can't reuse the cells
+        // As the height of the cell is dynamic I can't reuse the cells
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierExpanded];
         
         cell.backgroundColor = [UIColor clearColor];
@@ -145,23 +184,11 @@
                             constrainedToSize:CGSizeMake(tableView.frame.size.width, MAXFLOAT) 
                                 lineBreakMode:UILineBreakModeWordWrap];
         
-        //TODO - make it a dynamic scroll view of buttons if I allow customisation for this
-        UIView *barView = [[UIView alloc] initWithFrame:CGRectMake(cell.contentView.frame.origin.x, labelSize.height + SELECTED_CELL_PADDING, cell.frame.size.width, NoteThreadActionToolbarHeight)];
-        // TODO - refactor into style service
-        barView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];
+        UIScrollView *barScrollView = [self->_styleService scrollViewForTagAtPoint:CGPointMake(cell.contentView.frame.origin.x, labelSize.height + SELECTED_CELL_PADDING) width:self.view.frame.size.width];
         
-        NSString *archiveString = @"#archive";
+        [self->_buttonScroller addButtonsForContentAreaIn:barScrollView];
         
-        UIButton *button = [self->_styleService customUIButtonStyle];
-        CGSize stringSize = [archiveString sizeWithFont:[self->_styleService fontTagButton]];
-        
-        button.frame = CGRectMake(10.0f, 2.0f, stringSize.width + 10.0f, NoteThreadActionToolbarHeight - 5.0f);
-        [button setTitle:archiveString forState:UIControlStateNormal];
-        button.titleLabel.font = [self->_styleService fontTagButton];
-        
-        [barView addSubview:button];
-        
-        [cell addSubview:barView];
+        [cell addSubview:barScrollView];
     }
     else {
         if (cell == nil) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
@@ -201,6 +228,27 @@
 
     [tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
     [tableView endUpdates];
+}
+
+
+#pragma mark - JLButtonScrollerDelegate
+
+- (UIFont *)fontForButton {
+    return [self->_styleService fontTagButton];
+}
+
+- (NSInteger)numberOfButtons {
+    return [self->_filteredTags count];
+}
+
+- (UIButton *)buttonForIndex:(NSInteger)position {
+    UIButton *tagButton = [self->_styleService customUIButtonStyle];
+    [tagButton addTarget:self action:@selector(addFilteredTagToNote:) forControlEvents:UIControlEventTouchUpInside];
+    return tagButton;
+}
+
+- (NSString *)stringForIndex:(NSInteger)position {
+    return [NSString stringWithFormat:@"#%@", [self->_filteredTags objectAtIndex:position]];
 }
 
 @end

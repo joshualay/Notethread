@@ -203,7 +203,7 @@ const NSInteger threadDepthInteger = 1;
         // Save the context.
         NSError *error = nil;
         if (![context save:&error]) {
-            [AlertApplicationService alertViewForCoreDataError:nil];
+            [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
         }
     }   
 }
@@ -255,7 +255,7 @@ const NSInteger threadDepthInteger = 1;
     
 	NSError *error = nil;
 	if (![self.fetchedResultsController performFetch:&error]) {
-        [AlertApplicationService alertViewForCoreDataError:nil];
+        [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
 	}
     
     return __fetchedResultsController;
