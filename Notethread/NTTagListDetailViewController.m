@@ -19,7 +19,7 @@
 @interface NTTagListDetailViewController (Private)
 - (NSArray *)arrayNotesForDataSourceFromTag:(Tag *)tag;
 - (IBAction)addFilteredTagToNote:(id)sender;
-- (BOOL)hasNoteTagFromSet:(NSSet *)tags inFilter:(NSArray *)filter;
+- (BOOL)hasTagFromSet:(NSSet *)tags inFilter:(NSArray *)filter;
 @end
 
 #define SELECTED_CELL_PADDING 44.0f
@@ -69,7 +69,7 @@
 
 #pragma mark - NTTagListDetailViewController (Private)
 
-- (BOOL)hasNoteTagFromSet:(NSSet *)tags inFilter:(NSArray *)filter {
+- (BOOL)hasTagFromSet:(NSSet *)tags inFilter:(NSArray *)filter {
     for (Tag *tag in tags) {
         if ([filter containsObject:tag.name]) {
             return YES;
@@ -87,7 +87,7 @@
     NSArray *filtered = [userDefaults arrayForKey:KeywordTagsKey];
     
     for (Note *dirtyNote in dirtyNotes) {
-        if ([self hasNoteTagFromSet:dirtyNote.tags inFilter:filtered]) {
+        if ([self hasTagFromSet:dirtyNote.tags inFilter:filtered] == NO) {
             [filteredNotes addObject:dirtyNote];        
         }
     }
