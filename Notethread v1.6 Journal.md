@@ -66,6 +66,17 @@ Just updated all my core data alert services to use the error message.
 
 Playing around with a little refactoring and just making things a bit more readable and consistent.
 
+Back to making the filter smarter so I can show filtered tags when they've been selected.
+
+Adding a state var to track - just in case I want to change anything just for displaying keyword (filter) tags in NTTagDetailListViewController.
+
+Updating so the action bar doesn't display the filtered tag again. No point in it being there.
+
+Doing some time profiling. The check for whether the device can send email is expensive. I'm going to remove now.
+
+Memory leak profiling now. Only getting minor leaks from: libsystem_c.dylib : strdup. It's only 48 bytes each time. I'm not sure what is triggering it though. Seems to be part of a core library. Will leave for now.
+
+
 ## 25/06/2012
 
 Push the button.

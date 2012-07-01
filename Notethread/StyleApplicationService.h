@@ -11,7 +11,11 @@
 @class NTWriteViewController;
 @class Note;
 
-@interface StyleApplicationService : NSObject
+@interface StyleApplicationService : NSObject {
+    // Since the same button is created each time
+    // Create it once then just send a copy for each request
+    UIButton *_customUIButton;
+}
 
 @property (nonatomic, strong) NSUserDefaults *userDefaults;
 

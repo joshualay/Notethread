@@ -29,17 +29,26 @@
 - (id)initWithTag:(Tag *)tag {
     self = [super initWithNibName:@"NTTagListDetailViewController" bundle:nil];
     if (self) {
-        _tag = tag;
-        _notes = [self arrayNotesForDataSourceFromTag:_tag];
         _styleService = [StyleApplicationService sharedSingleton];
+        _tagService = [[TagService alloc] init];                        
+        
         _selectedIndexPath = nil;
         _buttonScroller = [[JLButtonScroller alloc] init];
         _buttonScroller.delegate = self;
         
+        _tag = tag;
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
         _filteredTags = [userDefaults arrayForKey:KeywordTagsKey];
+        _isFilteredTag = ([_filteredTags containsObject:_tag.name]);
+        if (_isFilteredTag) {
+            NSMutableArray *mutableFilteredTags = [_filteredTags mutableCopy];
+            [mutableFilteredTags removeObject:_tag.name];
+            _filteredTags = nil;
+            _filteredTags = [mutableFilteredTags copy];
+            mutableFilteredTags = nil;
+        }
         
-        _tagService = [[TagService alloc] init];                        
+        _notes = [self arrayNotesForDataSourceFromTag:_tag];
     }
     return self;
 }
@@ -51,6 +60,8 @@
     self.title = self->_tag.name;
     
     self->_tableView.backgroundColor = [self->_styleService paperColor];
+    
+    NSLog(@"%i", self->_isFilteredTag);
 }
 
 - (void)viewDidUnload
@@ -80,6 +91,10 @@
 
 - (NSArray *)arrayNotesForDataSourceFromTag:(Tag *)tag {        
     NSMutableArray *dirtyNotes = [[tag.notes allObjects] mutableCopy];
+    if (self->_isFilteredTag) {
+        return dirtyNotes;
+    }
+    
     NSMutableArray *filteredNotes = [[NSMutableArray alloc] initWithCapacity:[dirtyNotes count]];
     
     // TODO - check if this tag is a filtered tag - then we don't do anything

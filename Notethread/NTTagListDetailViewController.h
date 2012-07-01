@@ -30,6 +30,9 @@
     JLButtonScroller *_buttonScroller;
     NSArray *_filteredTags;
     TagService *_tagService;
+    
+    // State var to track if this Tag this has been init'd with is a filtered tag or not
+    BOOL _isFilteredTag;
 }
 
 - (id)initWithTag:(Tag *)tag;
