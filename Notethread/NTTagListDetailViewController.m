@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Joshua Lay. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
+
 #import "NTTagListDetailViewController.h"
 #import "Tag.h"
 #import "Note.h"
@@ -60,8 +62,6 @@
     self.title = self->_tag.name;
     
     self->_tableView.backgroundColor = [self->_styleService paperColor];
-    
-    NSLog(@"%i", self->_isFilteredTag);
 }
 
 - (void)viewDidUnload
@@ -134,9 +134,9 @@
     
     // Reload the data store
     self->_notes = [self arrayNotesForDataSourceFromTag:self->_tag];
-    [self->_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:self->_selectedIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     // nil out so we don't get the previous row selected
     self->_selectedIndexPath = nil;
+    [self->_tableView reloadData];
 }
 
 
@@ -199,7 +199,13 @@
         
         [self->_buttonScroller addButtonsForContentAreaIn:barScrollView];
         
+        CGRect endFrame   = barScrollView.frame;
+        UIView *shadowView = [[UIView alloc] initWithFrame:CGRectMake(endFrame.origin.x, endFrame.origin.y, endFrame.size.width, 1.0f)];
+        shadowView.backgroundColor = [UIColor colorWithWhite:0.4f alpha:0.4f];  
+        shadowView.layer.opacity = 0.5f;
+
         [cell addSubview:barScrollView];
+        [cell addSubview:shadowView];  
     }
     else {
         if (cell == nil) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];

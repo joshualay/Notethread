@@ -4,6 +4,36 @@ The goal of this release is give more power to #tags. I want to be able to creat
 
 As you may have a certain tag in different notes this will just show them all in the one list; making it easy to have a quick overview.
 
+## 3/07/2012
+
+Trying to get the expanding toolbar to look a bit nicer with an animation. 
+
+### Worklog
+
+        CGRect endFrame   = barScrollView.frame;
+        static CGFloat dropDownHeight = 2.0f;
+        CGRect startFrame = CGRectMake(endFrame.origin.x, endFrame.origin.y - dropDownHeight, endFrame.size.width, endFrame.size.height);
+        
+        [self->_buttonScroller addButtonsForContentAreaIn:barScrollView];
+        
+        UIView *shadowView = [[UIView alloc] initWithFrame:CGRectMake(endFrame.origin.x, endFrame.origin.y, endFrame.size.width, 2.0f)];
+        shadowView.backgroundColor = [UIColor colorWithWhite:0.4f alpha:0.4f];  
+        shadowView.layer.opacity = 0.4f;
+        
+        barScrollView.frame = startFrame;
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration:0.8];
+        
+        barScrollView.frame = endFrame;
+        [cell addSubview:barScrollView];
+        [cell addSubview:shadowView];
+        
+        [UIView commitAnimations];
+        
+This looks nicer.
+
+Hmmm. The animation pisses me off. I'm removing it.
+
 ## 1/07/2012
 
 Playing around with getting the toolbar in place.

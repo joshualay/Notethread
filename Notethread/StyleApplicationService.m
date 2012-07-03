@@ -147,23 +147,22 @@
 
 
 - (UIButton *)customUIButtonStyle {
-    if (self->_customUIButton == nil) {
-        self->_customUIButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        
-        [self->_customUIButton setTintColor:[UIColor lightTextColor]];
-        
-        [self->_customUIButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [self->_customUIButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
-        
-        [self->_customUIButton setTitleShadowColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-        [self->_customUIButton setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-        
-        self->_customUIButton.backgroundColor = [UIColor darkGrayColor];
-        self->_customUIButton.layer.borderColor = [UIColor grayColor].CGColor;
-        self->_customUIButton.layer.borderWidth = 0.8f;
-        self->_customUIButton.layer.cornerRadius = 3.0f;
-    }
-    return [self->_customUIButton copy];
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    [button setTintColor:[UIColor lightTextColor]];
+    
+    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+    
+    [button setTitleShadowColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    [button setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    
+    button.backgroundColor = [UIColor darkGrayColor];
+    button.layer.borderColor = [UIColor grayColor].CGColor;
+    button.layer.borderWidth = 0.8f;
+    button.layer.cornerRadius = 3.0f;
+    
+    return button;
 }
 
 @end
