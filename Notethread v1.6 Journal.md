@@ -33,6 +33,10 @@ Need to reload from Core Data, refresh the data store and table view.
     self->_notes = [self arrayNotesForDataSourceFromTag:self->_tag];
     
     [self->_tableView reloadData];
+    
+Actually it's bugging me. Creating a protocol and implementing the delegate methods in NTTagListDetailViewController.
+
+This does result in some funny behaviour when reloading. 
 
 
 ## 5/07/2012

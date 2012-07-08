@@ -25,6 +25,8 @@
 
 @implementation NTWriteViewController
 
+@synthesize delegate;
+
 @synthesize navigationBar = _navigationBar;
 @synthesize saveButton    = _saveButton;
 @synthesize noteDepth     = _noteDepth;
@@ -94,6 +96,10 @@
 }
 
 - (IBAction)saveNote:(id)sender {
+    if ([self.delegate respondsToSelector:@selector(willSaveNote)]) {
+        [self.delegate willSaveNote];
+    }
+    
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
     
@@ -122,6 +128,10 @@
     if (![managedObjectContext save:&error]) {
         [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
     } 
+    
+    if ([self.delegate respondsToSelector:@selector(didSaveNote)]) {
+        [self.delegate didSaveNote];
+    }
     
     [self dismissModalViewControllerAnimated:YES];
 }

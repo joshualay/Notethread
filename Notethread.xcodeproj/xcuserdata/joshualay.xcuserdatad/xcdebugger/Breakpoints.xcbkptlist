@@ -34,13 +34,13 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Notethread/NTWriteViewController.m"
-         timestampString = "363433707.98981"
+         timestampString = "363434903.905875"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "172"
-         endingLineNumber = "172"
-         landmarkName = "@implementation NTWriteViewController"
-         landmarkType = "3">
+         startingLineNumber = "182"
+         endingLineNumber = "182"
+         landmarkName = "-saveNote:"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"

@@ -11,9 +11,17 @@
 
 @class Note;
 
+@protocol NTWriteViewDelegate <NSObject>
+@optional
+- (void)willSaveNote;
+- (void)didSaveNote;
+@end
+
 @interface NTWriteViewController : NTNoteController {
     NSString *_initialNoteText;
 }
+
+@property (nonatomic, assign) id<NTWriteViewDelegate> delegate;
 
 @property (strong, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *saveButton;

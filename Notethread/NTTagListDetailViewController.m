@@ -17,7 +17,6 @@
 #import "AppDelegate.h"
 #import "AlertApplicationService.h"
 #import "TagService.h"
-#import "NTWriteViewController.h"
 
 @interface NTTagListDetailViewController (Private)
 - (NSArray *)arrayNotesForDataSourceFromTag:(Tag *)tag;
@@ -56,17 +55,6 @@
     
     UIBarButtonItem *composeTagButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(willComposeNewNoteWithTag:)];
     self.navigationItem.rightBarButtonItem = composeTagButton;
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
-    [managedObjectContext refreshObject:self->_tag mergeChanges:YES];
-    self->_notes = [self arrayNotesForDataSourceFromTag:self->_tag];
-    
-    [self->_tableView reloadData];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -129,6 +117,8 @@
     
     writeViewController.modalTransitionStyle   = UIModalTransitionStyleCoverVertical;
     writeViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+    
+    writeViewController.delegate = self;
     
     [self presentModalViewController:writeViewController animated:YES];
 }
@@ -259,6 +249,18 @@
 
 - (NSString *)stringForIndex:(NSInteger)position {
     return [NSString stringWithFormat:@"#%@", [self->_filteredTags objectAtIndex:position]];
+}
+
+
+#pragma mark = NTWriteViewDelegate 
+
+- (void)didSaveNote {
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
+    [managedObjectContext refreshObject:self->_tag mergeChanges:YES];
+    self->_notes = [self arrayNotesForDataSourceFromTag:self->_tag];
+    
+    [self->_tableView reloadData];    
 }
 
 @end

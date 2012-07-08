@@ -9,12 +9,13 @@
 #import <UIKit/UIKit.h>
 
 #import "JLButtonScroller.h"
+#import "NTWriteViewController.h"
 
 @class StyleApplicationService;
 @class Tag;
 @class TagService;
 
-@interface NTTagListDetailViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, JLButtonScrollerDelegate> {
+@interface NTTagListDetailViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, JLButtonScrollerDelegate, NTWriteViewDelegate> {
     Tag *_tag;
     NSArray *_notes;
     
