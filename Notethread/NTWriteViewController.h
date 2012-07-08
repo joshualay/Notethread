@@ -11,7 +11,9 @@
 
 @class Note;
 
-@interface NTWriteViewController : NTNoteController 
+@interface NTWriteViewController : NTNoteController {
+    NSString *_initialNoteText;
+}
 
 @property (strong, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *saveButton;
@@ -41,6 +43,8 @@
  
  */
 - (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note;
+
+- (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note initialText:(NSString *)text;
 
 - (IBAction)cancelWriting:(id)sender;
 - (IBAction)saveNote:(id)sender;

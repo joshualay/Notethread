@@ -17,6 +17,23 @@ Getting distracted and adding comments to the header :) Considering some renames
 
 Took out a duplicate method - apparently I was doing the same thing in two methods in the same class.
 
+Added the ability to compose a new note using the #tag. 
+
+Decided to insert and start composing at the very start. I don't like the idea of starting after the #tag. 
+
+Need to get it to reload its data after saving however.
+
+This is probably a good thing for a delegate -- however I will just utilise viewDidAppear for now.
+
+Need to reload from Core Data, refresh the data store and table view.
+
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
+    [managedObjectContext refreshObject:self->_tag mergeChanges:YES];
+    self->_notes = [self arrayNotesForDataSourceFromTag:self->_tag];
+    
+    [self->_tableView reloadData];
+
 
 ## 5/07/2012
 

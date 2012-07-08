@@ -43,10 +43,18 @@
     if (self) {
         _noteDepth  = threadDepth;
         _parentNote = note;
+        _initialNoteText = @"";
     }
     return self;
 }
 
+- (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note initialText:(NSString *)text {
+    self = [self initWithThreadDepth:threadDepth parent:note];
+    if (self) {
+        _initialNoteText = [text copy];
+    }
+    return self;
+}
 
 #pragma mark - View lifecycle
 
@@ -58,6 +66,12 @@
     self.navigationBar.topItem.title = NSLocalizedString(@"Writing...", @"Writing...");
 
     self.noteTextView.backgroundColor = [UIColor clearColor];
+    self.noteTextView.text = [self->_initialNoteText copy];
+    NSUInteger textLength = [self->_initialNoteText length];
+    if (textLength) {
+        self.noteTextView.selectedRange = NSMakeRange(0, 0);
+    }
+    self->_initialNoteText = nil;
     self.view.backgroundColor = [self->_styleService paperColor];
 
     self.saveButton.enabled = ([self.noteTextView.text length]) ? YES : NO;

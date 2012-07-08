@@ -17,10 +17,12 @@
 #import "AppDelegate.h"
 #import "AlertApplicationService.h"
 #import "TagService.h"
+#import "NTWriteViewController.h"
 
 @interface NTTagListDetailViewController (Private)
 - (NSArray *)arrayNotesForDataSourceFromTag:(Tag *)tag;
 - (IBAction)addFilteredTagToNote:(id)sender;
+- (IBAction)willComposeNewNoteWithTag:(id)sender;
 @end
 
 #define SELECTED_CELL_PADDING 44.0f
@@ -51,13 +53,20 @@
     self.title = self->_tag.name;
     
     self->_tableView.backgroundColor = [self->_styleService paperColor];
+    
+    UIBarButtonItem *composeTagButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(willComposeNewNoteWithTag:)];
+    self.navigationItem.rightBarButtonItem = composeTagButton;
 }
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
+    [managedObjectContext refreshObject:self->_tag mergeChanges:YES];
+    self->_notes = [self arrayNotesForDataSourceFromTag:self->_tag];
+    
+    [self->_tableView reloadData];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -115,7 +124,14 @@
     [self->_tableView reloadData];
 }
 
-
+- (IBAction)willComposeNewNoteWithTag:(id)sender {       
+    NTWriteViewController *writeViewController = [[NTWriteViewController alloc] initWithThreadDepth:0 parent:nil initialText:[NSString stringWithFormat:@" #%@", self->_tag.name]];
+    
+    writeViewController.modalTransitionStyle   = UIModalTransitionStyleCoverVertical;
+    writeViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+    
+    [self presentModalViewController:writeViewController animated:YES];
+}
 
 #pragma mark - Table view data source
 
