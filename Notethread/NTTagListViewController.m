@@ -12,6 +12,7 @@
 #import "AppDelegate.h"
 #import "Tag.h"
 #import "StyleApplicationService.h"
+#import "TagService.h"
 #import "StyleConstants.h"
 #import "UserSettingsConstants.h"
 
@@ -35,6 +36,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _styleService = [StyleApplicationService sharedSingleton];
+        _tagService = [[TagService alloc] init];
         [self reloadTagDataStore];
     }
     return self;
@@ -79,14 +81,7 @@
 #pragma mark - NTTagListViewController (Private)
 
 - (void)reloadTagDataStore {
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    
-    NSArray *filtered = [userDefaults arrayForKey:KeywordTagsKey];
-    if (filtered == nil) {
-        filtered = [[NSArray alloc] initWithObjects:@"archive", nil];
-        [userDefaults setObject:filtered forKey:KeywordTagsKey];
-    }
-    
+    NSArray *filtered = self->_tagService.filteredTags;
     NSMutableArray *tmpTags = [[[self fetchedResultsController] fetchedObjects] mutableCopy];
     [tmpTags sortUsingComparator:^(id tag1, id tag2) {
         Tag *tagOne = (Tag *)tag1;

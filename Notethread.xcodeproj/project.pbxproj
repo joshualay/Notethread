@@ -31,6 +31,7 @@
 		9818217B1468026E00DBC1D2 /* NotethreadTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9818217A1468026E00DBC1D2 /* NotethreadTests.m */; };
 		98190BCF149B72EC00E96126 /* NTNoteListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98190BCD149B72EB00E96126 /* NTNoteListViewController.m */; };
 		98190BD0149B72EC00E96126 /* NTNoteListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98190BCE149B72EC00E96126 /* NTNoteListViewController.xib */; };
+		98209CFB15A5922C007E06EF /* InterfaceRules.md in Resources */ = {isa = PBXBuildFile; fileRef = 98209CFA15A5922C007E06EF /* InterfaceRules.md */; };
 		983816A614C04FDD000A644C /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 983816A514C04FDD000A644C /* README.md */; };
 		98489949156B8F33008AF533 /* NSArray+Reverse.m in Sources */ = {isa = PBXBuildFile; fileRef = 98489948156B8F33008AF533 /* NSArray+Reverse.m */; };
 		9848994D15706C36008AF533 /* TagTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 9848994C15706C36008AF533 /* TagTracker.m */; };
@@ -106,6 +107,7 @@
 		98190BCC149B72EB00E96126 /* NTNoteListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NTNoteListViewController.h; sourceTree = "<group>"; };
 		98190BCD149B72EB00E96126 /* NTNoteListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NTNoteListViewController.m; sourceTree = "<group>"; };
 		98190BCE149B72EC00E96126 /* NTNoteListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NTNoteListViewController.xib; sourceTree = "<group>"; };
+		98209CFA15A5922C007E06EF /* InterfaceRules.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = InterfaceRules.md; sourceTree = "<group>"; };
 		983816A514C04FDD000A644C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		98489947156B8F33008AF533 /* NSArray+Reverse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Reverse.h"; sourceTree = "<group>"; };
 		98489948156B8F33008AF533 /* NSArray+Reverse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Reverse.m"; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 		981821341468026D00DBC1D2 = {
 			isa = PBXGroup;
 			children = (
+				98209CFA15A5922C007E06EF /* InterfaceRules.md */,
 				9848996D15874B6D008AF533 /* Twitter.framework */,
 				9848996415863E63008AF533 /* QuartzCore.framework */,
 				9815BD2A154812B500E450DA /* Notethread v1.5 Journal.md */,
@@ -434,6 +437,7 @@
 				9848996715873B01008AF533 /* Notethread v1.6 Journal.md in Resources */,
 				98FDA0811588AF890045E31A /* NTTagListViewController.xib in Resources */,
 				98BC4A39158C8E2900B48D38 /* NTTagListDetailViewController.xib in Resources */,
+				98209CFB15A5922C007E06EF /* InterfaceRules.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

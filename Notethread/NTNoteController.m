@@ -125,7 +125,7 @@
     
     NSMutableString *noteText = [self.noteTextView.text mutableCopy];
     
-    NSString *prevTag = [self->_tagService stringTagPreviousWordInText:noteText fromLocation:insertionLocation];
+    NSString *prevTag = [self->_tagService tagNameOrNilOfPreviousWordInText:noteText fromLocation:insertionLocation];
     NSUInteger enteredLength = [prevTag length];
     NSUInteger tagStartLocation = insertionLocation - enteredLength;
     NSRange range = NSMakeRange(tagStartLocation, enteredLength);
@@ -160,7 +160,7 @@
     if (location == 0 || ![textView.text length])
         return;
     
-    NSArray *tagMatchesForCurrentWord = [self->_tagTracker arrayOfMatchedTagsWhenCurrentWordATagInText:textView.text fromLocation:location withExistingTags:self->_existingTags];
+    NSArray *tagMatchesForCurrentWord = [self->_tagTracker arrayOfMatchedTagsWhenCurrentWordIsTagInText:textView.text fromLocation:location withExistingTags:self->_existingTags];
     
     if (tagMatchesForCurrentWord != nil)
         self->_matchedTags = tagMatchesForCurrentWord;

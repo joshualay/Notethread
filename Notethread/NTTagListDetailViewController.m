@@ -21,7 +21,6 @@
 @interface NTTagListDetailViewController (Private)
 - (NSArray *)arrayNotesForDataSourceFromTag:(Tag *)tag;
 - (IBAction)addFilteredTagToNote:(id)sender;
-- (BOOL)hasTagFromSet:(NSSet *)tags inFilter:(NSArray *)filter;
 @end
 
 #define SELECTED_CELL_PADDING 44.0f
@@ -39,17 +38,7 @@
         _buttonScroller.delegate = self;
         
         _tag = tag;
-        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-        _filteredTags = [userDefaults arrayForKey:KeywordTagsKey];
-        _isFilteredTag = ([_filteredTags containsObject:_tag.name]);
-        if (_isFilteredTag) {
-            NSMutableArray *mutableFilteredTags = [_filteredTags mutableCopy];
-            [mutableFilteredTags removeObject:_tag.name];
-            _filteredTags = nil;
-            _filteredTags = [mutableFilteredTags copy];
-            mutableFilteredTags = nil;
-        }
-        
+        _isFilteredTag = ([_tagService.filteredTags containsObject:_tag.name]);
         _notes = [self arrayNotesForDataSourceFromTag:_tag];
     }
     return self;
@@ -80,15 +69,6 @@
 
 #pragma mark - NTTagListDetailViewController (Private)
 
-- (BOOL)hasTagFromSet:(NSSet *)tags inFilter:(NSArray *)filter {
-    for (Tag *tag in tags) {
-        if ([filter containsObject:tag.name]) {
-            return YES;
-        }
-    }    
-    return NO;
-}
-
 - (NSArray *)arrayNotesForDataSourceFromTag:(Tag *)tag {        
     NSMutableArray *dirtyNotes = [[tag.notes allObjects] mutableCopy];
     if (self->_isFilteredTag) {
@@ -96,13 +76,9 @@
     }
     
     NSMutableArray *filteredNotes = [[NSMutableArray alloc] initWithCapacity:[dirtyNotes count]];
-    
-    // TODO - check if this tag is a filtered tag - then we don't do anything
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSArray *filtered = [userDefaults arrayForKey:KeywordTagsKey];
-    
+
     for (Note *dirtyNote in dirtyNotes) {
-        if ([self hasTagFromSet:dirtyNote.tags inFilter:filtered] == NO) {
+        if ([self->_tagService doesContainFilteredTagInTagSet:dirtyNote.tags] == NO) {
             [filteredNotes addObject:dirtyNote];        
         }
     }

@@ -21,11 +21,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Notethread/TagService.m"
-         timestampString = "360214856.3046"
+         timestampString = "363407719.789918"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "55"
-         endingLineNumber = "55"
+         startingLineNumber = "67"
+         endingLineNumber = "67"
          landmarkName = "-arrayOfMatchingTagsForTerm:inExistingTags:"
          landmarkType = "5">
       </FileBreakpoint>

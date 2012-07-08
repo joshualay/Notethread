@@ -10,12 +10,24 @@
 #import "Tag.h"
 #import "Note.h"
 #include "NSArray+Reverse.h"
+#include "UserSettingsConstants.h"
 
 @interface TagService (Private)
 - (NSString *)stringWordTillPreviousSpaceInText:(NSString *)text fromLocation:(NSUInteger)location;
+- (NSArray *)arrayFilteredTagsFromUserDefaults;
 @end
 
 @implementation TagService
+
+@synthesize filteredTags=_filteredTags;
+
+- (id)init {
+    self = [super init];
+    if (self) {
+        _filteredTags = [self arrayFilteredTagsFromUserDefaults];
+    }
+    return self;
+}
 
 - (Tag *)tagWithName:(NSString *)name inManagedContext:(NSManagedObjectContext *)managedObjectContext {
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
@@ -124,7 +136,7 @@
     return outfitTags;
 }
 
-- (NSString *)stringTagPreviousWordInText:(NSString *)text fromLocation:(NSUInteger)location {
+- (NSString *)tagNameOrNilOfPreviousWordInText:(NSString *)text fromLocation:(NSUInteger)location {
     NSString *prevWord = [self stringWordTillPreviousSpaceInText:text fromLocation:location];
     
     NSArray *tags = [self arrayOfTagsInText:prevWord];
@@ -134,14 +146,14 @@
     return nil;
 }
 
-- (NSString *)stringTagCurrentWordInText:(NSString *)text fromLocation:(NSUInteger)location {
-    NSString *prevWord = [self stringWordTillPreviousSpaceInText:text fromLocation:location];
-    NSArray *matched = [self arrayOfTagsInText:prevWord];
+- (BOOL)doesContainFilteredTagInTagSet:(NSSet *)tags {
+    for (Tag *tag in tags) {
+        if ([self.filteredTags containsObject:tag.name]) {
+            return YES;
+        }
+    }    
     
-    if ([matched count])
-        return [matched lastObject];
-    
-    return nil;
+    return NO;
 }
 
 
@@ -149,7 +161,7 @@
 - (NSString *)stringWordTillPreviousSpaceInText:(NSString *)text fromLocation:(NSUInteger)location {    
     NSMutableArray *foundCharacters = [[NSMutableArray alloc] init];
     
-    // Start after the current location
+    // Start before the current location
     location = location - 1;
     
     BOOL isSpaceCharacter = NO;
@@ -175,6 +187,16 @@
     }
     
     return prevWord;
+}
+
+- (NSArray *)arrayFilteredTagsFromUserDefaults {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSArray *filterTags = [userDefaults arrayForKey:KeywordTagsKey];
+    if (filterTags == nil) {
+        filterTags = [[NSArray alloc] initWithObjects:@"archive", nil];
+        [userDefaults setObject:filterTags forKey:KeywordTagsKey];
+    }
+    return filterTags;
 }
 
 @end

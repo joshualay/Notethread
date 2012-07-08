@@ -4,6 +4,24 @@ The goal of this release is give more power to #tags. I want to be able to creat
 
 As you may have a certain tag in different notes this will just show them all in the one list; making it easy to have a quick overview.
 
+### 8/07/2012
+
+* Fix up when tags have no notes to display -- i.e. they're filtered
+* Compose #tag button
+
+### Worklog
+
+I think I need to refactor out the filtering. 
+
+Getting distracted and adding comments to the header :) Considering some renames as well. 
+
+Took out a duplicate method - apparently I was doing the same thing in two methods in the same class.
+
+
+## 5/07/2012
+
+User testing checklist
+
 ## 3/07/2012
 
 Trying to get the expanding toolbar to look a bit nicer with an animation. 
