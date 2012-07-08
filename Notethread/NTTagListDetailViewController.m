@@ -24,7 +24,7 @@
 - (IBAction)willComposeNewNoteWithTag:(id)sender;
 @end
 
-#define SELECTED_CELL_PADDING 44.0f
+#define SELECTED_CELL_PADDING 54.0f
 
 @implementation NTTagListDetailViewController
 
@@ -73,6 +73,9 @@
     }
     
     NSMutableArray *filteredNotes = [[NSMutableArray alloc] initWithCapacity:[dirtyNotes count]];
+    [dirtyNotes sortedArrayUsingComparator:^(Note *n1, Note *n2) {
+        return [n1.lastModifiedDate compare:n2.lastModifiedDate];
+    }];
 
     for (Note *dirtyNote in dirtyNotes) {
         if ([self->_tagService doesContainFilteredTagInTagSet:dirtyNote.tags] == NO) {
@@ -176,7 +179,7 @@
         CGSize labelSize = [note.text sizeWithFont:[self->_styleService fontTextLabelPrimary]
                             constrainedToSize:CGSizeMake(tableView.frame.size.width, MAXFLOAT) 
                                 lineBreakMode:UILineBreakModeWordWrap];
-        
+                
         UIScrollView *barScrollView = [self->_styleService scrollViewForTagAtPoint:CGPointMake(cell.contentView.frame.origin.x, labelSize.height + SELECTED_CELL_PADDING) width:self.view.frame.size.width];
         
         [self->_buttonScroller addButtonsForContentAreaIn:barScrollView];

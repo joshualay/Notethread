@@ -38,6 +38,9 @@ Actually it's bugging me. Creating a protocol and implementing the delegate meth
 
 This does result in some funny behaviour when reloading. 
 
+I'm guessing it's because when the changes are merged the results are no longer ordered. Adding a quick sort by lastModified date of the notes when reloading to make sure.
+
+
 
 ## 5/07/2012
 
