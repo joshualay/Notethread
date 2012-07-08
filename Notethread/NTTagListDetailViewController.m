@@ -238,7 +238,7 @@
 }
 
 - (NSInteger)numberOfButtons {
-    return [self->_filteredTags count];
+    return [_tagService.filteredTags count];
 }
 
 - (UIButton *)buttonForIndex:(NSInteger)position {
@@ -248,7 +248,7 @@
 }
 
 - (NSString *)stringForIndex:(NSInteger)position {
-    return [NSString stringWithFormat:@"#%@", [self->_filteredTags objectAtIndex:position]];
+    return [NSString stringWithFormat:@"#%@", [self->_tagService.filteredTags objectAtIndex:position]];
 }
 
 
