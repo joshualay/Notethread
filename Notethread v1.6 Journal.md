@@ -4,7 +4,39 @@ The goal of this release is give more power to #tags. I want to be able to creat
 
 As you may have a certain tag in different notes this will just show them all in the one list; making it easy to have a quick overview.
 
-### 8/07/2012
+## 12/07/2012
+
+Better filtering for the main tag view. Needs to not display tags that have no notes PLUS no filtered #tags.
+
+### Worklog
+
+I'm not sure if I've done it the best way possible; but i'm having to loop over the data to confirm whether or not the tag should be displayed. 
+
+Since I'm using filters I can't rely on the [[tag note] count] as that doesn't understand any of the filters in place. 
+
+It doesn't seem too slow at the moment though.
+
+Time for profiling!
+
+No bad leaks; only one core library which i can't touch. I'm fairly sure it's when I'm using char for the tag checking.
+
+Using the list it doesn't look like the data is refreshed properly after you #archive the last note.
+
+Aren't I clever. I wasn't reloading the table view.
+
+## 9/07/2012
+
+I want to fix up the text label. It's tooooooooooo damnnnn lowwww.
+
+### Worklog
+
+Modifying the textLabel frame doesn't do anything. 
+
+Will just create my own label and put it on the cell.contentView instead.
+
+Offsetting the origin by the font size height of the text label. 
+
+## 8/07/2012
 
 * Fix up when tags have no notes to display -- i.e. they're filtered
 * Compose #tag button

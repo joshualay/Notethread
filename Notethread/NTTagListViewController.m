@@ -11,6 +11,7 @@
 #import "AlertApplicationService.h"
 #import "AppDelegate.h"
 #import "Tag.h"
+#import "Note.h"
 #import "StyleApplicationService.h"
 #import "TagService.h"
 #import "StyleConstants.h"
@@ -26,7 +27,9 @@
 @end
 
 @interface NTTagListViewController (Private)
-- (void)reloadTagDataStore;
+- (void)loadTagDataStore;
+- (NSArray *)arraySortTagList:(NSArray *)tags withFilter:(NSArray *)filterTagNames;
+- (NSArray *)arrayFilterTagList:(NSArray *)tags withRemovalFilter:(NSArray *)filterTagNames;
 @end
 
 @implementation NTTagListViewController
@@ -37,7 +40,6 @@
     if (self) {
         _styleService = [StyleApplicationService sharedSingleton];
         _tagService = [[TagService alloc] init];
-        [self reloadTagDataStore];
     }
     return self;
 }
@@ -45,9 +47,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    self.title = @"Tag List";
     
+    self.title = @"Tag List";
+
     self->_tableView.backgroundColor = [self->_styleService paperColor];
     
     UIBarButtonItem *leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Notethread" style:UIBarButtonItemStyleDone target:self action:@selector(dismissView:)];
@@ -62,9 +64,9 @@
     // e.g. self.myOutlet = nil;
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    [self reloadTagDataStore];
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self loadTagDataStore];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -79,19 +81,17 @@
 }
 
 #pragma mark - NTTagListViewController (Private)
-
-- (void)reloadTagDataStore {
-    NSArray *filtered = self->_tagService.filteredTags;
-    NSMutableArray *tmpTags = [[[self fetchedResultsController] fetchedObjects] mutableCopy];
-    [tmpTags sortUsingComparator:^(id tag1, id tag2) {
+- (NSArray *)arraySortTagList:(NSArray *)tags withFilter:(NSArray *)filterTagNames {
+    NSMutableArray *mutableCopy = [tags mutableCopy];
+    [mutableCopy sortUsingComparator:^(id tag1, id tag2) {
         Tag *tagOne = (Tag *)tag1;
         Tag *tagTwo = (Tag *)tag2;
         
         /* Tag keyword filtering */
-        if ([filtered containsObject:tagOne.name])
+        if ([filterTagNames containsObject:tagOne.name])
             return (NSComparisonResult)NSOrderedDescending;
         
-        if ([filtered containsObject:tagTwo.name])
+        if ([filterTagNames containsObject:tagTwo.name])
             return (NSComparisonResult)NSOrderedAscending;
         
         
@@ -104,8 +104,51 @@
         
         return (NSComparisonResult)NSOrderedSame;
     }];
-    _tags = [tmpTags copy];
-    tmpTags = nil;    
+    
+    return mutableCopy;
+}
+
+- (NSArray *)arrayFilterTagList:(NSArray *)tags withRemovalFilter:(NSArray *)filterTagNames {
+    NSMutableArray *filteredTags = [[NSMutableArray alloc] initWithCapacity:[tags count]];
+    
+    for (Tag *tag in tags) {  
+        if ([filterTagNames containsObject:tag.name]) {
+            [filteredTags addObject:tag];
+            continue;
+        }
+        
+        NSUInteger filterMatches = 0;
+        NSUInteger tagNoteCount = [tag.notes count];
+        
+        for (NSString *filterTag in filterTagNames) {
+            for (Note *tagNote in tag.notes) {
+                for (Tag *noteTag in tagNote.tags) {
+                    if ([filterTag isEqualToString:noteTag.name]) {
+                        filterMatches += 1;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        if (filterMatches != tagNoteCount) {
+            [filteredTags addObject:tag];
+        }
+    }   
+    
+    return filteredTags;
+}
+
+- (void)loadTagDataStore {
+    NSArray *tagNameFilters = self->_tagService.filteredTags;
+    NSArray *fetchedTags = [[self fetchedResultsController] fetchedObjects];
+    NSArray *sortedTags = [self arraySortTagList:fetchedTags withFilter:tagNameFilters];    
+    fetchedTags = nil;
+    
+    _tags = [[self arrayFilterTagList:sortedTags withRemovalFilter:tagNameFilters] copy];
+    sortedTags = nil;
+    
+    [self->_tableView reloadData];
 }
 
 #pragma mark - Table view data source

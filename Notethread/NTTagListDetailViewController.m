@@ -24,7 +24,7 @@
 - (IBAction)willComposeNewNoteWithTag:(id)sender;
 @end
 
-#define SELECTED_CELL_PADDING 54.0f
+#define SELECTED_CELL_PADDING 44.0f
 
 @implementation NTTagListDetailViewController
 
@@ -171,14 +171,23 @@
         cell.backgroundColor = [UIColor clearColor];
         
         cell.detailTextLabel.backgroundColor = [UIColor clearColor];
-        
-        cell.textLabel.backgroundColor = [UIColor clearColor];
-        cell.textLabel.numberOfLines = 0;
-        cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
 
         CGSize labelSize = [note.text sizeWithFont:[self->_styleService fontTextLabelPrimary]
-                            constrainedToSize:CGSizeMake(tableView.frame.size.width, MAXFLOAT) 
-                                lineBreakMode:UILineBreakModeWordWrap];
+                                 constrainedToSize:CGSizeMake(cell.contentView.frame.size.width, MAXFLOAT) 
+                                     lineBreakMode:UILineBreakModeWordWrap];
+        
+        // I want to get the height of the font for one character
+        CGSize fontSize  = [@"s" sizeWithFont:[self->_styleService fontTextLabelPrimary]
+                            constrainedToSize:CGSizeMake(tableView.frame.size.width, MAXFLOAT)];
+                                
+        
+        UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(fontSize.height, fontSize.height, labelSize.width - fontSize.height, labelSize.height)];
+        textLabel.backgroundColor = [UIColor clearColor];
+        textLabel.numberOfLines   = 0;
+        textLabel.lineBreakMode   = UILineBreakModeWordWrap;
+        textLabel.font            = [self->_styleService fontTextLabelPrimary];
+        
+        textLabel.text = note.text;
                 
         UIScrollView *barScrollView = [self->_styleService scrollViewForTagAtPoint:CGPointMake(cell.contentView.frame.origin.x, labelSize.height + SELECTED_CELL_PADDING) width:self.view.frame.size.width];
         
@@ -189,20 +198,20 @@
         shadowView.backgroundColor = [UIColor colorWithWhite:0.4f alpha:0.4f];  
         shadowView.layer.opacity = 0.5f;
 
-        [cell addSubview:barScrollView];
-        [cell addSubview:shadowView];  
+        [cell.contentView addSubview:textLabel];
+        [cell.contentView addSubview:barScrollView];
+        [cell.contentView addSubview:shadowView];  
     }
     else {
         if (cell == nil) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.textLabel.text = note.text;
     }
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     cell.textLabel.font       = [self->_styleService fontTextLabelPrimary];
     cell.detailTextLabel.font = [self->_styleService fontDetailTextLabelPrimary];
-        
-    cell.textLabel.text = note.text;
-         
+                 
     return cell;
 }
 
