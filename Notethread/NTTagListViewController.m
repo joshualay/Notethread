@@ -48,12 +48,11 @@
 {
     [super viewDidLoad];
     
-    self.title = @"Tag List";
+    self.title = NSLocalizedString(@"Taglist", @"Taglist");
 
     self->_tableView.backgroundColor = [self->_styleService paperColor];
     
-    UIBarButtonItem *leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Notethread" style:UIBarButtonItemStyleDone target:self action:@selector(dismissView:)];
-    
+    UIBarButtonItem *leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Notethread" style:UIBarButtonItemStyleBordered target:self action:@selector(dismissView:)];
     self.navigationItem.leftBarButtonItem = leftBarButtonItem;
 }
     
@@ -192,7 +191,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NTTagListDetailViewController *detailViewController = [[NTTagListDetailViewController alloc] initWithTag:[self->_tags objectAtIndex:indexPath.row]];
+    Tag *tag = [self->_tags objectAtIndex:indexPath.row];
+    NTTagListDetailViewController *detailViewController = [[NTTagListDetailViewController alloc] initWithTag:tag managedObjectContext:[self managedObjectContext]];
     [self.navigationController pushViewController:detailViewController animated:YES];
 }
 

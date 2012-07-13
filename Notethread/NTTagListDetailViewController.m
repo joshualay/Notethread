@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 Joshua Lay. All rights reserved.
 //
 
+// For view.layer.*
 #import <QuartzCore/QuartzCore.h>
 
 #import "NTTagListDetailViewController.h"
@@ -22,15 +23,18 @@
 - (NSArray *)arrayNotesForDataSourceFromTag:(Tag *)tag;
 - (IBAction)addFilteredTagToNote:(id)sender;
 - (IBAction)willComposeNewNoteWithTag:(id)sender;
+- (UITableViewCell *)cellForSelectedRowForTable:(UITableView *)tableView withNote:(Note *)note;
 @end
 
 #define SELECTED_CELL_PADDING 44.0f
 
 @implementation NTTagListDetailViewController
 
-- (id)initWithTag:(Tag *)tag {
+- (id)initWithTag:(Tag *)tag managedObjectContext:(NSManagedObjectContext *)managedObjectContext {
     self = [super initWithNibName:@"NTTagListDetailViewController" bundle:nil];
     if (self) {
+        _managedObjectContext = managedObjectContext;
+        
         _styleService = [StyleApplicationService sharedSingleton];
         _tagService = [[TagService alloc] init];                        
         
@@ -42,7 +46,7 @@
         _isFilteredTag = ([_tagService.filteredTags containsObject:_tag.name]);
         _notes = [self arrayNotesForDataSourceFromTag:_tag];
     }
-    return self;
+    return self;   
 }
 
 - (void)viewDidLoad
@@ -68,24 +72,25 @@
 
 - (NSArray *)arrayNotesForDataSourceFromTag:(Tag *)tag {        
     NSMutableArray *dirtyNotes = [[tag.notes allObjects] mutableCopy];
-    if (self->_isFilteredTag) {
-        return dirtyNotes;
-    }
-    
-    NSMutableArray *filteredNotes = [[NSMutableArray alloc] initWithCapacity:[dirtyNotes count]];
-    [dirtyNotes sortedArrayUsingComparator:^(Note *n1, Note *n2) {
-        return [n1.lastModifiedDate compare:n2.lastModifiedDate];
+
+    // Reverse order
+    NSArray *sortedNotes = [dirtyNotes sortedArrayUsingComparator:^(Note *n1, Note *n2) {
+        return [n2.lastModifiedDate compare:n1.lastModifiedDate];
     }];
 
-    for (Note *dirtyNote in dirtyNotes) {
-        if ([self->_tagService doesContainFilteredTagInTagSet:dirtyNote.tags] == NO) {
-            [filteredNotes addObject:dirtyNote];        
+    if (self->_isFilteredTag) {
+        return sortedNotes;
+    }
+
+    NSMutableArray *filteredNotes = [[NSMutableArray alloc] init];
+    for (Note *note in sortedNotes) {
+        if ([self->_tagService doesContainFilteredTagInTagSet:note.tags] == NO) {
+            [filteredNotes addObject:note];        
         }
     }
-    
     dirtyNotes = nil;
 
-    return [filteredNotes copy];   
+    return filteredNotes;   
 }
 
 
@@ -98,13 +103,10 @@
     
     NSArray *tagsInNote = [self->_tagService arrayOfTagsInText:selectedNote.text];
     
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
-    
-    [self->_tagService storeTags:tagsInNote withRelationship:selectedNote inManagedContext:managedObjectContext];
+    [self->_tagService storeTags:tagsInNote withRelationship:selectedNote inManagedContext:self->_managedObjectContext];
     
     NSError *error = nil;
-    if (![managedObjectContext save:&error]) {
+    if (![self->_managedObjectContext save:&error]) {
         [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
     } 
     
@@ -124,6 +126,48 @@
     writeViewController.delegate = self;
     
     [self presentModalViewController:writeViewController animated:YES];
+}
+
+- (UITableViewCell *)cellForSelectedRowForTable:(UITableView *)tableView withNote:(Note *)note {
+    static NSString *CellIdentifierExpanded = @"CellExpanded";
+    
+    // As the height of the cell is dynamic I can't reuse the cells
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierExpanded];
+    
+    cell.backgroundColor = [UIColor clearColor];
+    
+    cell.detailTextLabel.backgroundColor = [UIColor clearColor];
+    
+    CGSize labelSize = [note.text sizeWithFont:[self->_styleService fontTextLabelPrimary]
+                             constrainedToSize:CGSizeMake(tableView.frame.size.width, MAXFLOAT) 
+                                 lineBreakMode:UILineBreakModeWordWrap];
+    
+    // I want to get the height of the font for one character
+    CGSize fontSize  = [@"s" sizeWithFont:[self->_styleService fontTextLabelPrimary]
+                        constrainedToSize:CGSizeMake(tableView.frame.size.width, MAXFLOAT)];
+    
+    UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(fontSize.height, fontSize.height, cell.contentView.frame.size.width, labelSize.height)];
+    textLabel.backgroundColor = [UIColor clearColor];
+    textLabel.numberOfLines   = 0;
+    textLabel.lineBreakMode   = UILineBreakModeWordWrap;
+    textLabel.font            = [self->_styleService fontTextLabelPrimary];
+    
+    textLabel.text = note.text;
+    
+    UIScrollView *barScrollView = [self->_styleService scrollViewForTagAtPoint:CGPointMake(cell.contentView.frame.origin.x, labelSize.height + SELECTED_CELL_PADDING) width:self.view.frame.size.width];
+    
+    [self->_buttonScroller addButtonsForContentAreaIn:barScrollView];
+    
+    CGRect endFrame   = barScrollView.frame;
+    UIView *shadowView = [[UIView alloc] initWithFrame:CGRectMake(endFrame.origin.x, endFrame.origin.y, endFrame.size.width, 1.0f)];
+    shadowView.backgroundColor = [UIColor colorWithWhite:0.4f alpha:0.4f];  
+    shadowView.layer.opacity = 0.5f;
+    
+    [cell.contentView addSubview:textLabel];
+    [cell.contentView addSubview:barScrollView];
+    [cell.contentView addSubview:shadowView];
+    
+    return cell;
 }
 
 #pragma mark - Table view data source
@@ -154,53 +198,15 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    static NSString *CellIdentifierExpanded = @"CellExpanded";
     
     NSIndexPath *selected = self->_selectedIndexPath;
     BOOL isSelectedRow = (selected != nil && (indexPath.row == selected.row));
     
-    UITableViewCell *cell = (isSelectedRow) ? [tableView dequeueReusableCellWithIdentifier:CellIdentifierExpanded] :
-                                              [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    UITableViewCell *cell = (isSelectedRow) ? nil : [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         
     Note *note = [self->_notes objectAtIndex:indexPath.row];
-
     if (isSelectedRow) {        
-        // As the height of the cell is dynamic I can't reuse the cells
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierExpanded];
-        
-        cell.backgroundColor = [UIColor clearColor];
-        
-        cell.detailTextLabel.backgroundColor = [UIColor clearColor];
-
-        CGSize labelSize = [note.text sizeWithFont:[self->_styleService fontTextLabelPrimary]
-                                 constrainedToSize:CGSizeMake(cell.contentView.frame.size.width, MAXFLOAT) 
-                                     lineBreakMode:UILineBreakModeWordWrap];
-        
-        // I want to get the height of the font for one character
-        CGSize fontSize  = [@"s" sizeWithFont:[self->_styleService fontTextLabelPrimary]
-                            constrainedToSize:CGSizeMake(tableView.frame.size.width, MAXFLOAT)];
-                                
-        
-        UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(fontSize.height, fontSize.height, labelSize.width - fontSize.height, labelSize.height)];
-        textLabel.backgroundColor = [UIColor clearColor];
-        textLabel.numberOfLines   = 0;
-        textLabel.lineBreakMode   = UILineBreakModeWordWrap;
-        textLabel.font            = [self->_styleService fontTextLabelPrimary];
-        
-        textLabel.text = note.text;
-                
-        UIScrollView *barScrollView = [self->_styleService scrollViewForTagAtPoint:CGPointMake(cell.contentView.frame.origin.x, labelSize.height + SELECTED_CELL_PADDING) width:self.view.frame.size.width];
-        
-        [self->_buttonScroller addButtonsForContentAreaIn:barScrollView];
-        
-        CGRect endFrame   = barScrollView.frame;
-        UIView *shadowView = [[UIView alloc] initWithFrame:CGRectMake(endFrame.origin.x, endFrame.origin.y, endFrame.size.width, 1.0f)];
-        shadowView.backgroundColor = [UIColor colorWithWhite:0.4f alpha:0.4f];  
-        shadowView.layer.opacity = 0.5f;
-
-        [cell.contentView addSubview:textLabel];
-        [cell.contentView addSubview:barScrollView];
-        [cell.contentView addSubview:shadowView];  
+        cell = [self cellForSelectedRowForTable:tableView withNote:note];
     }
     else {
         if (cell == nil) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
@@ -267,9 +273,7 @@
 #pragma mark = NTWriteViewDelegate 
 
 - (void)didSaveNote {
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
-    [managedObjectContext refreshObject:self->_tag mergeChanges:YES];
+    [self->_managedObjectContext refreshObject:self->_tag mergeChanges:YES];
     self->_notes = [self arrayNotesForDataSourceFromTag:self->_tag];
     
     [self->_tableView reloadData];    

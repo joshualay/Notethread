@@ -33,8 +33,11 @@
     
     // State var to track if this Tag this has been init'd with is a filtered tag or not
     BOOL _isFilteredTag;
+    
+    NSManagedObjectContext *_managedObjectContext;
 }
 
-- (id)initWithTag:(Tag *)tag;
+// Use this - a Tag is required and I've enforced it via the constructor
+- (id)initWithTag:(Tag *)tag managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 @end

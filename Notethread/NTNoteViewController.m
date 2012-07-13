@@ -493,7 +493,7 @@ const CGFloat threadCellRowHeight = 42.0f;
 
 - (void)textViewDidChange:(UITextView *)textView {
     self.title = [self titleForNote:textView.text];
-    self.navigationItem.rightBarButtonItem.enabled =  ([textView.text length]);
+    self.navigationItem.rightBarButtonItem.enabled =  ([textView.text length] > 0);
 }
 
 #pragma mark @selector

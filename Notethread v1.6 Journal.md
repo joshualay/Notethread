@@ -4,6 +4,30 @@ The goal of this release is give more power to #tags. I want to be able to creat
 
 As you may have a certain tag in different notes this will just show them all in the one list; making it easy to have a quick overview.
 
+## 13/07/2012
+
+Misc night
+
+### Worklog
+
+When editing I had a logic check to enable to [done] button or not.
+
+	self.navigationItem.rightBarButtonItem.enabled =  ([textView.text length])
+	
+What's interesting about this is that every second character entered would enable the view. I'm not too sure why this happened. Each time the length was evaluated it would be a positive integer. However perhaps since there's no explicit comparision the boolean result just varies?
+
+I've fixed it to do a comparison instead.
+
+	([textView.text length] > 0)
+	
+I was wondering why my sorting wasn't working! I didn't look at the method signature to realise it returns the sorted array. 
+
+    NSArray *sortedNotes = [dirtyNotes sortedArrayUsingComparator:^(Note *n1, Note *n2) {
+        return [n2.lastModifiedDate compare:n1.lastModifiedDate];
+    }];
+    
+The text label i created when tapping on a tag was too small. It cut off the last word for some reason. I've used the width of the cell's content view instead.
+
 ## 12/07/2012
 
 Better filtering for the main tag view. Needs to not display tags that have no notes PLUS no filtered #tags.

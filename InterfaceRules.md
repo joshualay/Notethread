@@ -33,4 +33,14 @@
 * Must display tag toolbar
     * Must be loaded with **#** button on the left hand side
 * Must have **cancel** button
-* Must have **save** button
+* Must have **done** button
+
+
+## Note Write View
+
+* Must display **cancel** button
+* Must display **save** button
+	* Must only display when text has been entered
+* Must display tag toolbar
+    * Must be loaded with **#** button on the left hand side
+
