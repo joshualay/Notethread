@@ -146,7 +146,7 @@
     CGSize fontSize  = [@"s" sizeWithFont:[self->_styleService fontTextLabelPrimary]
                         constrainedToSize:CGSizeMake(tableView.frame.size.width, MAXFLOAT)];
     
-    UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(fontSize.height, fontSize.height, cell.contentView.frame.size.width, labelSize.height)];
+    UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, fontSize.height, cell.contentView.frame.size.width - (fontSize.height * 1.5f), labelSize.height)];
     textLabel.backgroundColor = [UIColor clearColor];
     textLabel.numberOfLines   = 0;
     textLabel.lineBreakMode   = UILineBreakModeWordWrap;
