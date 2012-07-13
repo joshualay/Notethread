@@ -28,6 +28,36 @@ I was wondering why my sorting wasn't working! I didn't look at the method signa
     
 The text label i created when tapping on a tag was too small. It cut off the last word for some reason. I've used the width of the cell's content view instead.
 
+I want to add a info modal for the taglist feature as well as add a couple of new fonts. I'm thinking Baskerville and GillSans.
+
+I like GillSans but Baskerville does not work well. Changing to Marion-Regular instead.
+
+The SettingsViewController is a bit untidy. Going to refactor it.
+To make it more readable I'm creating a set of enum's:
+
+	typedef enum {
+	    SettingsSectionsThreadsDisplayed = 0,
+	    SettingsSectionsFontUsed,
+	    SettingsSectionsFontSize
+	} SettingsSections;
+	
+	typedef enum {
+	    FontFamilyRowSerif = 0,
+	    FontFamilyRowSansSerif,
+	    FontFamilyRowSerifAlt,
+	    FontFamilyRowSansSerifAlt
+	} FontFamilyRow;
+	
+	typedef enum {
+	    FontSizeSliderSmall = 0,
+	    FontSizeSliderNormal,
+	    FontSizeSliderLarge
+	} FontSizeSliderValue;
+
+Much better!
+
+Changed the footer to just use a twitter logo and link to my page.
+
 ## 12/07/2012
 
 Better filtering for the main tag view. Needs to not display tags that have no notes PLUS no filtered #tags.

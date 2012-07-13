@@ -38,6 +38,8 @@
 		9848995C1574FE41008AF533 /* NTNoteController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9848995B1574FE41008AF533 /* NTNoteController.m */; };
 		9848996715873B01008AF533 /* Notethread v1.6 Journal.md in Resources */ = {isa = PBXBuildFile; fileRef = 9848996615873B00008AF533 /* Notethread v1.6 Journal.md */; };
 		9848996E15874B6D008AF533 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9848996D15874B6D008AF533 /* Twitter.framework */; };
+		9851716B15B05CD60056D8DC /* twitter_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 9851716915B05CD60056D8DC /* twitter_logo.png */; };
+		9851716C15B05CD60056D8DC /* twitter_logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9851716A15B05CD60056D8DC /* twitter_logo@2x.png */; };
 		986E806C147E3C06004645CF /* EmailContentApplicationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 986E806B147E3C06004645CF /* EmailContentApplicationService.m */; };
 		986E8072147E90EC004645CF /* EmailApplicationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 986E8071147E90EC004645CF /* EmailApplicationService.m */; };
 		986E8074147E98C5004645CF /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 986E8073147E98C5004645CF /* MessageUI.framework */; };
@@ -53,8 +55,6 @@
 		98EB1F01147CE9930018FF08 /* UserSettingsConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 98EB1F00147CE9930018FF08 /* UserSettingsConstants.m */; };
 		98EB1F05147D0CB70018FF08 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98EB1F03147D0CB70018FF08 /* SettingsViewController.m */; };
 		98EB1F06147D0CB70018FF08 /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98EB1F04147D0CB70018FF08 /* SettingsViewController.xib */; };
-		98EB1F0A147D35340018FF08 /* AboutMeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98EB1F08147D35340018FF08 /* AboutMeViewController.m */; };
-		98EB1F0B147D35340018FF08 /* AboutMeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98EB1F09147D35340018FF08 /* AboutMeViewController.xib */; };
 		98EC88F91539797C007D92A7 /* JLButtonScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 98EC88F81539797C007D92A7 /* JLButtonScroller.m */; };
 		98EC88FB15397EB3007D92A7 /* JLButtonScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 98EC88F81539797C007D92A7 /* JLButtonScroller.m */; };
 		98F911361482066300D421B0 /* icon57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 98F91134148203FC00D421B0 /* icon57x57.png */; };
@@ -118,6 +118,8 @@
 		9848996415863E63008AF533 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		9848996615873B00008AF533 /* Notethread v1.6 Journal.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Notethread v1.6 Journal.md"; sourceTree = "<group>"; };
 		9848996D15874B6D008AF533 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
+		9851716915B05CD60056D8DC /* twitter_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = twitter_logo.png; sourceTree = "<group>"; };
+		9851716A15B05CD60056D8DC /* twitter_logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "twitter_logo@2x.png"; sourceTree = "<group>"; };
 		986E806A147E3C06004645CF /* EmailContentApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailContentApplicationService.h; sourceTree = "<group>"; };
 		986E806B147E3C06004645CF /* EmailContentApplicationService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailContentApplicationService.m; sourceTree = "<group>"; };
 		986E8070147E90EC004645CF /* EmailApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailApplicationService.h; sourceTree = "<group>"; };
@@ -142,9 +144,6 @@
 		98EB1F02147D0CB70018FF08 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		98EB1F03147D0CB70018FF08 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		98EB1F04147D0CB70018FF08 /* SettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingsViewController.xib; sourceTree = "<group>"; };
-		98EB1F07147D35330018FF08 /* AboutMeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutMeViewController.h; sourceTree = "<group>"; };
-		98EB1F08147D35340018FF08 /* AboutMeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutMeViewController.m; sourceTree = "<group>"; };
-		98EB1F09147D35340018FF08 /* AboutMeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutMeViewController.xib; sourceTree = "<group>"; };
 		98EC88F71539797C007D92A7 /* JLButtonScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JLButtonScroller.h; sourceTree = "<group>"; };
 		98EC88F81539797C007D92A7 /* JLButtonScroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JLButtonScroller.m; sourceTree = "<group>"; };
 		98F91134148203FC00D421B0 /* icon57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon57x57.png; sourceTree = "<group>"; };
@@ -187,7 +186,6 @@
 		980055A5146AB89F004C4802 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				98EB1F09147D35340018FF08 /* AboutMeViewController.xib */,
 				98EB1F04147D0CB70018FF08 /* SettingsViewController.xib */,
 				9871256014700AA0007D56D6 /* NTNoteViewController.xib */,
 				980055A2146AB884004C4802 /* NTWriteViewController.xib */,
@@ -259,8 +257,6 @@
 				98FDA07E158782910045E31A /* NTTagListDetailViewController.m */,
 				98EB1F02147D0CB70018FF08 /* SettingsViewController.h */,
 				98EB1F03147D0CB70018FF08 /* SettingsViewController.m */,
-				98EB1F07147D35330018FF08 /* AboutMeViewController.h */,
-				98EB1F08147D35340018FF08 /* AboutMeViewController.m */,
 				98EC88F71539797C007D92A7 /* JLButtonScroller.h */,
 				98EC88F81539797C007D92A7 /* JLButtonScroller.m */,
 				9871256C147132DF007D56D6 /* ApplicationServices */,
@@ -277,6 +273,8 @@
 		9818214C1468026D00DBC1D2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				9851716915B05CD60056D8DC /* twitter_logo.png */,
+				9851716A15B05CD60056D8DC /* twitter_logo@2x.png */,
 				989D514F148900FD002B27AB /* handmadepaper.png */,
 				989D514D1488FECC002B27AB /* fabric_1.png */,
 				989D51471488F013002B27AB /* black-Linen.png */,
@@ -425,7 +423,6 @@
 				980055A4146AB884004C4802 /* NTWriteViewController.xib in Resources */,
 				9871256214700AA0007D56D6 /* NTNoteViewController.xib in Resources */,
 				98EB1F06147D0CB70018FF08 /* SettingsViewController.xib in Resources */,
-				98EB1F0B147D35340018FF08 /* AboutMeViewController.xib in Resources */,
 				98F911361482066300D421B0 /* icon57x57.png in Resources */,
 				98F911381482066600D421B0 /* icon114x114.png in Resources */,
 				989D51481488F013002B27AB /* black-Linen.png in Resources */,
@@ -438,6 +435,8 @@
 				98FDA0811588AF890045E31A /* NTTagListViewController.xib in Resources */,
 				98BC4A39158C8E2900B48D38 /* NTTagListDetailViewController.xib in Resources */,
 				98209CFB15A5922C007E06EF /* InterfaceRules.md in Resources */,
+				9851716B15B05CD60056D8DC /* twitter_logo.png in Resources */,
+				9851716C15B05CD60056D8DC /* twitter_logo@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,7 +482,6 @@
 				98EB1EF9147BBF160018FF08 /* AlertApplicationService.m in Sources */,
 				98EB1F01147CE9930018FF08 /* UserSettingsConstants.m in Sources */,
 				98EB1F05147D0CB70018FF08 /* SettingsViewController.m in Sources */,
-				98EB1F0A147D35340018FF08 /* AboutMeViewController.m in Sources */,
 				986E806C147E3C06004645CF /* EmailContentApplicationService.m in Sources */,
 				986E8072147E90EC004645CF /* EmailApplicationService.m in Sources */,
 				9801C7B0148645CF005138A7 /* Note.m in Sources */,

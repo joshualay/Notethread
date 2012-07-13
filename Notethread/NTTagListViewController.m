@@ -54,6 +54,10 @@
     
     UIBarButtonItem *leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Notethread" style:UIBarButtonItemStyleBordered target:self action:@selector(dismissView:)];
     self.navigationItem.leftBarButtonItem = leftBarButtonItem;
+    
+    // TODO
+    //UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[UIButton buttonWithType:UIButtonTypeInfoLight]];
+    //self.navigationItem.rightBarButtonItem = rightBarButtonItem;
 }
     
 - (void)viewDidUnload
