@@ -30,6 +30,8 @@
 
 @implementation NTTagListDetailViewController
 
+@synthesize managedObjectContext=_managedObjectContext;
+
 - (id)initWithTag:(Tag *)tag managedObjectContext:(NSManagedObjectContext *)managedObjectContext {
     self = [super initWithNibName:@"NTTagListDetailViewController" bundle:nil];
     if (self) {
@@ -103,10 +105,10 @@
     
     NSArray *tagsInNote = [self->_tagService arrayOfTagsInText:selectedNote.text];
     
-    [self->_tagService storeTags:tagsInNote withRelationship:selectedNote inManagedContext:self->_managedObjectContext];
+    [self->_tagService storeTags:tagsInNote withRelationship:selectedNote inManagedContext:self.managedObjectContext];
     
     NSError *error = nil;
-    if (![self->_managedObjectContext save:&error]) {
+    if (![self.managedObjectContext save:&error]) {
         [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
     } 
     
@@ -118,7 +120,7 @@
 }
 
 - (IBAction)willComposeNewNoteWithTag:(id)sender {       
-    NTWriteViewController *writeViewController = [[NTWriteViewController alloc] initWithThreadDepth:0 parent:nil initialText:[NSString stringWithFormat:@" #%@", self->_tag.name]];
+    NTWriteViewController *writeViewController = [[NTWriteViewController alloc] initWithThreadDepth:0 parent:nil initialText:[NSString stringWithFormat:@" #%@", self->_tag.name] managedObjectContext:self.managedObjectContext];
     
     writeViewController.modalTransitionStyle   = UIModalTransitionStyleCoverVertical;
     writeViewController.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -273,7 +275,7 @@
 #pragma mark = NTWriteViewDelegate 
 
 - (void)didSaveNote {
-    [self->_managedObjectContext refreshObject:self->_tag mergeChanges:YES];
+    [self.managedObjectContext refreshObject:self->_tag mergeChanges:YES];
     self->_notes = [self arrayNotesForDataSourceFromTag:self->_tag];
     
     [self->_tableView reloadData];    

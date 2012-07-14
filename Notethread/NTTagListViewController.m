@@ -34,12 +34,14 @@
 
 @implementation NTTagListViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+@synthesize managedObjectContext = _managedObjectContext;
+
+- (id)initWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
+    self = [super initWithNibName:@"NTTagListViewController" bundle:nil];
     if (self) {
         _styleService = [StyleApplicationService sharedSingleton];
         _tagService = [[TagService alloc] init];
+        _managedObjectContext = managedObjectContext;
     }
     return self;
 }

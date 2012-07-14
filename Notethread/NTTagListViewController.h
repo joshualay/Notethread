@@ -27,4 +27,8 @@
     NSArray *_tags;
 }
 
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+
+- (id)initWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+
 @end

@@ -94,7 +94,7 @@ const NSInteger threadDepthInteger = 1;
 }
 
 - (IBAction)displayTagListView:(id)sender {
-    NTTagListViewController *tagListViewController = [[NTTagListViewController alloc] initWithNibName:@"NTTagListViewController" bundle:nil];
+    NTTagListViewController *tagListViewController = [[NTTagListViewController alloc] initWithManagedObjectContext:self.managedObjectContext];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:tagListViewController];
     navController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     [self presentModalViewController:navController animated:YES];
@@ -162,7 +162,7 @@ const NSInteger threadDepthInteger = 1;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NTNoteViewController *noteViewController = [[NTNoteViewController alloc] init];
+    NTNoteViewController *noteViewController = [[NTNoteViewController alloc] initWithManagedObjectContext:self.managedObjectContext];
     
     Note *selectedNote = nil;
     if (tableView == self.searchDisplayController.searchResultsTableView)
@@ -326,7 +326,7 @@ const NSInteger threadDepthInteger = 1;
 
 // Top level note: UIModalTransitionStyleCoverVertical
 - (void)displayWriteView {
-    NTWriteViewController *writeViewController = [[NTWriteViewController alloc] initWithThreadDepth:0 parent:nil];
+    NTWriteViewController *writeViewController = [[NTWriteViewController alloc] initWithThreadDepth:0 parent:nil managedObjectContext:self.managedObjectContext];
     
     writeViewController.modalTransitionStyle   = UIModalTransitionStyleCoverVertical;
     writeViewController.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -344,7 +344,7 @@ const NSInteger threadDepthInteger = 1;
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:indexRow inSection:0];
     
     Note *activeNote = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    NTWriteViewController *threadWriteViewController = [[NTWriteViewController alloc] initWithThreadDepth:threadDepthInteger parent:activeNote];
+    NTWriteViewController *threadWriteViewController = [[NTWriteViewController alloc] initWithThreadDepth:threadDepthInteger parent:activeNote managedObjectContext:self.managedObjectContext];
     
     [self.styleApplicationService modalStyleForThreadWriteView:threadWriteViewController];
     

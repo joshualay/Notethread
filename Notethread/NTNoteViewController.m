@@ -63,11 +63,12 @@
 
 @synthesize backButton = _backButton;
 
+
 const CGFloat threadCellRowHeight = 42.0f;
 
 
-- (id)init {
-    self = [super init];
+- (id)initWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
+    self = [super initWithManagedObjectContext:managedObjectContext];
     if (self) {
         self.noteThreads = nil;
     }
@@ -98,9 +99,7 @@ const CGFloat threadCellRowHeight = 42.0f;
     
     [self setKeyboardNotificationsObservers];
     
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
-    [managedObjectContext refreshObject:self.note mergeChanges:YES];
+    [self.managedObjectContext refreshObject:self.note mergeChanges:YES];
     
     self.noteThreads = nil;
     self.noteThreads = [self.note.noteThreads array];
@@ -136,7 +135,8 @@ const CGFloat threadCellRowHeight = 42.0f;
 }
 
 - (UIBarButtonItem *)defaultRightBarButtonItem {
-    return [[UIBarButtonItem alloc] initWithTitle:@"Edit Note" style:UIBarButtonItemStylePlain target:self action:@selector(willEditNoteTextView:)];
+    NSString *title = NSLocalizedString(@"Edit Note", @"Edit Note");
+    return [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStylePlain target:self action:@selector(willEditNoteTextView:)];
 }
 
 - (void)resetNavigationItemFromEditing {
@@ -237,9 +237,10 @@ const CGFloat threadCellRowHeight = 42.0f;
 
 #pragma mark - NTNoteViewController(ActionSheet)
 - (IBAction)presentActionSheetForNote:(id)sender {
+    NSString *cancel = NSLocalizedString(@"Cancel", @"Cancel");
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil 
                                                              delegate:self 
-                                                    cancelButtonTitle:@"Cancel" 
+                                                    cancelButtonTitle:cancel 
                                                destructiveButtonTitle:nil 
                                                     otherButtonTitles:@"Email", @"Tweet note", nil];
     
@@ -306,8 +307,8 @@ const CGFloat threadCellRowHeight = 42.0f;
 - (CGRect)frameForActionToolbar:(CGRect)viewRect noteFrame:(CGRect)noteViewRect toolBarHeight:(CGFloat)height {
     CGFloat tableWidth   = self.view.frame.size.width;
     
-    // The - 1 is so we get a black line to separate from the thread table view
-    return CGRectMake(viewRect.origin.x, noteViewRect.size.height, tableWidth, height - 1);
+    NSUInteger spaceFromBarTop = 1;
+    return CGRectMake(viewRect.origin.x, noteViewRect.size.height, tableWidth, height - spaceFromBarTop);
 }
 
 - (NSArray *)barButtonsForActionToolbar {
@@ -383,27 +384,26 @@ const CGFloat threadCellRowHeight = 42.0f;
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
-        
-        Note *noteThread = [self.noteThreads objectAtIndex:indexPath.row];
-        NSMutableArray *noteThreads = [[self.note.noteThreads array] mutableCopy];
-        [noteThreads removeObject:noteThread];
-        
-        [self.note setNoteThreads:[NSOrderedSet orderedSetWithArray:noteThreads]];
-        
-        self.noteThreads = [noteThreads copy];
+    if (editingStyle != UITableViewCellEditingStyleDelete) {
+        return;
+    }
 
-        [self.threadTableView beginUpdates];
-        [self.threadTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-        [self.threadTableView endUpdates];
-                
-        NSError *error = nil;
-        if (![managedObjectContext save:&error]) {
-            [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
-        }
-    }   
+    Note *noteThread = [self.noteThreads objectAtIndex:indexPath.row];
+    NSMutableArray *noteThreads = [[self.note.noteThreads array] mutableCopy];
+    [noteThreads removeObject:noteThread];
+    
+    [self.note setNoteThreads:[NSOrderedSet orderedSetWithArray:noteThreads]];
+    
+    self.noteThreads = [noteThreads copy];
+
+    [self.threadTableView beginUpdates];
+    [self.threadTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.threadTableView endUpdates];
+            
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
+    }
 }
 
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
@@ -421,12 +421,9 @@ const CGFloat threadCellRowHeight = 42.0f;
     
     self.noteThreads = [threadsMutableArray copy];
     [self.note setNoteThreads:[NSOrderedSet orderedSetWithArray:self.noteThreads]];
-    
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
-    
+
     NSError *error = nil;
-    if (![managedObjectContext save:&error]) {
+    if (![self.managedObjectContext save:&error]) {
         [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
     }
 }
@@ -449,7 +446,7 @@ const CGFloat threadCellRowHeight = 42.0f;
     NSInteger threadDepthInteger = [self.note.depth integerValue] + 1;
     
     [self removeKeyboardNotificationObservers];
-    NTWriteViewController *threadWriteViewController = [[NTWriteViewController alloc] initWithThreadDepth:threadDepthInteger parent:self.note];
+    NTWriteViewController *threadWriteViewController = [[NTWriteViewController alloc] initWithThreadDepth:threadDepthInteger parent:self.note managedObjectContext:self.managedObjectContext];
     
     [self->_styleService modalStyleForThreadWriteView:threadWriteViewController];
     
@@ -457,18 +454,15 @@ const CGFloat threadCellRowHeight = 42.0f;
 }
 
 - (IBAction)saveNote:(id)sender {
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
-    
     self.note.text             = self.noteTextView.text;
     self.note.lastModifiedDate = [NSDate date];
     
     NSArray *tagsInNote = [self->_tagService arrayOfTagsInText:self.note.text];
     
-    [self->_tagService storeTags:tagsInNote withRelationship:self.note inManagedContext:managedObjectContext];
+    [self->_tagService storeTags:tagsInNote withRelationship:self.note inManagedContext:self.managedObjectContext];
     
     NSError *error = nil;
-    if (![managedObjectContext save:&error]) {
+    if (![self.managedObjectContext save:&error]) {
         [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
     }    
 }

@@ -38,6 +38,9 @@
 }
 
 @property (strong, nonatomic) IBOutlet UITextView *noteTextView;
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+
+- (id)initWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 - (void)addButtonTagNameToText:(id)sender;
 - (NSString *)titleForNote:(NSString *)text;

@@ -11,6 +11,7 @@
 #import "Note.h"
 #include "NSArray+Reverse.h"
 #include "UserSettingsConstants.h"
+#include "AlertApplicationService.h"
 
 @interface TagService (Private)
 - (NSString *)stringWordTillPreviousSpaceInText:(NSString *)text fromLocation:(NSUInteger)location;
@@ -42,6 +43,10 @@
     
     NSError *error = nil;
     NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    
+    if (error != nil) {
+        [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
+    }
     
     if (array != nil) {
         NSUInteger count = [array count]; // May be 0 if the object has been deleted.
@@ -78,9 +83,7 @@
     return [self tagWithName:name inManagedContext:managedObjectContext];
 }
 
-- (NSArray *)arrayExistingTagsIn:(NSManagedObjectContext *)managedObjectContext {
-    //TODO sort tags by frequency?
-    
+- (NSArray *)arrayExistingTagsIn:(NSManagedObjectContext *)managedObjectContext {    
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"frequency" ascending:NO];
     [fetchRequest setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
@@ -89,7 +92,12 @@
 	[fetchRequest setEntity:entity];
         
     NSError *error;
-	return [managedObjectContext executeFetchRequest:fetchRequest error:&error];
+	NSArray *tagsByFrequency = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (error != nil) {
+        [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
+    }
+    
+    return tagsByFrequency;
 }
 
 - (UIFont *)fontTag {

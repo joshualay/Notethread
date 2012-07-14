@@ -23,16 +23,18 @@
 @implementation NTNoteController
 
 @synthesize noteTextView=_noteTextView;
+@synthesize managedObjectContext=_managedObjectContext;
 
-- (id)init {
+- (id)initWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
     self = [super init];
     if (self) {
         _tagService = [[TagService alloc] init];
         _tagTracker = [[TagTracker alloc] initWithTagService:_tagService];
         _styleService = [StyleApplicationService sharedSingleton];
+        _managedObjectContext = managedObjectContext;
     }
     
-    return self;
+    return self;    
 }
 
 - (void)viewDidLoad
@@ -45,10 +47,8 @@
     self.noteTextView.inputAccessoryView = [self->_styleService inputAccessoryViewForTextView:self.noteTextView];
     self.noteTextView.keyboardType = UIKeyboardTypeDefault;
     
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *managedObject = [appDelegate managedObjectContext];
     self->_existingTags = nil;
-    self->_existingTags = [self->_tagService arrayExistingTagsIn:managedObject];
+    self->_existingTags = [self->_tagService arrayExistingTagsIn:self.managedObjectContext];
     self->_tagButtonScrollView = [self->_styleService scrollViewForTagAtPoint:CGPointZero width:self.view.frame.size.width];
 
     UIButton *addTagButton = [self->_styleService customUIButtonStyle];

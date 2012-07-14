@@ -50,9 +50,8 @@
  TODO: Investigate and determine if threadDepth is required and replace with dynamic solution.
  
  */
-- (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note;
-
-- (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note initialText:(NSString *)text;
+- (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+- (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note initialText:(NSString *)text managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 - (IBAction)cancelWriting:(id)sender;
 - (IBAction)saveNote:(id)sender;

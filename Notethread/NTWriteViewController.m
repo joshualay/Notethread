@@ -32,7 +32,6 @@
 @synthesize noteDepth     = _noteDepth;
 @synthesize parentNote    = _parentNote;
 
-
 #define CGRECTSCREEN [[UIScreen mainScreen] bounds]
 #define VIEWHEIGHT CGRECTSCREEN.size.height
 #define VIEWWIDTH CGRECTSCREEN.size.width
@@ -40,8 +39,8 @@
 #define PORTRAIT_WIDTH 0.97 * VIEWWIDTH
 
 
-- (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note {
-    self = [super init];
+- (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note managedObjectContext:(NSManagedObjectContext *)managedObjectContext {
+    self = [super initWithManagedObjectContext:managedObjectContext];
     if (self) {
         _noteDepth  = threadDepth;
         _parentNote = note;
@@ -50,8 +49,9 @@
     return self;
 }
 
-- (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note initialText:(NSString *)text {
-    self = [self initWithThreadDepth:threadDepth parent:note];
+- (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note initialText:(NSString *)text managedObjectContext:(NSManagedObjectContext *)managedObjectContext 
+{
+    self = [self initWithThreadDepth:threadDepth parent:note managedObjectContext:managedObjectContext];
     if (self) {
         _initialNoteText = [text copy];
     }
@@ -65,7 +65,7 @@
     [super viewDidLoad];
     [self.noteTextView becomeFirstResponder];
     
-    self.navigationBar.topItem.title = NSLocalizedString(@"Writing...", @"Writing...");
+    self.navigationBar.topItem.title = NSLocalizedString(@"New note", @"New note");
 
     self.noteTextView.backgroundColor = [UIColor clearColor];
     self.noteTextView.text = [self->_initialNoteText copy];
@@ -99,11 +99,8 @@
     if ([self.delegate respondsToSelector:@selector(willSaveNote)]) {
         [self.delegate willSaveNote];
     }
-    
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
-    
-    Note *newNote = [NSEntityDescription insertNewObjectForEntityForName:@"Note" inManagedObjectContext:managedObjectContext];
+
+    Note *newNote = [NSEntityDescription insertNewObjectForEntityForName:@"Note" inManagedObjectContext:self.managedObjectContext];
     
     newNote.createdDate = [NSDate date];
     newNote.lastModifiedDate = [NSDate date];
@@ -112,7 +109,7 @@
     
     NSArray *tagsInNote = [self->_tagService arrayOfTagsInText:newNote.text];
     
-    [self->_tagService storeTags:tagsInNote withRelationship:newNote inManagedContext:managedObjectContext];
+    [self->_tagService storeTags:tagsInNote withRelationship:newNote inManagedContext:self.managedObjectContext];
     
     if (self.parentNote != nil) {
         NSMutableArray *noteThreads = [[self.parentNote.noteThreads array] mutableCopy];
@@ -125,7 +122,7 @@
     }
     
     NSError *error = nil;
-    if (![managedObjectContext save:&error]) {
+    if (![self.managedObjectContext save:&error]) {
         [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
     } 
     

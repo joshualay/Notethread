@@ -36,4 +36,6 @@
 
 @property (strong, nonatomic) UIBarButtonItem *backButton;
 
+- (id)initWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+
 @end
