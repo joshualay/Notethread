@@ -4,6 +4,14 @@ The goal of this release is give more power to #tags. I want to be able to creat
 
 As you may have a certain tag in different notes this will just show them all in the one list; making it easy to have a quick overview.
 
+## 16/07/2012
+
+Found a bug with my refactoring. I don't believe I'm passing the model down correctly when opening up a note thread.
+
+### Worklog
+
+Yep. Silly me. I missed an init for NTNoteViewController.
+
 ## 14/07/2012
 
 Trying to move towards having constructor dependencies where possible. Starting off with just passing down the managedObjectContext down the chain. It feels a bit redundant constantly fetching from the app delegate multiple times in the same class!

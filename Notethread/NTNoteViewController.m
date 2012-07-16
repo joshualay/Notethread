@@ -431,7 +431,7 @@ const CGFloat threadCellRowHeight = 42.0f;
 #pragma UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NTNoteViewController *noteViewController = [[NTNoteViewController alloc] init];
+    NTNoteViewController *noteViewController = [[NTNoteViewController alloc] initWithManagedObjectContext:self.managedObjectContext];
     
     Note *selectedNote             = [self.noteThreads objectAtIndex:indexPath.row];
     noteViewController.note        = selectedNote;
