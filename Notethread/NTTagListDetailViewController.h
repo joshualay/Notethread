@@ -35,6 +35,7 @@
     BOOL _isFilteredTag;
 }
 
+
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 // Use this - a Tag is required and I've enforced it via the constructor

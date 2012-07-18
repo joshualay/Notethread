@@ -224,6 +224,32 @@
 }
 
 
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle != UITableViewCellEditingStyleDelete) return;
+    
+    NSUInteger index = indexPath.row;
+    
+    // Delete the managed object for the given index path
+    [self.managedObjectContext deleteObject:[self->_notes objectAtIndex:index]];
+    
+    // Save the context.
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
+    }
+    
+    NSMutableArray *mutableCopy = [self->_notes mutableCopy];
+    self->_notes = nil;
+    [mutableCopy removeObjectAtIndex:index];
+    self->_notes = [mutableCopy copy];
+    mutableCopy = nil;
+    
+    [self->_tableView beginUpdates];
+    [self->_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self->_tableView endUpdates];
+}
+
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
