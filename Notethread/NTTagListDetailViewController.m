@@ -245,9 +245,11 @@
     self->_notes = [mutableCopy copy];
     mutableCopy = nil;
     
-    [self->_tableView beginUpdates];
-    [self->_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-    [self->_tableView endUpdates];
+    self->_selectedIndexPath = nil;
+    
+    NSArray *indexPathArray = [NSArray arrayWithObject:indexPath];
+    [self->_tableView deleteRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self->_tableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationNone];
 }
 
 #pragma mark - Table view delegate
