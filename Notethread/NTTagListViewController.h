@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CMPopTipView.h"
 
 @class StyleApplicationService;
 @class TagService;
 
-@interface NTTagListViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate> {
+@interface NTTagListViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, CMPopTipViewDelegate> {
     NSFetchedResultsController *__fetchedResultsController;
     NSManagedObjectContext *__managedObjectContext;
     
@@ -19,6 +20,8 @@
     TagService *_tagService;
     
     IBOutlet UITableView *_tableView;
+    
+    CMPopTipView *_popTipView;
     
     /*
      I cannot use a NSSortDescriptor on the relationship Tag.notes. In order to get around this I have this ivar. 

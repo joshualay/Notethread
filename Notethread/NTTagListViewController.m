@@ -18,7 +18,6 @@
 #import "TagService.h"
 #import "StyleConstants.h"
 #import "UserSettingsConstants.h"
-#import "TagListHelpViewController.h"
 
 @interface NTTagListViewController (CoreData)
 - (NSFetchedResultsController *)fetchedResultsController;
@@ -27,7 +26,7 @@
 
 @interface NTTagListViewController (Selectors)
 - (IBAction)dismissView:(id)sender;
-- (IBAction)presentHelpViewController:(id)sender;
+- (IBAction)presentHelpPopTipView:(id)sender;
 @end
 
 @interface NTTagListViewController (Private)
@@ -64,7 +63,7 @@
     self.navigationItem.leftBarButtonItem = leftBarButtonItem;
     
     UIButton *infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
-    [infoButton addTarget:self action:@selector(presentHelpViewController:) forControlEvents:UIControlEventTouchUpInside];
+    [infoButton addTarget:self action:@selector(presentHelpPopTipView:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
     self.navigationItem.rightBarButtonItem = rightBarButtonItem;
 }
@@ -215,30 +214,29 @@
     [self dismissModalViewControllerAnimated:YES];
 }
 
-- (IBAction)presentHelpViewController:(id)sender {
-    UIView *existingView = [self.view viewWithTag:HELP_TAG];
-    if (existingView != nil) {
-        [existingView removeFromSuperview];
-        return;
-    }    
-    
-    TagListHelpViewController *help = [[TagListHelpViewController alloc] initWithNibName:@"TagListHelpViewController" bundle:nil];
-    
-    help.view.alpha = 0.0f;
-    help.view.tag = HELP_TAG;
-    
-    [self.view addSubview:help.view];
-    [UIView animateWithDuration:0.5 animations:^{
-        help.view.backgroundColor = [UIColor darkGrayColor];
-        help.view.alpha = 0.5f;
-        help.view.layer.borderWidth = 0.1f;
-        help.view.layer.cornerRadius = 10.0f;
-        help.view.frame = CGRectMake(self.view.frame.size.width * 0.1,
-                                     self.view.frame.size.width * 0.1, 
-                                     self.view.frame.size.width * 0.8, 
-                                     self.view.frame.size.height * 0.8);
-    }];
+- (IBAction)presentHelpPopTipView:(id)sender {
+    if (self->_popTipView == nil) {
+        NSString *message = @"Any #tags you add in your notes will show up here.";
+        self->_popTipView = [[CMPopTipView alloc] initWithMessage:message];
+        self->_popTipView.delegate = self;
+        self->_popTipView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];
+        self->_popTipView.textColor = [UIColor darkGrayColor];
+        [self->_popTipView presentPointingAtBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
+    }
+    else {
+        [self dismissPopTipView];
+    }
+}
 
+- (void)dismissPopTipView {
+    [self->_popTipView dismissAnimated:NO];
+    self->_popTipView = nil;
+}
+
+
+#pragma mark - CMPopTipViewDelegate
+- (void)popTipViewWasDismissedByUser:(CMPopTipView *)popTipView {
+    [self dismissPopTipView];
 }
 
 #pragma markt - NTTagListViewController (CoreData)
