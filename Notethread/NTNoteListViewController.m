@@ -120,7 +120,7 @@ const NSInteger threadDepthInteger = 1;
     
     [self.tableView setContentOffset:CGPointMake(0,self.searchDisplayController.searchBar.frame.size.height)];    
     
-    self.searchDisplayController.searchBar.scopeButtonTitles = [NSArray arrayWithObjects:@"All", @"Tags", nil];
+    self.searchDisplayController.searchBar.scopeButtonTitles = @[@"All", @"Tags"];
 }
 
 - (void)viewDidUnload {
@@ -243,7 +243,7 @@ const NSInteger threadDepthInteger = 1;
     
     // Edit the sort key as appropriate.
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"lastModifiedDate" ascending:NO];
-    NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    NSArray *sortDescriptors = @[sortDescriptor];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
     

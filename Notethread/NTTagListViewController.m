@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Joshua Lay. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
+
 #import "NTTagListViewController.h"
 #import "NTTagListDetailViewController.h"
 #import "AlertApplicationService.h"
@@ -16,6 +18,7 @@
 #import "TagService.h"
 #import "StyleConstants.h"
 #import "UserSettingsConstants.h"
+#import "TagListHelpViewController.h"
 
 @interface NTTagListViewController (CoreData)
 - (NSFetchedResultsController *)fetchedResultsController;
@@ -24,6 +27,7 @@
 
 @interface NTTagListViewController (Selectors)
 - (IBAction)dismissView:(id)sender;
+- (IBAction)presentHelpViewController:(id)sender;
 @end
 
 @interface NTTagListViewController (Private)
@@ -31,6 +35,8 @@
 - (NSArray *)arraySortTagList:(NSArray *)tags withFilter:(NSArray *)filterTagNames;
 - (NSArray *)arrayFilterTagList:(NSArray *)tags withRemovalFilter:(NSArray *)filterTagNames;
 @end
+
+#define HELP_TAG 42
 
 @implementation NTTagListViewController
 
@@ -57,9 +63,10 @@
     UIBarButtonItem *leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Notethread" style:UIBarButtonItemStyleBordered target:self action:@selector(dismissView:)];
     self.navigationItem.leftBarButtonItem = leftBarButtonItem;
     
-    // TODO
-    //UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[UIButton buttonWithType:UIButtonTypeInfoLight]];
-    //self.navigationItem.rightBarButtonItem = rightBarButtonItem;
+    UIButton *infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
+    [infoButton addTarget:self action:@selector(presentHelpViewController:) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
+    self.navigationItem.rightBarButtonItem = rightBarButtonItem;
 }
     
 - (void)viewDidUnload
@@ -208,6 +215,31 @@
     [self dismissModalViewControllerAnimated:YES];
 }
 
+- (IBAction)presentHelpViewController:(id)sender {
+    UIView *existingView = [self.view viewWithTag:HELP_TAG];
+    if (existingView != nil) {
+        [existingView removeFromSuperview];
+        return;
+    }    
+    
+    TagListHelpViewController *help = [[TagListHelpViewController alloc] initWithNibName:@"TagListHelpViewController" bundle:nil];
+    
+    help.view.alpha = 0.0f;
+    help.view.tag = HELP_TAG;
+    
+    [self.view addSubview:help.view];
+    [UIView animateWithDuration:0.5 animations:^{
+        help.view.backgroundColor = [UIColor darkGrayColor];
+        help.view.alpha = 0.5f;
+        help.view.layer.borderWidth = 0.1f;
+        help.view.layer.cornerRadius = 10.0f;
+        help.view.frame = CGRectMake(self.view.frame.size.width * 0.1,
+                                     self.view.frame.size.width * 0.1, 
+                                     self.view.frame.size.width * 0.8, 
+                                     self.view.frame.size.height * 0.8);
+    }];
+
+}
 
 #pragma markt - NTTagListViewController (CoreData)
 - (NSFetchedResultsController *)fetchedResultsController
