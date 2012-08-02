@@ -35,8 +35,6 @@
 - (NSArray *)arrayFilterTagList:(NSArray *)tags withRemovalFilter:(NSArray *)filterTagNames;
 @end
 
-#define HELP_TAG 42
-
 @implementation NTTagListViewController
 
 @synthesize managedObjectContext = _managedObjectContext;
