@@ -228,6 +228,7 @@
 
 - (void)dismissPopTipView {
     [self->_popTipView dismissAnimated:NO];
+    self->_popTipView.delegate = nil;
     self->_popTipView = nil;
 }
 

@@ -32,6 +32,7 @@
 
 @implementation CMPopTipView
 
+@synthesize delegate;
 @synthesize backgroundColor;
 @synthesize message;
 @synthesize customView;
