@@ -214,7 +214,7 @@
 
 - (IBAction)presentHelpPopTipView:(id)sender {
     if (self->_popTipView == nil) {
-        NSString *message = @"Any #tags you add in your notes will show up here.";
+        NSString *message = @"Any #tags in your notes will show up here.";
         self->_popTipView = [[CMPopTipView alloc] initWithMessage:message];
         self->_popTipView.delegate = self;
         self->_popTipView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];
