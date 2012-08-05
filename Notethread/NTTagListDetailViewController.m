@@ -247,9 +247,7 @@
     
     self->_selectedIndexPath = nil;
     
-    NSArray *indexPathArray = [NSArray arrayWithObject:indexPath];
-    [self->_tableView deleteRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationAutomatic];
-    [self->_tableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationNone];
+    [self->_tableView reloadData];
 }
 
 #pragma mark - Table view delegate
