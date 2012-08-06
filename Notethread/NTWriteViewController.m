@@ -166,6 +166,7 @@
     }
     else {
         CGFloat height = VIEWWIDTH - keyboardFrame.size.width - self.navigationBar.frame.size.height - scrollViewHeight;
+        height += scrollViewHeight / 2.7f;
         newFrame.size = CGSizeMake(VIEWHEIGHT, height);
     }
     self.noteTextView.frame = newFrame;
