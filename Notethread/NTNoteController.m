@@ -16,23 +16,25 @@
 #import "StyleApplicationService.h"
 #import "StyleConstants.h"
 
-@interface NTNoteController() 
+@interface NTNoteController(Private) 
 - (IBAction)addTagToNote:(id)sender;
 @end
 
 @implementation NTNoteController
 
 @synthesize noteTextView=_noteTextView;
+@synthesize managedObjectContext=_managedObjectContext;
 
-- (id)init {
+- (id)initWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
     self = [super init];
     if (self) {
         _tagService = [[TagService alloc] init];
         _tagTracker = [[TagTracker alloc] initWithTagService:_tagService];
         _styleService = [StyleApplicationService sharedSingleton];
+        _managedObjectContext = managedObjectContext;
     }
     
-    return self;
+    return self;    
 }
 
 - (void)viewDidLoad
@@ -45,10 +47,8 @@
     self.noteTextView.inputAccessoryView = [self->_styleService inputAccessoryViewForTextView:self.noteTextView];
     self.noteTextView.keyboardType = UIKeyboardTypeDefault;
     
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *managedObject = [appDelegate managedObjectContext];
     self->_existingTags = nil;
-    self->_existingTags = [self->_tagService arrayExistingTagsIn:managedObject];
+    self->_existingTags = [self->_tagService arrayExistingTagsIn:self.managedObjectContext];
     self->_tagButtonScrollView = [self->_styleService scrollViewForTagAtPoint:CGPointZero width:self.view.frame.size.width];
 
     UIButton *addTagButton = [self->_styleService customUIButtonStyle];
@@ -73,6 +73,17 @@
     self.noteTextView.inputAccessoryView = self->_tagButtonScrollView;
 }
 
+- (NSString *)titleForNote:(NSString *)text {
+    NSRange newLineRange = [text rangeOfString:@"\n"];
+    if (newLineRange.location != NSNotFound) {
+        NSRange headingRange   = NSMakeRange(0, newLineRange.location);
+        
+        return [text substringWithRange:headingRange];
+    }
+    
+    return text;
+}
+
 - (IBAction)addTagToNote:(id)sender {
     NSRange selectedRange = self.noteTextView.selectedRange;
     NSUInteger insertionLocation = selectedRange.location;
@@ -81,7 +92,7 @@
     if (tagStartLocation < 0)
         tagStartLocation = 0;
     
-    NSUInteger enteredLength = 1;
+    NSUInteger enteredLength = 0;
     NSRange range = NSMakeRange(tagStartLocation, enteredLength);
     
     NSMutableString *noteText = [self.noteTextView.text mutableCopy];
@@ -93,11 +104,13 @@
         [noteText replaceCharactersInRange:range withString:@"#"];
     }
     
+    // This is so the UITextView doesn't scroll to the bottom when text is changed
     self.noteTextView.scrollEnabled = NO;
     self.noteTextView.text = noteText;
     self.noteTextView.scrollEnabled = YES;
     
-    NSRange newRange = NSMakeRange(insertionLocation + 1, 0);
+    NSUInteger afterHashSymbolLocation = insertionLocation + 1;
+    NSRange newRange = NSMakeRange(afterHashSymbolLocation, 0);
     self.noteTextView.selectedRange = newRange;
     
     [self->_tagTracker setIsTracking:YES withTermOrNil:nil];
@@ -112,7 +125,7 @@
     
     NSMutableString *noteText = [self.noteTextView.text mutableCopy];
     
-    NSString *prevTag = [self->_tagService stringTagPreviousWordInText:noteText fromLocation:insertionLocation];
+    NSString *prevTag = [self->_tagService tagNameOrNilOfPreviousWordInText:noteText fromLocation:insertionLocation];
     NSUInteger enteredLength = [prevTag length];
     NSUInteger tagStartLocation = insertionLocation - enteredLength;
     NSRange range = NSMakeRange(tagStartLocation, enteredLength);
@@ -122,7 +135,9 @@
     self.noteTextView.scrollEnabled = NO;
     self.noteTextView.text = noteText;
     self.noteTextView.scrollEnabled = YES;
-    NSRange newRange = NSMakeRange(insertionLocation + [tagString length], 0);
+    
+    NSUInteger newCursorLocation = insertionLocation + [tagString length];
+    NSRange newRange = NSMakeRange(newCursorLocation, 0);
     self.noteTextView.selectedRange = newRange;
     
     // Tidying up
@@ -145,7 +160,7 @@
     if (location == 0 || ![textView.text length])
         return;
     
-    NSArray *tagMatchesForCurrentWord = [self->_tagTracker arrayOfMatchedTagsWhenCurrentWordATagInText:textView.text fromLocation:location withExistingTags:self->_existingTags];
+    NSArray *tagMatchesForCurrentWord = [self->_tagTracker arrayOfMatchedTagsWhenCurrentWordIsTagInText:textView.text fromLocation:location withExistingTags:self->_existingTags];
     
     if (tagMatchesForCurrentWord != nil)
         self->_matchedTags = tagMatchesForCurrentWord;

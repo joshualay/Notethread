@@ -23,21 +23,20 @@
 }
 
 - (void)presentMailComposeViewWithNote:(Note *)note forObject:(id)sender {   
-    if ([MFMailComposeViewController canSendMail]) {
-        MFMailComposeViewController *mailController = [[MFMailComposeViewController alloc] init];
-        
-        mailController.mailComposeDelegate = sender;
-        
-        [mailController setSubject:@"From Notethread"];
-        
-        EmailContentApplicationService *emailContentService = [EmailContentApplicationService sharedSingleton];
-        NSString *message = [emailContentService htmlMessageBody:note];
-        [mailController setMessageBody:message isHTML:YES];
-        
-        [sender presentModalViewController:mailController animated:YES];
-    }
+    MFMailComposeViewController *mailController = [[MFMailComposeViewController alloc] init];
+    
+    mailController.mailComposeDelegate = sender;
+    
+    [mailController setSubject:@"From Notethread"];
+    
+    EmailContentApplicationService *emailContentService = [EmailContentApplicationService sharedSingleton];
+    NSString *message = [emailContentService htmlMessageBody:note];
+    [mailController setMessageBody:message isHTML:YES];
+    
+    [sender presentModalViewController:mailController animated:YES];
 }
 
+// Deprecated - assume always can send email
 - (BOOL)deviceCanSendEmail {
     return [MFMailComposeViewController canSendMail];
 }

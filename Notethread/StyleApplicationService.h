@@ -11,7 +11,7 @@
 @class NTWriteViewController;
 @class Note;
 
-@interface StyleApplicationService : NSObject
+@interface StyleApplicationService : NSObject 
 
 @property (nonatomic, strong) NSUserDefaults *userDefaults;
 

@@ -14,7 +14,6 @@
 
 #import "Note.h"
 #import "NTThreadWriteViewDelegate.h"
-#import "NTThreadViewDelegate.h"
 
 @class NTWriteViewController;
 
@@ -22,7 +21,7 @@
                                                     < 
                                                      UITableViewDelegate,
                                                      UITableViewDataSource, 
-                                                     NTThreadWriteViewDelegate, NTThreadViewDelegate,
+                                                     NTThreadWriteViewDelegate,
                                                      UITextViewDelegate,
                                                      MFMailComposeViewControllerDelegate,
                                                      UIActionSheetDelegate
@@ -36,5 +35,7 @@
 @property (strong, nonatomic) NSArray *noteThreads;
 
 @property (strong, nonatomic) UIBarButtonItem *backButton;
+
+- (id)initWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 @end
