@@ -10,12 +10,25 @@
 #import "Tag.h"
 #import "Note.h"
 #include "NSArray+Reverse.h"
+#include "UserSettingsConstants.h"
+#include "AlertApplicationService.h"
 
-@interface TagService ()
+@interface TagService (Private)
 - (NSString *)stringWordTillPreviousSpaceInText:(NSString *)text fromLocation:(NSUInteger)location;
+- (NSArray *)arrayFilteredTagsFromUserDefaults;
 @end
 
 @implementation TagService
+
+@synthesize filteredTags=_filteredTags;
+
+- (id)init {
+    self = [super init];
+    if (self) {
+        _filteredTags = [self arrayFilteredTagsFromUserDefaults];
+    }
+    return self;
+}
 
 - (Tag *)tagWithName:(NSString *)name inManagedContext:(NSManagedObjectContext *)managedObjectContext {
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
@@ -30,6 +43,10 @@
     
     NSError *error = nil;
     NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    
+    if (error != nil) {
+        [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
+    }
     
     if (array != nil) {
         NSUInteger count = [array count]; // May be 0 if the object has been deleted.
@@ -66,9 +83,7 @@
     return [self tagWithName:name inManagedContext:managedObjectContext];
 }
 
-- (NSArray *)arrayExistingTagsIn:(NSManagedObjectContext *)managedObjectContext {
-    //TODO sort tags by frequency?
-    
+- (NSArray *)arrayExistingTagsIn:(NSManagedObjectContext *)managedObjectContext {    
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"frequency" ascending:NO];
     [fetchRequest setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
@@ -77,7 +92,12 @@
 	[fetchRequest setEntity:entity];
         
     NSError *error;
-	return [managedObjectContext executeFetchRequest:fetchRequest error:&error];
+	NSArray *tagsByFrequency = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (error != nil) {
+        [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
+    }
+    
+    return tagsByFrequency;
 }
 
 - (UIFont *)fontTag {
@@ -124,7 +144,7 @@
     return outfitTags;
 }
 
-- (NSString *)stringTagPreviousWordInText:(NSString *)text fromLocation:(NSUInteger)location {
+- (NSString *)tagNameOrNilOfPreviousWordInText:(NSString *)text fromLocation:(NSUInteger)location {
     NSString *prevWord = [self stringWordTillPreviousSpaceInText:text fromLocation:location];
     
     NSArray *tags = [self arrayOfTagsInText:prevWord];
@@ -134,37 +154,39 @@
     return nil;
 }
 
-- (NSString *)stringTagCurrentWordInText:(NSString *)text fromLocation:(NSUInteger)location {
-    NSString *prevWord = [self stringWordTillPreviousSpaceInText:text fromLocation:location];
-    NSArray *matched = [self arrayOfTagsInText:prevWord];
+- (BOOL)doesContainFilteredTagInTagSet:(NSSet *)tags {
+    for (Tag *tag in tags) {
+        if ([self.filteredTags containsObject:tag.name]) {
+            return YES;
+        }
+    }    
     
-    if ([matched count])
-        return [matched lastObject];
-    
-    return nil;
+    return NO;
 }
 
 
 #pragma mark - Private
-- (NSString *)stringWordTillPreviousSpaceInText:(NSString *)text fromLocation:(NSUInteger)location {
-    BOOL isSpaceCharacter = NO;
-    
+- (NSString *)stringWordTillPreviousSpaceInText:(NSString *)text fromLocation:(NSUInteger)location {    
     NSMutableArray *foundCharacters = [[NSMutableArray alloc] init];
     
-    // Start after
+    // Start before the current location
     location = location - 1;
-    while (!isSpaceCharacter) {
+    
+    BOOL isSpaceCharacter = NO;
+    do {
         unichar prevChar = [text characterAtIndex:location];
         NSString *prevCharStr = [NSString stringWithFormat:@"%C", prevChar];
         
         if ([prevCharStr rangeOfCharacterFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].location != NSNotFound) {
             isSpaceCharacter = YES;
-            break;
+        }
+        else {        
+            [foundCharacters addObject:prevCharStr];
         }
         
-        [foundCharacters addObject:prevCharStr];
-        location--;
-    }
+        location -= 1;
+        
+    } while (!isSpaceCharacter);
     
     NSArray *orderedFoundCharacters = [foundCharacters reverseArray];
     NSMutableString *prevWord = [[NSMutableString alloc] initWithCapacity:[orderedFoundCharacters count]];
@@ -173,6 +195,16 @@
     }
     
     return prevWord;
+}
+
+- (NSArray *)arrayFilteredTagsFromUserDefaults {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSArray *filterTags = [userDefaults arrayForKey:KeywordTagsKey];
+    if (filterTags == nil) {
+        filterTags = [[NSArray alloc] initWithObjects:@"archive", nil];
+        [userDefaults setObject:filterTags forKey:KeywordTagsKey];
+    }
+    return filterTags;
 }
 
 @end

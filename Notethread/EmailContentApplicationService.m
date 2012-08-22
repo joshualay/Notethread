@@ -10,7 +10,7 @@
 #import "Note.h"
 #import "StyleApplicationService.h"
 
-@interface EmailContentApplicationService() 
+@interface EmailContentApplicationService(Private) 
 - (NSString *)htmlNoteThread:(Note *)note currentHtml:(NSString *)currentHtml;
 @end
 

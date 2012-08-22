@@ -7,6 +7,7 @@
 //
 
 #import <QuartzCore/QuartzCore.h>
+#import <Twitter/Twitter.h>
 
 #import "NTNoteViewController.h"
 #import "NTWriteViewController.h"
@@ -17,14 +18,34 @@
 #import "EmailApplicationService.h"
 
 
-@interface NTNoteViewController()
+@interface NTNoteViewController(Private)
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 - (UIBarButtonItem *)defaultRightBarButtonItem;
 - (void)resetNavigationItemFromEditing;
-- (NSString *)titleForNote:(NSString *)text;
-- (IBAction)presentActionSheetForNote:(id)sender;
 - (void)willEditNoteTextView:(id)sender;
 - (void)navigationBarForNoteEditing;
+@end
+
+@interface NTNoteViewController(NoteViewDisplay_and_Actions)
+- (void)editingNoteDone:(id)sender;
+- (void)editingNoteCancel:(id)sender;
+
+- (NSInteger)rowsForThreadTableView;
+
+- (CGRect)frameForThreadViewTable:(CGRect)viewRect noteFrame:(CGRect)noteViewRect withRows:(NSInteger)rowsDisplayed toolBarHeight:(CGFloat)height;
+- (CGRect)frameForNoteView:(CGRect)viewRect threadTableOffset:(CGFloat)threadTableHeightOffset;
+- (CGRect)frameForActionToolbar:(CGRect)viewRect noteFrame:(CGRect)noteViewRect toolBarHeight:(CGFloat)height;
+- (NSArray *)barButtonsForActionToolbar;
+- (void)viewForNoteThread;
+@end
+
+@interface NTNoteViewController(ActionSheet)
+- (IBAction)presentActionSheetForNote:(id)sender;
+- (void)emailNotethread;
+- (void)tweetNote;
+@end
+
+@interface NTNoteViewController(Keyboard)
 - (void)setKeyboardNotificationsObservers;
 - (void)removeKeyboardNotificationObservers;
 - (void)keyboardWillAppear:(NSNotification *)notification;
@@ -42,17 +63,100 @@
 
 @synthesize backButton = _backButton;
 
+
 const CGFloat threadCellRowHeight = 42.0f;
 
 
-- (id)init {
-    self = [super init];
+- (id)initWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
+    self = [super initWithManagedObjectContext:managedObjectContext];
     if (self) {
         self.noteThreads = nil;
     }
     return self;  
 }
 
+#pragma mark - View lifecycle
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    self.title             = [self titleForNote:self.note.text];
+    self.noteTextView.text = self.note.text;
+    
+    [self viewForNoteThread];
+    
+    self.threadTableView.delegate   = self;
+    self.threadTableView.dataSource = self;
+    
+    [self.view addSubview:self.threadTableView];
+    
+    self.navigationItem.rightBarButtonItem = [self defaultRightBarButtonItem];
+    self.backButton = self.navigationItem.leftBarButtonItem;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [self setKeyboardNotificationsObservers];
+    
+    [self.managedObjectContext refreshObject:self.note mergeChanges:YES];
+    
+    self.noteThreads = nil;
+    self.noteThreads = [self.note.noteThreads array];
+    [self.threadTableView reloadData];   
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [self removeKeyboardNotificationObservers];
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    if (interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)
+        return NO;
+    
+    return YES;
+}
+
+
+#pragma override
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
+    [super setEditing:editing animated:animated];
+    [self.threadTableView setEditing:editing];
+}
+
+
+#pragma mark - NTNoteViewController(Private)
+- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+    Note *note = [self.noteThreads objectAtIndex:indexPath.row];
+    [self->_styleService configureNoteTableCell:cell note:note];
+    
+    cell.contentView.backgroundColor   = [UIColor whiteColor];
+}
+
+- (UIBarButtonItem *)defaultRightBarButtonItem {
+    NSString *title = NSLocalizedString(@"Edit Note", @"Edit Note");
+    return [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStylePlain target:self action:@selector(willEditNoteTextView:)];
+}
+
+- (void)resetNavigationItemFromEditing {
+    self.navigationItem.rightBarButtonItem = [self defaultRightBarButtonItem];
+    self.navigationItem.leftBarButtonItem  = self.backButton;
+    [self.noteTextView resignFirstResponder];     
+}
+
+- (void)navigationBarForNoteEditing {
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(editingNoteDone:)];
+    self.navigationItem.leftBarButtonItem  = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(editingNoteCancel:)];
+}
+
+- (void)willEditNoteTextView:(id)sender {
+    [self.noteTextView becomeFirstResponder];
+    [self navigationBarForNoteEditing];
+}
+
+
+#pragma mark - NTNoteViewController(Keyboard)
 - (void)setKeyboardNotificationsObservers {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillAppear:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillDisappear:) name:UIKeyboardWillHideNotification object:nil];
@@ -131,106 +235,47 @@ const CGFloat threadCellRowHeight = 42.0f;
 }
 
 
-- (NSString *)titleForNote:(NSString *)text {
-    NSRange newLineRange = [text rangeOfString:@"\n"];
-    if (newLineRange.location != NSNotFound) {
-        NSRange headingRange   = NSMakeRange(0, newLineRange.location);
-        
-        return [text substringWithRange:headingRange];
-    }
-    
-    return text;
-}
-
-#pragma mark - View lifecycle
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-        
-    self.title             = [self titleForNote:self.note.text];
-    self.noteTextView.text = self.note.text;
-    
-    [self viewForNoteThread];
-        
-    self.threadTableView.delegate   = self;
-    self.threadTableView.dataSource = self;
-            
-    [self.view addSubview:self.threadTableView];
-    
-    self.navigationItem.rightBarButtonItem = [self defaultRightBarButtonItem];
-    self.backButton = self.navigationItem.leftBarButtonItem;
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-        
-    [self setKeyboardNotificationsObservers];
-    
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
-    [managedObjectContext refreshObject:self.note mergeChanges:YES];
-    
-    self.noteThreads = nil;
-    self.noteThreads = [self.note.noteThreads array];
-    [self.threadTableView reloadData];   
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [self removeKeyboardNotificationObservers];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    if (interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)
-        return NO;
-    
-    return YES;
-}
-
-- (UIBarButtonItem *)defaultRightBarButtonItem {
-    return [[UIBarButtonItem alloc] initWithTitle:@"Edit Note" style:UIBarButtonItemStylePlain target:self action:@selector(willEditNoteTextView:)];
-}
-
-- (void)resetNavigationItemFromEditing {
-    self.navigationItem.rightBarButtonItem = [self defaultRightBarButtonItem];
-    self.navigationItem.leftBarButtonItem  = self.backButton;
-    [self.noteTextView resignFirstResponder];     
-}
-
+#pragma mark - NTNoteViewController(ActionSheet)
 - (IBAction)presentActionSheetForNote:(id)sender {
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Email", nil];
+    NSString *cancel = NSLocalizedString(@"Cancel", @"Cancel");
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil 
+                                                             delegate:self 
+                                                    cancelButtonTitle:cancel 
+                                               destructiveButtonTitle:nil 
+                                                    otherButtonTitles:@"Email", @"Tweet note", nil];
+    
     [actionSheet showInView:self.view];
 }
 
-#pragma override
-- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
-    [super setEditing:editing animated:animated];
-    [self.threadTableView setEditing:editing];
+- (void)emailNotethread {
+    EmailApplicationService *emailService = [EmailApplicationService sharedSingleton];
+    [emailService presentMailComposeViewWithNote:self.note forObject:self];
 }
 
-
-- (void)willEditNoteTextView:(id)sender {
-    [self.noteTextView becomeFirstResponder];
-    [self navigationBarForNoteEditing];
+- (void)tweetNote {
+    TWTweetComposeViewController *composer = [[TWTweetComposeViewController alloc] init];
+    [composer setInitialText:self.note.text];
+    [self presentModalViewController:composer animated:YES];
 }
 
-- (void)navigationBarForNoteEditing {
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(editingNoteDone:)];
-    self.navigationItem.leftBarButtonItem  = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(editingNoteCancel:)];
-}
-
-#pragma NTThreadViewDelegate
+#pragma mark - NTNoteViewController(NoteViewDisplay_and_Actions)
 - (void)editingNoteDone:(id)sender {
-    if ([self respondsToSelector:@selector(saveNote:)])
+    if ([self respondsToSelector:@selector(saveNote:)]) {
         [self saveNote:sender];
+    }
 
     self.title = [self titleForNote:self.noteTextView.text];
     [self resetNavigationItemFromEditing];
 }
 
 - (void)editingNoteCancel:(id)sender {
+    // Disable scrolling when reverting the changes to text
+    self.noteTextView.scrollEnabled = NO;
     self.noteTextView.text = self.note.text;
+    self.noteTextView.scrollEnabled = YES;
+    
     self.title = [self titleForNote:self.noteTextView.text];
+    
     [self resetNavigationItemFromEditing];
 }
 
@@ -262,8 +307,8 @@ const CGFloat threadCellRowHeight = 42.0f;
 - (CGRect)frameForActionToolbar:(CGRect)viewRect noteFrame:(CGRect)noteViewRect toolBarHeight:(CGFloat)height {
     CGFloat tableWidth   = self.view.frame.size.width;
     
-    // The - 1 is so we get a black line to separate from the thread table view
-    return CGRectMake(viewRect.origin.x, noteViewRect.size.height, tableWidth, height - 1);
+    NSUInteger spaceFromBarTop = 1;
+    return CGRectMake(viewRect.origin.x, noteViewRect.size.height, tableWidth, height - spaceFromBarTop);
 }
 
 - (NSArray *)barButtonsForActionToolbar {
@@ -273,10 +318,6 @@ const CGFloat threadCellRowHeight = 42.0f;
     UIBarButtonItem *flexible = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     
     UIBarButtonItem *addNoteThreadButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(displayChildThreadWriteViewForActiveNote:)];
-    
-    EmailApplicationService *emailService = [EmailApplicationService sharedSingleton];
-    if (![emailService deviceCanSendEmail])
-        actionButton = flexible;
     
     return [NSArray arrayWithObjects:self.editButtonItem,flexible, actionButton, flexible, addNoteThreadButton, nil];
 }
@@ -311,15 +352,12 @@ const CGFloat threadCellRowHeight = 42.0f;
     self.noteTextView.autoresizingMask    = UIViewAutoresizingFlexibleWidth;
 }
 
-- (void)emailNotethread {
-    EmailApplicationService *emailService = [EmailApplicationService sharedSingleton];
-    [emailService presentMailComposeViewWithNote:self.note forObject:self];
-}
 
 #pragma UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (self.noteThreads == nil)
+    if (self.noteThreads == nil) {
         return 0;
+    }
     
     return [self.noteThreads count];
 }
@@ -344,36 +382,28 @@ const CGFloat threadCellRowHeight = 42.0f;
     return cell;    
 }
 
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    Note *note = [self.noteThreads objectAtIndex:indexPath.row];
-    [self->_styleService configureNoteTableCell:cell note:note];
-    
-    cell.contentView.backgroundColor   = [UIColor whiteColor];
-}
-
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
-        
-        Note *noteThread = [self.noteThreads objectAtIndex:indexPath.row];
-        NSMutableArray *noteThreads = [[self.note.noteThreads array] mutableCopy];
-        [noteThreads removeObject:noteThread];
-        
-        [self.note setNoteThreads:[NSOrderedSet orderedSetWithArray:noteThreads]];
-        
-        self.noteThreads = [noteThreads copy];
+    if (editingStyle != UITableViewCellEditingStyleDelete) {
+        return;
+    }
 
-        [self.threadTableView beginUpdates];
-        [self.threadTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-        [self.threadTableView endUpdates];
-                
-        NSError *error = nil;
-        if (![managedObjectContext save:&error]) {
-            [AlertApplicationService alertViewForCoreDataError:nil];
-        }
-    }   
+    Note *noteThread = [self.noteThreads objectAtIndex:indexPath.row];
+    NSMutableArray *noteThreads = [[self.note.noteThreads array] mutableCopy];
+    [noteThreads removeObject:noteThread];
+    
+    [self.note setNoteThreads:[NSOrderedSet orderedSetWithArray:noteThreads]];
+    
+    self.noteThreads = [noteThreads copy];
+
+    [self.threadTableView beginUpdates];
+    [self.threadTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.threadTableView endUpdates];
+            
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
+    }
 }
 
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
@@ -391,20 +421,17 @@ const CGFloat threadCellRowHeight = 42.0f;
     
     self.noteThreads = [threadsMutableArray copy];
     [self.note setNoteThreads:[NSOrderedSet orderedSetWithArray:self.noteThreads]];
-    
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
-    
+
     NSError *error = nil;
-    if (![managedObjectContext save:&error]) {
-        [AlertApplicationService alertViewForCoreDataError:nil];
+    if (![self.managedObjectContext save:&error]) {
+        [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
     }
 }
 
 #pragma UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NTNoteViewController *noteViewController = [[NTNoteViewController alloc] init];
+    NTNoteViewController *noteViewController = [[NTNoteViewController alloc] initWithManagedObjectContext:self.managedObjectContext];
     
     Note *selectedNote             = [self.noteThreads objectAtIndex:indexPath.row];
     noteViewController.note        = selectedNote;
@@ -419,7 +446,7 @@ const CGFloat threadCellRowHeight = 42.0f;
     NSInteger threadDepthInteger = [self.note.depth integerValue] + 1;
     
     [self removeKeyboardNotificationObservers];
-    NTWriteViewController *threadWriteViewController = [[NTWriteViewController alloc] initWithThreadDepth:threadDepthInteger parent:self.note];
+    NTWriteViewController *threadWriteViewController = [[NTWriteViewController alloc] initWithThreadDepth:threadDepthInteger parent:self.note managedObjectContext:self.managedObjectContext];
     
     [self->_styleService modalStyleForThreadWriteView:threadWriteViewController];
     
@@ -427,19 +454,16 @@ const CGFloat threadCellRowHeight = 42.0f;
 }
 
 - (IBAction)saveNote:(id)sender {
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
-    
     self.note.text             = self.noteTextView.text;
     self.note.lastModifiedDate = [NSDate date];
     
     NSArray *tagsInNote = [self->_tagService arrayOfTagsInText:self.note.text];
     
-    [self->_tagService storeTags:tagsInNote withRelationship:self.note inManagedContext:managedObjectContext];
+    [self->_tagService storeTags:tagsInNote withRelationship:self.note inManagedContext:self.managedObjectContext];
     
     NSError *error = nil;
-    if (![managedObjectContext save:&error]) {
-        [AlertApplicationService alertViewForCoreDataError:nil];
+    if (![self.managedObjectContext save:&error]) {
+        [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
     }    
 }
 
@@ -463,7 +487,7 @@ const CGFloat threadCellRowHeight = 42.0f;
 
 - (void)textViewDidChange:(UITextView *)textView {
     self.title = [self titleForNote:textView.text];
-    self.navigationItem.rightBarButtonItem.enabled =  ([textView.text length]) ? YES : NO;
+    self.navigationItem.rightBarButtonItem.enabled =  ([textView.text length] > 0);
 }
 
 #pragma mark @selector
@@ -490,9 +514,16 @@ const CGFloat threadCellRowHeight = 42.0f;
 }
 
 #pragma UIActionSheetDelegate
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 0) {
-        [self emailNotethread];
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {    
+    switch (buttonIndex) {
+        case 0:
+            [self emailNotethread];
+            break;
+        case 1:
+            [self tweetNote];
+            break;
+        default:
+            break;
     }
 }
 

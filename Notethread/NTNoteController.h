@@ -4,7 +4,18 @@
 //
 //  Created by Joshua Lay on 29/05/12.
 //  Copyright (c) 2012 Joshua Lay. All rights reserved.
-//
+/*
+ 
+    Originally I only had NTWriteViewController & NTNoteViewController. 
+ 
+    Since there was common functionality I decided to create this super class to 
+    contain a lot of the common methods. 
+ 
+    Key components in here:
+        * Creating the boilerplate for the view
+        * Tracking tags
+        * Displaying tag buttons and the actions
+ */
 
 #import <UIKit/UIKit.h>
 
@@ -27,8 +38,11 @@
 }
 
 @property (strong, nonatomic) IBOutlet UITextView *noteTextView;
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+
+- (id)initWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 - (void)addButtonTagNameToText:(id)sender;
-
+- (NSString *)titleForNote:(NSString *)text;
 
 @end

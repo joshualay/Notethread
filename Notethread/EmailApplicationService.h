@@ -15,6 +15,7 @@
 @protocol EmailApplicationServiceDelegate <NSObject>
 
 - (void)presentMailComposeViewWithNote:(Note *)note forObject:(id)sender;
+// Deprecated - assume always can
 - (BOOL)deviceCanSendEmail;
 
 @end

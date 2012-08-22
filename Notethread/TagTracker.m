@@ -63,7 +63,7 @@
 }
 
 - (NSArray *)arrayOfMatchedTagsWhenPreviousWordIsTagInText:(NSString *)text fromLocation:(NSUInteger)location withExistingTags:(NSArray *)existingTags {
-    NSString *prevTag = [self.tagService stringTagPreviousWordInText:text fromLocation:location];
+    NSString *prevTag = [self.tagService tagNameOrNilOfPreviousWordInText:text fromLocation:location];
     BOOL isTracking = (prevTag == nil) ? NO : YES;
     [self setIsTracking:isTracking withTermOrNil:prevTag];
     
@@ -73,8 +73,8 @@
     return nil;
 }
 
-- (NSArray *)arrayOfMatchedTagsWhenCurrentWordATagInText:(NSString *)text fromLocation:(NSUInteger)location withExistingTags:(NSArray *)existingTags {
-    NSString *tag = [self->_tagService stringTagCurrentWordInText:text fromLocation:location];
+- (NSArray *)arrayOfMatchedTagsWhenCurrentWordIsTagInText:(NSString *)text fromLocation:(NSUInteger)location withExistingTags:(NSArray *)existingTags {
+    NSString *tag = [self->_tagService tagNameOrNilOfPreviousWordInText:text fromLocation:location];
     if (tag == nil) return nil;
     
     [self setIsTracking:YES withTermOrNil:tag];

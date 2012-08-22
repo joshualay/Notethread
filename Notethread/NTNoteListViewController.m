@@ -15,12 +15,27 @@
 #import "StyleApplicationService.h"
 #import "AlertApplicationService.h"
 #import "SettingsViewController.h"
+#import "NTTagListViewController.h"
+#import "StyleConstants.h"
 
 
-@interface NTNoteListViewController ()
+@interface NTNoteListViewController (Private)
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath inTableView:(UITableView *)tableView;
 - (void)displayWriteView;
+@end
+
+// Buttons on the toolbar of the page - see NTNoteListViewController.xib
+@interface NTNoteListViewController (Selectors)
 - (IBAction)displaySettingsView;
+- (IBAction)displayTagListView:(id)sender;
+@end
+
+// Search looks like it's a bit more complex than it really is. Since I'm searching just notes and also tags
+// 
+// I require different ways to:
+//  * Search for the entered text
+//  * Retrieving the notes to present
+@interface NTNoteListViewController (SearchBar)
 - (void)initFilteredListContentArrayCapacity;
 - (NSMutableArray *)arrayOfNotesMatchingSearch:(NSString *)search inNote:(Note *)note;
 - (NSMutableArray *)arrayOfNotesThatHaveTag:(NSString *)search inNote:(Note *)note;
@@ -41,9 +56,12 @@
 
 @synthesize filteredListContent, savedSearchTerm, savedScopeButtonIndex, searchWasActive;
 
+// Core data has a flat object model. If I look for all Notes I will get top level and all of the 
+// children as well. This value is to specify that I only care about top level notes.
 const NSInteger rootDepthInteger   = 0;
+// Used by NTWriteViewController, all notes at depth 0 will have child notes at depth 1. 
+// When the user taps on a row, any new childthreads created are going to be at this depth.
 const NSInteger threadDepthInteger = 1;
-const CGFloat   cellHeight         = 51.0f;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -66,7 +84,7 @@ const CGFloat   cellHeight         = 51.0f;
     return self;
 }
 
-
+#pragma mark - NTNoteListViewController(Selectors)
 - (IBAction)displaySettingsView {
     SettingsViewController *settingsViewController = [[SettingsViewController alloc] initWithNibName:@"SettingsViewController" bundle:nil];
     
@@ -74,6 +92,14 @@ const CGFloat   cellHeight         = 51.0f;
     
     [self presentModalViewController:settingsViewController animated:YES];
 }
+
+- (IBAction)displayTagListView:(id)sender {
+    NTTagListViewController *tagListViewController = [[NTTagListViewController alloc] initWithManagedObjectContext:self.managedObjectContext];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:tagListViewController];
+    navController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    [self presentModalViewController:navController animated:YES];
+}
+
 
 - (void)initFilteredListContentArrayCapacity {
     self.filteredListContent = [[NSMutableArray alloc] init]; 
@@ -94,7 +120,7 @@ const CGFloat   cellHeight         = 51.0f;
     
     [self.tableView setContentOffset:CGPointMake(0,self.searchDisplayController.searchBar.frame.size.height)];    
     
-    self.searchDisplayController.searchBar.scopeButtonTitles = [NSArray arrayWithObjects:@"All", @"Tags", nil];
+    self.searchDisplayController.searchBar.scopeButtonTitles = @[@"All", @"Tags"];
 }
 
 - (void)viewDidUnload {
@@ -136,7 +162,7 @@ const CGFloat   cellHeight         = 51.0f;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NTNoteViewController *noteViewController = [[NTNoteViewController alloc] init];
+    NTNoteViewController *noteViewController = [[NTNoteViewController alloc] initWithManagedObjectContext:self.managedObjectContext];
     
     Note *selectedNote = nil;
     if (tableView == self.searchDisplayController.searchResultsTableView)
@@ -177,7 +203,7 @@ const CGFloat   cellHeight         = 51.0f;
         // Save the context.
         NSError *error = nil;
         if (![context save:&error]) {
-            [AlertApplicationService alertViewForCoreDataError:nil];
+            [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
         }
     }   
 }
@@ -188,7 +214,7 @@ const CGFloat   cellHeight         = 51.0f;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return cellHeight;
+    return DefaultCellHeight;
 }
 
 
@@ -217,7 +243,7 @@ const CGFloat   cellHeight         = 51.0f;
     
     // Edit the sort key as appropriate.
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"lastModifiedDate" ascending:NO];
-    NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    NSArray *sortDescriptors = @[sortDescriptor];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
     
@@ -229,7 +255,7 @@ const CGFloat   cellHeight         = 51.0f;
     
 	NSError *error = nil;
 	if (![self.fetchedResultsController performFetch:&error]) {
-        [AlertApplicationService alertViewForCoreDataError:nil];
+        [AlertApplicationService alertViewForCoreDataError:[error localizedDescription]];
 	}
     
     return __fetchedResultsController;
@@ -300,7 +326,7 @@ const CGFloat   cellHeight         = 51.0f;
 
 // Top level note: UIModalTransitionStyleCoverVertical
 - (void)displayWriteView {
-    NTWriteViewController *writeViewController = [[NTWriteViewController alloc] initWithThreadDepth:0 parent:nil];
+    NTWriteViewController *writeViewController = [[NTWriteViewController alloc] initWithThreadDepth:0 parent:nil managedObjectContext:self.managedObjectContext];
     
     writeViewController.modalTransitionStyle   = UIModalTransitionStyleCoverVertical;
     writeViewController.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -318,14 +344,14 @@ const CGFloat   cellHeight         = 51.0f;
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:indexRow inSection:0];
     
     Note *activeNote = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    NTWriteViewController *threadWriteViewController = [[NTWriteViewController alloc] initWithThreadDepth:threadDepthInteger parent:activeNote];
+    NTWriteViewController *threadWriteViewController = [[NTWriteViewController alloc] initWithThreadDepth:threadDepthInteger parent:activeNote managedObjectContext:self.managedObjectContext];
     
     [self.styleApplicationService modalStyleForThreadWriteView:threadWriteViewController];
     
     [self presentModalViewController:threadWriteViewController animated:YES];
 }
 
-#pragma mark -
+#pragma mark - NTNoteListViewController (SearchBar)
 #pragma mark Content Filtering
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
@@ -370,7 +396,24 @@ const CGFloat   cellHeight         = 51.0f;
     return matchResults;    
 }
 
-
+/* 
+ For the search methods there's a little complexity incurred due to the relationships
+ 
+ Note: (depth 0)
+    noteThreads:
+        Note: (depth 1)
+            noteThreads:
+                Note: (depth 2)
+        Note: (depth 1)
+            noteThreads:
+                Note: (depth 2)
+                    noteThreads:
+                        Note: (depth 3)
+ 
+ I have a list of Notes at depth 0. In order to search for text in all notes I have to traverse down the tree. 
+ The same concept works with tags as well.
+ 
+ */
 - (NSArray *)arrayOfNotesTextMatchingInChildNotesOf:(Note *)note haveSearchTerm:(NSString *)search {
     NSMutableArray *matches = [[NSMutableArray alloc] init];
     if ([note.noteThreads count]) {
@@ -411,6 +454,7 @@ const CGFloat   cellHeight         = 51.0f;
     if (![search length])
         return NO;
     
+    // In case the user wants to include the # symbol. Remove it.
     search = [[search substringWithRange:NSMakeRange(0, [search length])] stringByReplacingOccurrencesOfString:@"#" withString:@""];
     for (Tag *tag in note.tags) {
         if ([self isSearch:search matchesFromStartString:tag.name])
