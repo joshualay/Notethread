@@ -136,6 +136,7 @@
 		9871256E14713310007D56D6 /* StyleApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StyleApplicationService.h; sourceTree = "<group>"; };
 		9871256F14713310007D56D6 /* StyleApplicationService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StyleApplicationService.m; sourceTree = "<group>"; };
 		987125711473D881007D56D6 /* NTThreadWriteViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NTThreadWriteViewDelegate.h; sourceTree = "<group>"; };
+		9871953615E67305000B996A /* Notethread v1.7 Journal.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Notethread v1.7 Journal.md"; sourceTree = "<group>"; };
 		989D51471488F013002B27AB /* black-Linen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "black-Linen.png"; sourceTree = "<group>"; };
 		989D514A1488F427002B27AB /* StyleConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StyleConstants.h; sourceTree = "<group>"; };
 		989D514B1488F45A002B27AB /* StyleConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StyleConstants.m; sourceTree = "<group>"; };
@@ -211,6 +212,7 @@
 				9848996415863E63008AF533 /* QuartzCore.framework */,
 				9815BD2A154812B500E450DA /* Notethread v1.5 Journal.md */,
 				9848996615873B00008AF533 /* Notethread v1.6 Journal.md */,
+				9871953615E67305000B996A /* Notethread v1.7 Journal.md */,
 				98F911371482066600D421B0 /* icon114x114.png */,
 				98F91134148203FC00D421B0 /* icon57x57.png */,
 				986E8073147E98C5004645CF /* MessageUI.framework */,
