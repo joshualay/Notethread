@@ -41,7 +41,6 @@
 		9848996E15874B6D008AF533 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9848996D15874B6D008AF533 /* Twitter.framework */; };
 		9851716B15B05CD60056D8DC /* twitter_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 9851716915B05CD60056D8DC /* twitter_logo.png */; };
 		9851716C15B05CD60056D8DC /* twitter_logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9851716A15B05CD60056D8DC /* twitter_logo@2x.png */; };
-		985171BC15B842EE0056D8DC /* TagListHelpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 985171B915B842EA0056D8DC /* TagListHelpViewController.xib */; };
 		986E806C147E3C06004645CF /* EmailContentApplicationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 986E806B147E3C06004645CF /* EmailContentApplicationService.m */; };
 		986E8072147E90EC004645CF /* EmailApplicationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 986E8071147E90EC004645CF /* EmailApplicationService.m */; };
 		986E8074147E98C5004645CF /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 986E8073147E98C5004645CF /* MessageUI.framework */; };
@@ -127,7 +126,6 @@
 		9848996D15874B6D008AF533 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		9851716915B05CD60056D8DC /* twitter_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = twitter_logo.png; sourceTree = "<group>"; };
 		9851716A15B05CD60056D8DC /* twitter_logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "twitter_logo@2x.png"; sourceTree = "<group>"; };
-		985171B915B842EA0056D8DC /* TagListHelpViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagListHelpViewController.xib; sourceTree = "<group>"; };
 		986E806A147E3C06004645CF /* EmailContentApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailContentApplicationService.h; sourceTree = "<group>"; };
 		986E806B147E3C06004645CF /* EmailContentApplicationService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailContentApplicationService.m; sourceTree = "<group>"; };
 		986E8070147E90EC004645CF /* EmailApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailApplicationService.h; sourceTree = "<group>"; };
@@ -200,7 +198,6 @@
 		980055A5146AB89F004C4802 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				985171B915B842EA0056D8DC /* TagListHelpViewController.xib */,
 				98EB1F04147D0CB70018FF08 /* SettingsViewController.xib */,
 				9871256014700AA0007D56D6 /* NTNoteViewController.xib */,
 				980055A2146AB884004C4802 /* NTWriteViewController.xib */,
@@ -208,6 +205,7 @@
 				98190BCE149B72EC00E96126 /* NTNoteListViewController.xib */,
 				98FDA0801588AF890045E31A /* NTTagListViewController.xib */,
 				98BC4A38158C8E2900B48D38 /* NTTagListDetailViewController.xib */,
+				98BEDC1215EB952A00B30496 /* NTTreeViewController.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -273,7 +271,6 @@
 				98FDA07E158782910045E31A /* NTTagListDetailViewController.m */,
 				98BEDC1015EB952A00B30496 /* NTTreeViewController.h */,
 				98BEDC1115EB952A00B30496 /* NTTreeViewController.m */,
-				98BEDC1215EB952A00B30496 /* NTTreeViewController.xib */,
 				98EB1F02147D0CB70018FF08 /* SettingsViewController.h */,
 				98EB1F03147D0CB70018FF08 /* SettingsViewController.m */,
 				98EC88F71539797C007D92A7 /* JLButtonScroller.h */,
@@ -460,7 +457,6 @@
 				98209CFB15A5922C007E06EF /* InterfaceRules.md in Resources */,
 				9851716B15B05CD60056D8DC /* twitter_logo.png in Resources */,
 				9851716C15B05CD60056D8DC /* twitter_logo@2x.png in Resources */,
-				985171BC15B842EE0056D8DC /* TagListHelpViewController.xib in Resources */,
 				98BEDC1415EB952A00B30496 /* NTTreeViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

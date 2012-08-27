@@ -35,3 +35,15 @@ The UI to me is already a little busy; a tree is secondary to writing notes so I
 The issue becomes how do I implement this without breaking everything? 
 
 I could nest it in a scrollview and change the offset. Actually I can just add it as an action! That's easy.
+
+For the notetree I'm thinking of using the button scroll view:
+
+
+[top level note]
+\----------------
+[sub note] [sub note] [sub note]
+
+\----------------
+[2nd tier note] [2nd tier note]
+
+When the button is tapped it will open up the note in a dialogue.

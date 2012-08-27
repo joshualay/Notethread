@@ -44,7 +44,7 @@
 - (IBAction)presentActionSheetForNote:(id)sender;
 - (void)emailNotethread;
 - (void)tweetNote;
-- (void)willDisplayTreeViewForNote;
+- (void)willDisplayNotetreeViewForNote;
 @end
 
 @interface NTNoteViewController(Keyboard)
@@ -244,7 +244,7 @@ const CGFloat threadCellRowHeight = 42.0f;
                                                              delegate:self 
                                                     cancelButtonTitle:cancel 
                                                destructiveButtonTitle:nil 
-                                                    otherButtonTitles:@"Email", @"Tweet note", @"Tree view", nil];
+                                                    otherButtonTitles:@"Email", @"Tweet note", @"Notetree", nil];
     
     [actionSheet showInView:self.view];
 }
@@ -260,10 +260,11 @@ const CGFloat threadCellRowHeight = 42.0f;
     [self presentModalViewController:composer animated:YES];
 }
 
-- (void)willDisplayTreeViewForNote {
+- (void)willDisplayNotetreeViewForNote {
     NTTreeViewController *treeView = [[NTTreeViewController alloc] initWithNote:self.note];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:treeView];
     treeView.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-    [self presentModalViewController:treeView animated:YES];
+    [self presentModalViewController:navController animated:YES];
 }
 
 #pragma mark - NTNoteViewController(NoteViewDisplay_and_Actions)
@@ -531,7 +532,7 @@ const CGFloat threadCellRowHeight = 42.0f;
             [self tweetNote];
             break;
         case 2:
-            [self willDisplayTreeViewForNote];
+            [self willDisplayNotetreeViewForNote];
             break;
         default:
             break;

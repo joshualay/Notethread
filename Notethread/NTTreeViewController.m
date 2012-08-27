@@ -10,7 +10,7 @@
 #import "Note.h"
 
 @interface NTTreeViewController ()
-
+- (void)willDismissModalView:(id)sender;
 @end
 
 @implementation NTTreeViewController
@@ -21,6 +21,8 @@
     self = [super initWithNibName:@"NTTreeViewController" bundle:nil];
     if (self) {
         self.note = note;
+        
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Close" style:UIBarButtonItemStyleDone target:self action:@selector(willDismissModalView:)];
     }
     return self;
 }
@@ -41,6 +43,10 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+- (void)willDismissModalView:(id)sender {
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 @end
