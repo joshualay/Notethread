@@ -41,14 +41,14 @@ For the notetree I'm thinking of using the button scroll view:
 
 [top level note]
 
-\----------------
+----------------
 
 [sub note] [sub note] [sub note]
 
-\----------------
+----------------
 
 [2nd tier note] [2nd tier note]
 
-\----------------
+----------------
 
 When the button is tapped it will open up the note in a dialogue.

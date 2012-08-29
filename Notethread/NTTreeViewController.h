@@ -7,12 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CMPopTipView.h"
 
 @class Note;
 
-@interface NTTreeViewController : UIViewController
+@interface NTTreeViewController : UIViewController <UIScrollViewDelegate, CMPopTipViewDelegate>
 
 @property (nonatomic, strong) Note *note;
+@property (nonatomic, strong) CMPopTipView *popTipView;
+
+@property (nonatomic, strong) IBOutlet UIScrollView *scrollView;
 
 - (id)initWithNote:(Note *)note;
 

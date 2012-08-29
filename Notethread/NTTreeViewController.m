@@ -8,14 +8,40 @@
 
 #import "NTTreeViewController.h"
 #import "Note.h"
+#import <objc/runtime.h>
+
+/* 
+ So I can assign a Note per button
+ 
+ http://stackoverflow.com/a/5287141
+ */
+@interface UIButton (NoteModel)
+@property (nonatomic, strong) Note *note;
+@end
+
+@implementation UIButton (NoteModel)
+static char noteKey;
+
+- (void)setNote:(Note *)note {
+    objc_setAssociatedObject( self, &noteKey, note, OBJC_ASSOCIATION_RETAIN );
+}
+
+- (Note *)note {
+    return objc_getAssociatedObject(self, &noteKey);
+}
+@end
+
+
 
 @interface NTTreeViewController ()
 - (void)willDismissModalView:(id)sender;
+- (void)presentPopTipNote:(UIButton *)sender;
 @end
 
 @implementation NTTreeViewController
 
 @synthesize note = _note;
+@synthesize scrollView;
 
 - (id)initWithNote:(Note *)note {
     self = [super initWithNibName:@"NTTreeViewController" bundle:nil];
@@ -30,7 +56,17 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+        
+    UIButton *start = [UIButton buttonWithType:UIButtonTypeInfoDark];
+    [start addTarget:self action:@selector(presentPopTipNote:) forControlEvents:UIControlEventTouchUpInside];
+    start.note = self.note;
+    [self.scrollView addSubview:start];
+    
+    UIButton *child = [UIButton buttonWithType:UIButtonTypeInfoDark];
+    [child addTarget:self action:@selector(presentPopTipNote:) forControlEvents:UIControlEventTouchUpInside];
+    child.note = [self.note.noteThreads firstObject];
+    child.frame = CGRectMake(50.0f, 100.0f, 10.0f, 10.0f);
+    [self.scrollView addSubview:child];
 }
 
 - (void)viewDidUnload
@@ -45,8 +81,22 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+
+
 - (void)willDismissModalView:(id)sender {
     [self dismissModalViewControllerAnimated:YES];
+}
+
+- (void)presentPopTipNote:(UIButton *)sender {
+    self.popTipView = [[CMPopTipView alloc] initWithMessage:sender.note.text];
+    self.popTipView.delegate = self;
+    [self.popTipView presentPointingAtView:sender inView:self.scrollView animated:NO];
+}
+
+- (void)popTipViewWasDismissedByUser:(CMPopTipView *)popTipView {
+    [self.popTipView dismissAnimated:NO];
+    self.popTipView.delegate = nil;
+    self.popTipView = nil;
 }
 
 @end
