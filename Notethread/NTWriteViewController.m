@@ -196,6 +196,7 @@
 
 - (void)textViewDidChange:(UITextView *)textView {
     self.saveButton.enabled = ([textView.text length]) ? YES : NO;
+    self.navigationBar.topItem.title = [self titleForNote:textView.text];
 }
 
 
