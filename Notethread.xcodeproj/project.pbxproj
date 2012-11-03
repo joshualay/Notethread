@@ -32,6 +32,7 @@
 		9818217B1468026E00DBC1D2 /* NotethreadTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9818217A1468026E00DBC1D2 /* NotethreadTests.m */; };
 		98190BCF149B72EC00E96126 /* NTNoteListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98190BCD149B72EB00E96126 /* NTNoteListViewController.m */; };
 		98190BD0149B72EC00E96126 /* NTNoteListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98190BCE149B72EC00E96126 /* NTNoteListViewController.xib */; };
+		9819DAE216134E0D009C6552 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9819DAE116134E0D009C6552 /* Default-568h@2x.png */; };
 		98209CFB15A5922C007E06EF /* InterfaceRules.md in Resources */ = {isa = PBXBuildFile; fileRef = 98209CFA15A5922C007E06EF /* InterfaceRules.md */; };
 		983816A614C04FDD000A644C /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 983816A514C04FDD000A644C /* README.md */; };
 		98489949156B8F33008AF533 /* NSArray+Reverse.m in Sources */ = {isa = PBXBuildFile; fileRef = 98489948156B8F33008AF533 /* NSArray+Reverse.m */; };
@@ -111,6 +112,7 @@
 		98190BCC149B72EB00E96126 /* NTNoteListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NTNoteListViewController.h; sourceTree = "<group>"; };
 		98190BCD149B72EB00E96126 /* NTNoteListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NTNoteListViewController.m; sourceTree = "<group>"; };
 		98190BCE149B72EC00E96126 /* NTNoteListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NTNoteListViewController.xib; sourceTree = "<group>"; };
+		9819DAE116134E0D009C6552 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		98209CFA15A5922C007E06EF /* InterfaceRules.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = InterfaceRules.md; sourceTree = "<group>"; };
 		983816A514C04FDD000A644C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		98489947156B8F33008AF533 /* NSArray+Reverse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Reverse.h"; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 		981821341468026D00DBC1D2 = {
 			isa = PBXGroup;
 			children = (
+				9819DAE116134E0D009C6552 /* Default-568h@2x.png */,
 				98209CFA15A5922C007E06EF /* InterfaceRules.md */,
 				9848996D15874B6D008AF533 /* Twitter.framework */,
 				9848996415863E63008AF533 /* QuartzCore.framework */,
@@ -446,6 +449,7 @@
 				9851716B15B05CD60056D8DC /* twitter_logo.png in Resources */,
 				9851716C15B05CD60056D8DC /* twitter_logo@2x.png in Resources */,
 				985171BC15B842EE0056D8DC /* TagListHelpViewController.xib in Resources */,
+				9819DAE216134E0D009C6552 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

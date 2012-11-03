@@ -32,9 +32,6 @@
 
 - (NSInteger)rowsForThreadTableView;
 
-- (CGRect)frameForThreadViewTable:(CGRect)viewRect noteFrame:(CGRect)noteViewRect withRows:(NSInteger)rowsDisplayed toolBarHeight:(CGFloat)height;
-- (CGRect)frameForNoteView:(CGRect)viewRect threadTableOffset:(CGFloat)threadTableHeightOffset;
-- (CGRect)frameForActionToolbar:(CGRect)viewRect noteFrame:(CGRect)noteViewRect toolBarHeight:(CGFloat)height;
 - (NSArray *)barButtonsForActionToolbar;
 - (void)viewForNoteThread;
 @end
@@ -64,7 +61,7 @@
 @synthesize backButton = _backButton;
 
 
-const CGFloat threadCellRowHeight = 42.0f;
+const CGFloat threadCellRowHeight = 44.0f;
 
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
@@ -293,24 +290,6 @@ const CGFloat threadCellRowHeight = 42.0f;
     return rowsDisplayed;
 }
 
-- (CGRect)frameForThreadViewTable:(CGRect)viewRect noteFrame:(CGRect)noteViewRect withRows:(NSInteger)rowsDisplayed toolBarHeight:(CGFloat)height {
-    CGFloat tableHeight  = viewRect.size.height - noteViewRect.size.height - height;
-    CGFloat tableWidth   = viewRect.size.width;
-    
-    return CGRectMake(0, noteViewRect.size.height + height, tableWidth, tableHeight);    
-}
-
-- (CGRect)frameForNoteView:(CGRect)viewRect threadTableOffset:(CGFloat)threadTableHeightOffset {
-     return CGRectMake(viewRect.origin.x, viewRect.origin.y, viewRect.size.width, viewRect.size.height - threadTableHeightOffset);
-}
-
-- (CGRect)frameForActionToolbar:(CGRect)viewRect noteFrame:(CGRect)noteViewRect toolBarHeight:(CGFloat)height {
-    CGFloat tableWidth   = self.view.frame.size.width;
-    
-    NSUInteger spaceFromBarTop = 1;
-    return CGRectMake(viewRect.origin.x, noteViewRect.size.height, tableWidth, height - spaceFromBarTop);
-}
-
 - (NSArray *)barButtonsForActionToolbar {
     UIBarButtonItem *actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(presentActionSheetForNote:)];
     actionButton.style = UIBarButtonItemStylePlain; 
@@ -325,13 +304,21 @@ const CGFloat threadCellRowHeight = 42.0f;
 - (void)viewForNoteThread {
     self.view.backgroundColor = [self->_styleService blackLinenColor];
     
-    NSInteger rowsDisplayed = [self rowsForThreadTableView];
-    CGFloat threadTableHeightOffset = ((CGFloat)rowsDisplayed * threadCellRowHeight) + NoteThreadActionToolbarHeight;
+    NSInteger rowsDisplayed = [self rowsForThreadTableView];    
+    CGRect viewRect     = [UIScreen mainScreen].applicationFrame;
     
-    CGRect viewRect     = self.view.frame;
-    CGRect noteViewRect = [self frameForNoteView:viewRect threadTableOffset:threadTableHeightOffset];
-    CGRect tableRect    = [self frameForThreadViewTable:viewRect noteFrame:noteViewRect withRows:rowsDisplayed toolBarHeight:NoteThreadActionToolbarHeight];
-    CGRect actionRect   = [self frameForActionToolbar:viewRect noteFrame:noteViewRect toolBarHeight:NoteThreadActionToolbarHeight];
+    // TABLE
+    CGFloat tableHeight = ((CGFloat)rowsDisplayed * threadCellRowHeight);
+    CGFloat tableOriginY = viewRect.size.height - threadCellRowHeight - tableHeight;
+    CGRect tableRect    = CGRectMake(0, tableOriginY, viewRect.size.width, tableHeight);
+    
+    // NOTE
+    // The -1 is to get the black border between the table and the action bar
+    CGFloat noteViewHeight = tableOriginY - NoteThreadActionToolbarHeight - 1;
+    CGRect noteViewRect = CGRectMake(0, 0, viewRect.size.width, noteViewHeight);
+    
+    // ACTION BAR
+    CGRect actionRect   = CGRectMake(0, noteViewRect.size.height, viewRect.size.width, NoteThreadActionToolbarHeight);
 
     self.noteTextView.frame = noteViewRect;
     

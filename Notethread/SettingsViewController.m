@@ -74,7 +74,15 @@ const NSInteger fontsAvailable = 4;
         [self.userDefaults setInteger:ThreadRowsDisplayedDefault forKey:ThreadRowsDisplayedKey];
     
     NSNumber *threadRows = [NSNumber numberWithInteger:[self.userDefaults integerForKey:ThreadRowsDisplayedKey]];
-    self.threadRowSlider.maximumValue = ThreadRowsDisplayedMaxRows;
+    
+    CGRect appFrame = [UIScreen mainScreen].applicationFrame;
+    CGFloat appHeight = appFrame.size.height;
+    CGFloat maxRows = ThreadRowsDisplayedMaxRows;
+    //JL: This is hack but I can't think of a nicer way
+    if (appHeight > 460.0f)
+        maxRows = 10.0f;
+    
+    self.threadRowSlider.maximumValue = maxRows;
     [self.threadRowSlider setValue:[threadRows floatValue]];
     
     self.fontFamilyName = [self.userDefaults stringForKey:FontFamilyNameDefaultKey];
