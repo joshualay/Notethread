@@ -142,7 +142,7 @@
     
     CGSize labelSize = [note.text sizeWithFont:[self->_styleService fontTextLabelPrimary]
                              constrainedToSize:CGSizeMake(tableView.frame.size.width, MAXFLOAT) 
-                                 lineBreakMode:UILineBreakModeWordWrap];
+                                 lineBreakMode:NSLineBreakByWordWrapping];
     
     // I want to get the height of the font for one character
     CGSize fontSize  = [@"s" sizeWithFont:[self->_styleService fontTextLabelPrimary]
@@ -189,7 +189,7 @@
         Note *note = [self->_notes objectAtIndex:indexPath.row];
         CGSize labelSize = [note.text sizeWithFont:[self->_styleService  fontTextLabelPrimary]
                                      constrainedToSize:CGSizeMake(tableView.frame.size.width, MAXFLOAT) 
-                                         lineBreakMode:UILineBreakModeWordWrap];
+                                         lineBreakMode:NSLineBreakByWordWrapping];
 
         return labelSize.height + SELECTED_CELL_PADDING + NoteThreadActionToolbarHeight;
     }
