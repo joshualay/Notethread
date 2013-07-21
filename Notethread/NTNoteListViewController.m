@@ -71,15 +71,6 @@ const NSInteger threadDepthInteger = 1;
         self.styleApplicationService = [StyleApplicationService sharedSingleton];   
         
         [self initFilteredListContentArrayCapacity];
-        // restore search settings if they were saved in didReceiveMemoryWarning.
-        if (self.savedSearchTerm)
-        {
-            [self.searchDisplayController setActive:self.searchWasActive];
-            [self.searchDisplayController.searchBar setSelectedScopeButtonIndex:self.savedScopeButtonIndex];
-            [self.searchDisplayController.searchBar setText:savedSearchTerm];
-            
-            self.savedSearchTerm = nil;
-        }
     }
     return self;
 }
@@ -87,10 +78,10 @@ const NSInteger threadDepthInteger = 1;
 #pragma mark - NTNoteListViewController(Selectors)
 - (IBAction)displaySettingsView {
     SettingsViewController *settingsViewController = [[SettingsViewController alloc] initWithNibName:@"SettingsViewController" bundle:nil];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
+    navController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     
-    settingsViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-    
-    [self presentModalViewController:settingsViewController animated:YES];
+    [self presentModalViewController:navController animated:YES];
 }
 
 - (IBAction)displayTagListView:(id)sender {
@@ -111,16 +102,26 @@ const NSInteger threadDepthInteger = 1;
 {
     [super viewDidLoad];
     
+    self.edgesForExtendedLayout = UIExtendedEdgeNone;
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    // restore search settings if they were saved in didReceiveMemoryWarning.
+    if (self.savedSearchTerm)
+    {
+        [self.searchDisplayController setActive:self.searchWasActive];
+        [self.searchDisplayController.searchBar setSelectedScopeButtonIndex:self.savedScopeButtonIndex];
+        [self.searchDisplayController.searchBar setText:savedSearchTerm];
+        
+        self.savedSearchTerm = nil;
+    }
+    
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
     
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(displayWriteView)];
     self.navigationItem.rightBarButtonItem = addButton;
 
-    self.tableView.backgroundColor = [self.styleApplicationService paperColor];    
-    
-    [self.tableView setContentOffset:CGPointMake(0,self.searchDisplayController.searchBar.frame.size.height)];    
-    
-    self.searchDisplayController.searchBar.scopeButtonTitles = @[@"All", @"Tags"];
+    self.tableView.backgroundColor = [self.styleApplicationService paperColor];
+    self.searchDisplayController.searchBar.scopeButtonTitles = @[NSLocalizedString(@"All", @"All"), NSLocalizedString(@"Tags", @"Tags")];
 }
 
 - (void)viewDidUnload {
@@ -163,6 +164,7 @@ const NSInteger threadDepthInteger = 1;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NTNoteViewController *noteViewController = [[NTNoteViewController alloc] initWithManagedObjectContext:self.managedObjectContext];
+    noteViewController.edgesForExtendedLayout = UIExtendedEdgeNone;
     
     Note *selectedNote = nil;
     if (tableView == self.searchDisplayController.searchResultsTableView)
