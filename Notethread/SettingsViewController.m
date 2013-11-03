@@ -28,17 +28,17 @@ const NSInteger sections = 3;
 const NSInteger fontsAvailable = 4;
 
 #pragma mark - selectors
-- (IBAction)didCancelChangeSettings:(id)sender {
-    [self dismissModalViewControllerAnimated:YES];
+- (void)didCancelChangeSettings:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (IBAction)didSaveSettings:(id)sender {
+- (void)didSaveSettings:(id)sender {
     NSInteger threadRows = (NSInteger)self.threadRowSlider.value;
     [self.userDefaults setInteger:threadRows forKey:ThreadRowsDisplayedKey];
     [self.userDefaults setValue:self.fontFamilyName forKey:FontFamilyNameDefaultKey];
     [self.userDefaults setFloat:self.fontSize forKey:FontWritingSizeKey];
     
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)didMoveThreadRowSlider:(id)sender {
@@ -78,6 +78,7 @@ const NSInteger fontsAvailable = 4;
     CGRect appFrame = [UIScreen mainScreen].applicationFrame;
     CGFloat appHeight = appFrame.size.height;
     CGFloat maxRows = ThreadRowsDisplayedMaxRows;
+    
     //JL: This is hack but I can't think of a nicer way
     if (appHeight > 460.0f)
         maxRows = 10.0f;
@@ -91,6 +92,11 @@ const NSInteger fontsAvailable = 4;
         [self.userDefaults setFloat:FontNoteSizeNormal forKey:FontWritingSizeKey];
     
     self.fontSize = [self.userDefaults floatForKey:FontWritingSizeKey];
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(didCancelChangeSettings:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(didSaveSettings:)];
+    
+    self.title = NSLocalizedString(@"Settings", @"Settings");
 }
 
 
@@ -201,7 +207,6 @@ const NSInteger fontsAvailable = 4;
     
     [fontSizeSegmentControl addTarget:self action:@selector(didSelectFontSize:) forControlEvents:UIControlEventValueChanged];
     
-    fontSizeSegmentControl.segmentedControlStyle = UISegmentedControlStyleBar;
     fontSizeSegmentControl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
     CGRect cellContentFrame      = cell.contentView.frame;

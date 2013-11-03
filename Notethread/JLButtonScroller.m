@@ -53,7 +53,7 @@
         button.titleLabel.font = font;
         
         NSString *text = [delegate stringForIndex:i];
-        CGSize stringSize = [text sizeWithFont:font];
+        CGSize stringSize = [text sizeWithAttributes:@{NSFontAttributeName: font}];
         CGFloat stringWidth = stringSize.width + buttonOffset;
 
         CGFloat heightForButton = stringSize.height;

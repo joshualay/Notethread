@@ -24,7 +24,10 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
 
+    self.window.tintColor = [UIColor blueColor];
+    
     NTNoteListViewController *masterViewController = [[NTNoteListViewController alloc] initWithNibName:@"NTNoteListViewController" bundle:nil];
+    self.navigationController.automaticallyAdjustsScrollViewInsets = NO;
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:masterViewController];
     masterViewController.managedObjectContext = self.managedObjectContext;
     self.window.rootViewController = self.navigationController;

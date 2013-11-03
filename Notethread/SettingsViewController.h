@@ -35,8 +35,8 @@ typedef enum {
 @property (strong) NSString *fontFamilyName;
 @property (assign) CGFloat fontSize;
 
-- (IBAction)didCancelChangeSettings:(id)sender;
-- (IBAction)didSaveSettings:(id)sender;
+- (void)didCancelChangeSettings:(id)sender;
+- (void)didSaveSettings:(id)sender;
 - (IBAction)didMoveThreadRowSlider:(id)sender;
 - (IBAction)didSelectFontSize:(id)sender;
 

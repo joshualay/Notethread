@@ -26,7 +26,6 @@
 
 @interface NTTagListViewController (Selectors)
 - (IBAction)dismissView:(id)sender;
-- (IBAction)presentHelpPopTipView:(id)sender;
 @end
 
 @interface NTTagListViewController (Private)
@@ -59,11 +58,6 @@
     
     UIBarButtonItem *leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Notethread" style:UIBarButtonItemStyleBordered target:self action:@selector(dismissView:)];
     self.navigationItem.leftBarButtonItem = leftBarButtonItem;
-    
-    UIButton *infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
-    [infoButton addTarget:self action:@selector(presentHelpPopTipView:) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
-    self.navigationItem.rightBarButtonItem = rightBarButtonItem;
 }
     
 - (void)viewDidUnload
@@ -209,33 +203,7 @@
 
 #pragma mark - NTTagListViewController (Selectors)
 - (IBAction)dismissView:(id)sender {
-    [self dismissModalViewControllerAnimated:YES];
-}
-
-- (IBAction)presentHelpPopTipView:(id)sender {
-    if (self->_popTipView == nil) {
-        NSString *message = @"Any #tags in your notes will show up here.";
-        self->_popTipView = [[CMPopTipView alloc] initWithMessage:message];
-        self->_popTipView.delegate = self;
-        self->_popTipView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];
-        self->_popTipView.textColor = [UIColor darkGrayColor];
-        [self->_popTipView presentPointingAtBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
-    }
-    else {
-        [self dismissPopTipView];
-    }
-}
-
-- (void)dismissPopTipView {
-    [self->_popTipView dismissAnimated:NO];
-    self->_popTipView.delegate = nil;
-    self->_popTipView = nil;
-}
-
-
-#pragma mark - CMPopTipViewDelegate
-- (void)popTipViewWasDismissedByUser:(CMPopTipView *)popTipView {
-    [self dismissPopTipView];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma markt - NTTagListViewController (CoreData)
