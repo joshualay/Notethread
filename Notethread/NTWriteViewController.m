@@ -92,7 +92,7 @@
 }
 
 - (IBAction)cancelWriting:(id)sender {
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)saveNote:(id)sender {
@@ -130,7 +130,7 @@
         [self.delegate didSaveNote];
     }
     
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)setKeyboardNotificationsObservers {

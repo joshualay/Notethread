@@ -29,7 +29,7 @@ const NSInteger fontsAvailable = 4;
 
 #pragma mark - selectors
 - (void)didCancelChangeSettings:(id)sender {
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)didSaveSettings:(id)sender {
@@ -38,7 +38,7 @@ const NSInteger fontsAvailable = 4;
     [self.userDefaults setValue:self.fontFamilyName forKey:FontFamilyNameDefaultKey];
     [self.userDefaults setFloat:self.fontSize forKey:FontWritingSizeKey];
     
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)didMoveThreadRowSlider:(id)sender {
@@ -207,7 +207,6 @@ const NSInteger fontsAvailable = 4;
     
     [fontSizeSegmentControl addTarget:self action:@selector(didSelectFontSize:) forControlEvents:UIControlEventValueChanged];
     
-    fontSizeSegmentControl.segmentedControlStyle = UISegmentedControlStyleBar;
     fontSizeSegmentControl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
     CGRect cellContentFrame      = cell.contentView.frame;

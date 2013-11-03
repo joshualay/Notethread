@@ -11,7 +11,6 @@
 		980055A3146AB884004C4802 /* NTWriteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 980055A1146AB884004C4802 /* NTWriteViewController.m */; };
 		980055A4146AB884004C4802 /* NTWriteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 980055A2146AB884004C4802 /* NTWriteViewController.xib */; };
 		9801C7B0148645CF005138A7 /* Note.m in Sources */ = {isa = PBXBuildFile; fileRef = 9801C7AF148645CF005138A7 /* Note.m */; };
-		980AFB3B15C963A000EA49C0 /* CMPopTipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 980AFB3A15C963A000EA49C0 /* CMPopTipView.m */; };
 		9815BD2B154812B500E450DA /* Notethread v1.5 Journal.md in Resources */ = {isa = PBXBuildFile; fileRef = 9815BD2A154812B500E450DA /* Notethread v1.5 Journal.md */; };
 		9815BD321548151400E450DA /* TagService.m in Sources */ = {isa = PBXBuildFile; fileRef = 9815BD311548151400E450DA /* TagService.m */; };
 		9815BD331548151400E450DA /* TagService.m in Sources */ = {isa = PBXBuildFile; fileRef = 9815BD311548151400E450DA /* TagService.m */; };
@@ -54,6 +53,7 @@
 		989D514E1488FECC002B27AB /* fabric_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 989D514D1488FECC002B27AB /* fabric_1.png */; };
 		989D5150148900FD002B27AB /* handmadepaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 989D514F148900FD002B27AB /* handmadepaper.png */; };
 		98BC4A39158C8E2900B48D38 /* NTTagListDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98BC4A38158C8E2900B48D38 /* NTTagListDetailViewController.xib */; };
+		98E03FAE18262D2F00038D24 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98E03FAD18262D2F00038D24 /* Social.framework */; };
 		98EB1EF9147BBF160018FF08 /* AlertApplicationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 98EB1EF8147BBF160018FF08 /* AlertApplicationService.m */; };
 		98EB1F01147CE9930018FF08 /* UserSettingsConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 98EB1F00147CE9930018FF08 /* UserSettingsConstants.m */; };
 		98EB1F05147D0CB70018FF08 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98EB1F03147D0CB70018FF08 /* SettingsViewController.m */; };
@@ -85,8 +85,6 @@
 		980055A2146AB884004C4802 /* NTWriteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NTWriteViewController.xib; sourceTree = "<group>"; };
 		9801C7AE148645CF005138A7 /* Note.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Note.h; path = ../Note.h; sourceTree = "<group>"; };
 		9801C7AF148645CF005138A7 /* Note.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Note.m; path = ../Note.m; sourceTree = "<group>"; };
-		980AFB3915C9639F00EA49C0 /* CMPopTipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPopTipView.h; sourceTree = "<group>"; };
-		980AFB3A15C963A000EA49C0 /* CMPopTipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPopTipView.m; sourceTree = "<group>"; };
 		9815BD2A154812B500E450DA /* Notethread v1.5 Journal.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Notethread v1.5 Journal.md"; sourceTree = "<group>"; };
 		9815BD301548151400E450DA /* TagService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagService.h; sourceTree = "<group>"; };
 		9815BD311548151400E450DA /* TagService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagService.m; sourceTree = "<group>"; };
@@ -144,6 +142,7 @@
 		989D514D1488FECC002B27AB /* fabric_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fabric_1.png; sourceTree = "<group>"; };
 		989D514F148900FD002B27AB /* handmadepaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = handmadepaper.png; sourceTree = "<group>"; };
 		98BC4A38158C8E2900B48D38 /* NTTagListDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NTTagListDetailViewController.xib; sourceTree = "<group>"; };
+		98E03FAD18262D2F00038D24 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		98EB1EF7147BBF160018FF08 /* AlertApplicationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertApplicationService.h; sourceTree = "<group>"; };
 		98EB1EF8147BBF160018FF08 /* AlertApplicationService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlertApplicationService.m; sourceTree = "<group>"; };
 		98EB1EFF147CE9930018FF08 /* UserSettingsConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserSettingsConstants.h; sourceTree = "<group>"; };
@@ -167,6 +166,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98E03FAE18262D2F00038D24 /* Social.framework in Frameworks */,
 				9848996E15874B6D008AF533 /* Twitter.framework in Frameworks */,
 				986E8074147E98C5004645CF /* MessageUI.framework in Frameworks */,
 				981821441468026D00DBC1D2 /* UIKit.framework in Frameworks */,
@@ -237,6 +237,7 @@
 		981821421468026D00DBC1D2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				98E03FAD18262D2F00038D24 /* Social.framework */,
 				981821431468026D00DBC1D2 /* UIKit.framework */,
 				981821451468026D00DBC1D2 /* Foundation.framework */,
 				981821471468026D00DBC1D2 /* CoreGraphics.framework */,
@@ -268,8 +269,6 @@
 				98EB1F03147D0CB70018FF08 /* SettingsViewController.m */,
 				98EC88F71539797C007D92A7 /* JLButtonScroller.h */,
 				98EC88F81539797C007D92A7 /* JLButtonScroller.m */,
-				980AFB3915C9639F00EA49C0 /* CMPopTipView.h */,
-				980AFB3A15C963A000EA49C0 /* CMPopTipView.m */,
 				9871256C147132DF007D56D6 /* ApplicationServices */,
 				980055A5146AB89F004C4802 /* Views */,
 				98C3FF9B146806E100133628 /* Models */,
@@ -506,7 +505,6 @@
 				9848995C1574FE41008AF533 /* NTNoteController.m in Sources */,
 				98FDA07B1587823E0045E31A /* NTTagListViewController.m in Sources */,
 				98FDA07F158782910045E31A /* NTTagListDetailViewController.m in Sources */,
-				980AFB3B15C963A000EA49C0 /* CMPopTipView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -631,7 +629,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Notethread/Notethread-Prefix.pch";
 				INFOPLIST_FILE = "Notethread/Notethread-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -644,7 +642,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Notethread/Notethread-Prefix.pch";
 				INFOPLIST_FILE = "Notethread/Notethread-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;

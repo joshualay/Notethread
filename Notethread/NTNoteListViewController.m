@@ -81,14 +81,14 @@ const NSInteger threadDepthInteger = 1;
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
     navController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     
-    [self presentModalViewController:navController animated:YES];
+    [self presentViewController:navController animated:YES completion:nil];
 }
 
 - (IBAction)displayTagListView:(id)sender {
     NTTagListViewController *tagListViewController = [[NTTagListViewController alloc] initWithManagedObjectContext:self.managedObjectContext];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:tagListViewController];
     navController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-    [self presentModalViewController:navController animated:YES];
+    [self presentViewController:navController animated:YES completion:nil];
 }
 
 
@@ -102,7 +102,7 @@ const NSInteger threadDepthInteger = 1;
 {
     [super viewDidLoad];
     
-    self.edgesForExtendedLayout = UIExtendedEdgeNone;
+    self.edgesForExtendedLayout = UIRectEdgeNone;
     self.automaticallyAdjustsScrollViewInsets = NO;
     
     // restore search settings if they were saved in didReceiveMemoryWarning.
@@ -164,7 +164,7 @@ const NSInteger threadDepthInteger = 1;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NTNoteViewController *noteViewController = [[NTNoteViewController alloc] initWithManagedObjectContext:self.managedObjectContext];
-    noteViewController.edgesForExtendedLayout = UIExtendedEdgeNone;
+    noteViewController.edgesForExtendedLayout = UIRectEdgeNone;
     
     Note *selectedNote = nil;
     if (tableView == self.searchDisplayController.searchResultsTableView)
@@ -330,10 +330,9 @@ const NSInteger threadDepthInteger = 1;
 - (void)displayWriteView {
     NTWriteViewController *writeViewController = [[NTWriteViewController alloc] initWithThreadDepth:0 parent:nil managedObjectContext:self.managedObjectContext];
     
-    writeViewController.modalTransitionStyle   = UIModalTransitionStyleCoverVertical;
-    writeViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self.styleApplicationService modalStyleForThreadWriteView:writeViewController];
     
-    [self presentModalViewController:writeViewController animated:YES];
+    [self presentViewController:writeViewController animated:YES completion:nil];
 }
 
 
@@ -350,7 +349,7 @@ const NSInteger threadDepthInteger = 1;
     
     [self.styleApplicationService modalStyleForThreadWriteView:threadWriteViewController];
     
-    [self presentModalViewController:threadWriteViewController animated:YES];
+    [self presentViewController:threadWriteViewController animated:YES completion:nil];
 }
 
 #pragma mark - NTNoteListViewController (SearchBar)

@@ -24,6 +24,8 @@
 - (IBAction)addFilteredTagToNote:(id)sender;
 - (IBAction)willComposeNewNoteWithTag:(id)sender;
 - (UITableViewCell *)cellForSelectedRowForTable:(UITableView *)tableView withNote:(Note *)note;
+
+- (CGSize)sizeForText:(NSString*)text constrainedToSize:(CGSize)constrainedSize;
 @end
 
 #define SELECTED_CELL_PADDING 44.0f
@@ -127,7 +129,7 @@
     
     writeViewController.delegate = self;
     
-    [self presentModalViewController:writeViewController animated:YES];
+    [self presentViewController:writeViewController animated:YES completion:nil];
 }
 
 - (UITableViewCell *)cellForSelectedRowForTable:(UITableView *)tableView withNote:(Note *)note {
@@ -140,18 +142,15 @@
     
     cell.detailTextLabel.backgroundColor = [UIColor clearColor];
     
-    CGSize labelSize = [note.text sizeWithFont:[self->_styleService fontTextLabelPrimary]
-                             constrainedToSize:CGSizeMake(tableView.frame.size.width, MAXFLOAT) 
-                                 lineBreakMode:NSLineBreakByWordWrapping];
+    CGSize labelSize = [self sizeForText:note.text constrainedToSize:CGSizeMake(CGRectGetWidth(tableView.frame), MAXFLOAT)];
     
     // I want to get the height of the font for one character
-    CGSize fontSize  = [@"s" sizeWithFont:[self->_styleService fontTextLabelPrimary]
-                        constrainedToSize:CGSizeMake(tableView.frame.size.width, MAXFLOAT)];
+    CGSize fontSize  = [self sizeForText:@"s" constrainedToSize:CGSizeMake(CGRectGetWidth(tableView.frame), MAXFLOAT)];
     
     UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, fontSize.height, cell.contentView.frame.size.width - (fontSize.height * 1.5f), labelSize.height)];
     textLabel.backgroundColor = [UIColor clearColor];
     textLabel.numberOfLines   = 0;
-    textLabel.lineBreakMode   = UILineBreakModeWordWrap;
+    textLabel.lineBreakMode   = NSLineBreakByWordWrapping;
     textLabel.font            = [self->_styleService fontTextLabelPrimary];
     
     textLabel.text = note.text;
@@ -172,6 +171,16 @@
     return cell;
 }
 
+- (CGSize)sizeForText:(NSString*)text constrainedToSize:(CGSize)constrainedSize
+{
+    CGRect textRect = [text boundingRectWithSize:constrainedSize
+                                              options:NSStringDrawingUsesLineFragmentOrigin
+                                           attributes:@{NSFontAttributeName:[self->_styleService fontTextLabelPrimary]}
+                                              context:nil];
+    
+    return textRect.size;
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -187,9 +196,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self->_selectedIndexPath != nil && ([indexPath compare:self->_selectedIndexPath] == NSOrderedSame)) {
         Note *note = [self->_notes objectAtIndex:indexPath.row];
-        CGSize labelSize = [note.text sizeWithFont:[self->_styleService  fontTextLabelPrimary]
-                                     constrainedToSize:CGSizeMake(tableView.frame.size.width, MAXFLOAT) 
-                                         lineBreakMode:NSLineBreakByWordWrapping];
+        CGSize labelSize = [self sizeForText:note.text constrainedToSize:CGSizeMake(CGRectGetWidth(tableView.frame), MAXFLOAT)];
 
         return labelSize.height + SELECTED_CELL_PADDING + NoteThreadActionToolbarHeight;
     }

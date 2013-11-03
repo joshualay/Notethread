@@ -7,7 +7,7 @@
 //
 
 #import <QuartzCore/QuartzCore.h>
-#import <Twitter/Twitter.h>
+#import <Social/Social.h>
 
 #import "NTNoteViewController.h"
 #import "NTWriteViewController.h"
@@ -237,10 +237,15 @@ const CGFloat threadCellRowHeight = 44.0f;
     NSString *cancel = NSLocalizedString(@"Cancel", @"Cancel");
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil 
                                                              delegate:self 
-                                                    cancelButtonTitle:cancel 
+                                                    cancelButtonTitle:nil
                                                destructiveButtonTitle:nil 
-                                                    otherButtonTitles:@"Email", @"Tweet note", nil];
+                                                    otherButtonTitles:nil];
     
+    [actionSheet addButtonWithTitle:NSLocalizedString(@"Email", @"Email")];
+    if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter])
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"Tweet note", @"Tweet note")];
+    
+    actionSheet.cancelButtonIndex = [actionSheet addButtonWithTitle:cancel];
     [actionSheet showInView:self.view];
 }
 
@@ -250,9 +255,9 @@ const CGFloat threadCellRowHeight = 44.0f;
 }
 
 - (void)tweetNote {
-    TWTweetComposeViewController *composer = [[TWTweetComposeViewController alloc] init];
+    SLComposeViewController *composer = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
     [composer setInitialText:self.note.text];
-    [self presentModalViewController:composer animated:YES];
+    [self presentViewController:composer animated:YES completion:nil];
 }
 
 #pragma mark - NTNoteViewController(NoteViewDisplay_and_Actions)
@@ -419,7 +424,7 @@ const CGFloat threadCellRowHeight = 44.0f;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NTNoteViewController *noteViewController = [[NTNoteViewController alloc] initWithManagedObjectContext:self.managedObjectContext];
-    noteViewController.edgesForExtendedLayout = UIExtendedEdgeNone;
+    noteViewController.edgesForExtendedLayout = UIRectEdgeNone;
     
     Note *selectedNote             = [self.noteThreads objectAtIndex:indexPath.row];
     noteViewController.note        = selectedNote;
@@ -438,7 +443,7 @@ const CGFloat threadCellRowHeight = 44.0f;
     
     [self->_styleService modalStyleForThreadWriteView:threadWriteViewController];
     
-    [self presentModalViewController:threadWriteViewController animated:YES];    
+    [self presentViewController:threadWriteViewController animated:YES completion:nil];
 }
 
 - (IBAction)saveNote:(id)sender {
@@ -489,7 +494,7 @@ const CGFloat threadCellRowHeight = 44.0f;
 // Dismisses the email composition interface when users tap Cancel or Send. Proceeds to update the message field with the result of the operation.
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error 
 {   
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
       
     switch (result)
     {
@@ -502,7 +507,10 @@ const CGFloat threadCellRowHeight = 44.0f;
 }
 
 #pragma UIActionSheetDelegate
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {    
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == actionSheet.cancelButtonIndex)
+        return;
+    
     switch (buttonIndex) {
         case 0:
             [self emailNotethread];
