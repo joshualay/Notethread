@@ -11,6 +11,10 @@
 		980055A3146AB884004C4802 /* NTWriteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 980055A1146AB884004C4802 /* NTWriteViewController.m */; };
 		980055A4146AB884004C4802 /* NTWriteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 980055A2146AB884004C4802 /* NTWriteViewController.xib */; };
 		9801C7B0148645CF005138A7 /* Note.m in Sources */ = {isa = PBXBuildFile; fileRef = 9801C7AF148645CF005138A7 /* Note.m */; };
+		98112A361827DF900058AC4B /* icon58x58.png in Resources */ = {isa = PBXBuildFile; fileRef = 98112A331827DF900058AC4B /* icon58x58.png */; };
+		98112A371827DF900058AC4B /* icon80x80.png in Resources */ = {isa = PBXBuildFile; fileRef = 98112A341827DF900058AC4B /* icon80x80.png */; };
+		98112A381827DF900058AC4B /* icon120x120.png in Resources */ = {isa = PBXBuildFile; fileRef = 98112A351827DF900058AC4B /* icon120x120.png */; };
+		98112A3A1827DF970058AC4B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98112A391827DF970058AC4B /* Images.xcassets */; };
 		9815BD2B154812B500E450DA /* Notethread v1.5 Journal.md in Resources */ = {isa = PBXBuildFile; fileRef = 9815BD2A154812B500E450DA /* Notethread v1.5 Journal.md */; };
 		9815BD321548151400E450DA /* TagService.m in Sources */ = {isa = PBXBuildFile; fileRef = 9815BD311548151400E450DA /* TagService.m */; };
 		9815BD331548151400E450DA /* TagService.m in Sources */ = {isa = PBXBuildFile; fileRef = 9815BD311548151400E450DA /* TagService.m */; };
@@ -85,6 +89,10 @@
 		980055A2146AB884004C4802 /* NTWriteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NTWriteViewController.xib; sourceTree = "<group>"; };
 		9801C7AE148645CF005138A7 /* Note.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Note.h; path = ../Note.h; sourceTree = "<group>"; };
 		9801C7AF148645CF005138A7 /* Note.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Note.m; path = ../Note.m; sourceTree = "<group>"; };
+		98112A331827DF900058AC4B /* icon58x58.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon58x58.png; sourceTree = "<group>"; };
+		98112A341827DF900058AC4B /* icon80x80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon80x80.png; sourceTree = "<group>"; };
+		98112A351827DF900058AC4B /* icon120x120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon120x120.png; sourceTree = "<group>"; };
+		98112A391827DF970058AC4B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		9815BD2A154812B500E450DA /* Notethread v1.5 Journal.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Notethread v1.5 Journal.md"; sourceTree = "<group>"; };
 		9815BD301548151400E450DA /* TagService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagService.h; sourceTree = "<group>"; };
 		9815BD311548151400E450DA /* TagService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagService.m; sourceTree = "<group>"; };
@@ -216,6 +224,9 @@
 				9848996615873B00008AF533 /* Notethread v1.6 Journal.md */,
 				98F911371482066600D421B0 /* icon114x114.png */,
 				98F91134148203FC00D421B0 /* icon57x57.png */,
+				98112A331827DF900058AC4B /* icon58x58.png */,
+				98112A341827DF900058AC4B /* icon80x80.png */,
+				98112A351827DF900058AC4B /* icon120x120.png */,
 				986E8073147E98C5004645CF /* MessageUI.framework */,
 				9818214B1468026D00DBC1D2 /* Notethread */,
 				981821731468026E00DBC1D2 /* NotethreadTests */,
@@ -276,6 +287,7 @@
 				9818214C1468026D00DBC1D2 /* Supporting Files */,
 				98489947156B8F33008AF533 /* NSArray+Reverse.h */,
 				98489948156B8F33008AF533 /* NSArray+Reverse.m */,
+				98112A391827DF970058AC4B /* Images.xcassets */,
 			);
 			path = Notethread;
 			sourceTree = "<group>";
@@ -429,6 +441,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				981821501468026D00DBC1D2 /* InfoPlist.strings in Resources */,
+				98112A3A1827DF970058AC4B /* Images.xcassets in Resources */,
 				981821621468026D00DBC1D2 /* MasterViewController.xib in Resources */,
 				980055A4146AB884004C4802 /* NTWriteViewController.xib in Resources */,
 				9871256214700AA0007D56D6 /* NTNoteViewController.xib in Resources */,
@@ -443,10 +456,13 @@
 				9815BD2B154812B500E450DA /* Notethread v1.5 Journal.md in Resources */,
 				9848996715873B01008AF533 /* Notethread v1.6 Journal.md in Resources */,
 				98FDA0811588AF890045E31A /* NTTagListViewController.xib in Resources */,
+				98112A361827DF900058AC4B /* icon58x58.png in Resources */,
 				98BC4A39158C8E2900B48D38 /* NTTagListDetailViewController.xib in Resources */,
+				98112A381827DF900058AC4B /* icon120x120.png in Resources */,
 				98209CFB15A5922C007E06EF /* InterfaceRules.md in Resources */,
 				9851716B15B05CD60056D8DC /* twitter_logo.png in Resources */,
 				9851716C15B05CD60056D8DC /* twitter_logo@2x.png in Resources */,
+				98112A371827DF900058AC4B /* icon80x80.png in Resources */,
 				985171BC15B842EE0056D8DC /* TagListHelpViewController.xib in Resources */,
 				9819DAE216134E0D009C6552 /* Default-568h@2x.png in Resources */,
 			);
@@ -626,6 +642,8 @@
 		9818217F1468026E00DBC1D2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Notethread/Notethread-Prefix.pch";
 				INFOPLIST_FILE = "Notethread/Notethread-Info.plist";
@@ -639,6 +657,8 @@
 		981821801468026E00DBC1D2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Notethread/Notethread-Prefix.pch";
 				INFOPLIST_FILE = "Notethread/Notethread-Info.plist";
