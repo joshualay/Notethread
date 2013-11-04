@@ -329,12 +329,10 @@ const CGFloat threadCellRowHeight = 44.0f;
     
     self.threadTableView = [[UITableView alloc] initWithFrame:tableRect style:UITableViewStylePlain];
     self.actionToolbar = [[UIToolbar alloc] initWithFrame:actionRect];
+    self.actionToolbar.tintAdjustmentMode = UIViewTintAdjustmentModeAutomatic;
     
     self.noteTextView.font         = [self->_styleService fontNoteView];    
     self.noteTextView.backgroundColor = [self->_styleService paperColor];
-    
-    self.actionToolbar.tintColor   = [UIColor lightGrayColor];
-    self.actionToolbar.translucent = YES;
     
     [self.actionToolbar setItems:[self barButtonsForActionToolbar]];
     [self.view addSubview:self.actionToolbar];
@@ -440,10 +438,11 @@ const CGFloat threadCellRowHeight = 44.0f;
     
     [self removeKeyboardNotificationObservers];
     NTWriteViewController *threadWriteViewController = [[NTWriteViewController alloc] initWithThreadDepth:threadDepthInteger parent:self.note managedObjectContext:self.managedObjectContext];
+    UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:threadWriteViewController];
     
     [self->_styleService modalStyleForThreadWriteView:threadWriteViewController];
     
-    [self presentViewController:threadWriteViewController animated:YES completion:nil];
+    [self presentViewController:navController animated:YES completion:nil];
 }
 
 - (IBAction)saveNote:(id)sender {

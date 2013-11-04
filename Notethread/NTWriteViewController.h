@@ -23,9 +23,6 @@
 
 @property (nonatomic, assign) id<NTWriteViewDelegate> delegate;
 
-@property (strong, nonatomic) IBOutlet UINavigationBar *navigationBar;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *saveButton;
-
 @property (assign, nonatomic) NSInteger noteDepth;
 @property (strong, nonatomic) Note *parentNote;
 
@@ -53,7 +50,7 @@
 - (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 - (id)initWithThreadDepth:(NSInteger)threadDepth parent:(Note *)note initialText:(NSString *)text managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
-- (IBAction)cancelWriting:(id)sender;
-- (IBAction)saveNote:(id)sender;
+- (void)cancelWriting:(id)sender;
+- (void)saveNote:(id)sender;
 
 @end

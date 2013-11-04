@@ -27,8 +27,6 @@
 
 @synthesize delegate;
 
-@synthesize navigationBar = _navigationBar;
-@synthesize saveButton    = _saveButton;
 @synthesize noteDepth     = _noteDepth;
 @synthesize parentNote    = _parentNote;
 
@@ -65,7 +63,10 @@
     [super viewDidLoad];
     [self.noteTextView becomeFirstResponder];
     
-    self.navigationBar.topItem.title = NSLocalizedString(@"New note", @"New note");
+    self.title = NSLocalizedString(@"New note", @"New note");
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelWriting:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveNote:)];
 
     self.noteTextView.backgroundColor = [UIColor clearColor];
     self.noteTextView.text = [self->_initialNoteText copy];
@@ -76,7 +77,7 @@
     self->_initialNoteText = nil;
     self.view.backgroundColor = [self->_styleService paperColor];
 
-    self.saveButton.enabled = ([self.noteTextView.text length]) ? YES : NO;
+    self.navigationItem.rightBarButtonItem.enabled = ([self.noteTextView.text length]) ? YES : NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -91,11 +92,11 @@
     return YES;
 }
 
-- (IBAction)cancelWriting:(id)sender {
+- (void)cancelWriting:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (IBAction)saveNote:(id)sender {
+- (void)saveNote:(id)sender {
     if ([self.delegate respondsToSelector:@selector(willSaveNote)]) {
         [self.delegate willSaveNote];
     }
@@ -158,17 +159,9 @@
         
     CGRect newFrame = self.noteTextView.frame;
     
-    CGFloat scrollViewHeight = self->_tagButtonScrollView.frame.size.height;
-    newFrame.origin.y = self.navigationBar.frame.size.height;
-    if (UIDeviceOrientationIsPortrait(self.interfaceOrientation)) {
-        CGFloat height = VIEWHEIGHT - keyboardFrame.size.height - self.navigationBar.frame.size.height - scrollViewHeight;
-        newFrame.size = CGSizeMake(PORTRAIT_WIDTH, height);
-    }
-    else {
-        CGFloat height = VIEWWIDTH - keyboardFrame.size.width - self.navigationBar.frame.size.height - scrollViewHeight;
-        height += scrollViewHeight / 2.7f;
-        newFrame.size = CGSizeMake(VIEWHEIGHT, height);
-    }
+    newFrame.origin.y = 0.0f;
+    newFrame.size.height = (UIDeviceOrientationIsPortrait(self.interfaceOrientation)) ? keyboardFrame.origin.y : keyboardFrame.origin.x;
+    newFrame.size.height -= 10.0f;
     self.noteTextView.frame = newFrame;
         
     [UIView commitAnimations];  
@@ -183,26 +176,26 @@
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {    
     [super textView:textView shouldChangeTextInRange:range replacementText:text];
 
-    self.navigationBar.topItem.title = [self titleForNote:textView.text];
-    self.saveButton.enabled = ([textView.text length]) ? YES : NO;
+    self.title = [self titleForNote:textView.text];
+    self.navigationItem.rightBarButtonItem.enabled = ([textView.text length]) ? YES : NO;
     
     if (range.location == 0 && [text isEqualToString:@""]) {
-        self.navigationBar.topItem.title = @"";
-        self.saveButton.enabled = NO;
+        self.title = @"";
+        self.navigationItem.rightBarButtonItem.enabled = NO;
     }
     
     return YES;
 }
 
 - (void)textViewDidChange:(UITextView *)textView {
-    self.saveButton.enabled = ([textView.text length]) ? YES : NO;
-    self.navigationBar.topItem.title = [self titleForNote:textView.text];
+    self.navigationItem.rightBarButtonItem.enabled = ([textView.text length]) ? YES : NO;
+    self.title = [self titleForNote:textView.text];
 }
 
 
 - (void)addButtonTagNameToText:(id)sender {
     [super addButtonTagNameToText:sender];
-    self.navigationBar.topItem.title = self.noteTextView.text;
+    self.title = self.noteTextView.text;
 }
 
 

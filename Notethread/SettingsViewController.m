@@ -275,24 +275,6 @@ const NSInteger fontsAvailable = 4;
 }
 
 #pragma mark - Table view delegate
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    if (section == lastSection) {
-        UIImage *twitterLogo = [UIImage imageNamed:@"twitter_logo"];
-        CGFloat halfLogo = twitterLogo.size.width / 2.0f;
-        
-        UIImageView *twitterImageView = [[UIImageView alloc] initWithImage:twitterLogo];
-        
-        CGFloat imageX = (tableView.frame.size.width / 2.0f) - halfLogo;
-        twitterImageView.frame = CGRectMake(imageX, 10.0f, twitterLogo.size.width, twitterLogo.size.height);
-        UIButton *twitterButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 44.0f)];
-        [twitterButton addSubview:twitterImageView];
-        [twitterButton addTarget:self action:@selector(launchTwitter:) forControlEvents:UIControlEventTouchUpInside];
-        return twitterButton;
-    }
-    
-    return nil;
-}
-
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     if (section == lastSection)
         return 55.0f;

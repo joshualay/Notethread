@@ -7,9 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NTWriteViewController">
             <connections>
-                <outlet property="navigationBar" destination="8" id="19"/>
                 <outlet property="noteTextView" destination="14" id="16"/>
-                <outlet property="saveButton" destination="11" id="23"/>
                 <outlet property="view" destination="1" id="13"/>
             </connections>
         </placeholder>
@@ -19,8 +17,8 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="14">
-                    <rect key="frame" x="5" y="49" width="310" height="180"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <rect key="frame" x="5" y="0.0" width="310" height="387"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <fontDescription key="fontDescription" name="Georgia" family="Georgia" pointSize="17"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -28,27 +26,6 @@
                         <outlet property="delegate" destination="-1" id="20"/>
                     </connections>
                 </textView>
-                <navigationBar contentMode="top" id="8">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                    <items>
-                        <navigationItem id="9">
-                            <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="10">
-                                <connections>
-                                    <action selector="cancelWriting:" destination="-1" id="17"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem key="rightBarButtonItem" style="done" systemItem="save" id="11">
-                                <connections>
-                                    <action selector="saveNote:" destination="-1" id="18"/>
-                                </connections>
-                            </barButtonItem>
-                            <connections>
-                                <outlet property="leftBarButtonItem" destination="10" id="22"/>
-                            </connections>
-                        </navigationItem>
-                    </items>
-                </navigationBar>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
         </view>

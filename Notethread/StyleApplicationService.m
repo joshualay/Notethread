@@ -113,15 +113,15 @@
 }
 
 - (UIColor *)colorForTableFooter {
-    return [UIColor colorWithPatternImage:[UIImage imageNamed:@"handmadepaper.png"]];
+    return [UIColor whiteColor];
 }
 
 - (UIColor *)paperColor {
-    return [UIColor colorWithPatternImage:[UIImage imageNamed:@"fabric_1.png"]];
+    return [UIColor colorWithWhite:0.98f alpha:1.0f];
 }
 
 - (UIColor *)blackLinenColor {
-    return [UIColor colorWithPatternImage:[UIImage imageNamed:@"black-Linen.png"]];
+    return [UIColor colorWithWhite:0.94f alpha:0.8f];
 }
 
 - (UILabel *)labelForTagScrollBarWithFrame:(CGRect)frame {
@@ -133,7 +133,7 @@
 - (UIScrollView *)scrollViewForTagAtPoint:(CGPoint)point width:(CGFloat)width {
     CGRect tagButtonScrollFrame = CGRectMake(point.x, point.y, width, NoteThreadActionToolbarHeight);
     UIScrollView *tagScrollView = [[UIScrollView alloc] initWithFrame:tagButtonScrollFrame];
-    tagScrollView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];  
+    tagScrollView.backgroundColor = [UIColor colorWithWhite:0.98f alpha:1.0f];
     return tagScrollView;
 }
 
@@ -145,7 +145,7 @@
 - (UIButton *)customUIButtonStyle {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     
-    [button setTintColor:[UIColor lightTextColor]];
+    [button setTintColor:[UIColor colorWithWhite:0.98f alpha:0.98f]];
     
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [button setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
@@ -153,7 +153,7 @@
     [button setTitleShadowColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
     [button setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     
-    button.backgroundColor = [UIColor darkGrayColor];
+    button.backgroundColor = [UIColor colorWithWhite:0.94f alpha:0.85f];
     button.layer.borderColor = [UIColor grayColor].CGColor;
     button.layer.borderWidth = 0.8f;
     button.layer.cornerRadius = 3.0f;

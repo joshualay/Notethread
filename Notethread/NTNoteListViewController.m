@@ -79,7 +79,7 @@ const NSInteger threadDepthInteger = 1;
 - (IBAction)displaySettingsView {
     SettingsViewController *settingsViewController = [[SettingsViewController alloc] initWithNibName:@"SettingsViewController" bundle:nil];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
-    navController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    navController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     
     [self presentViewController:navController animated:YES completion:nil];
 }
@@ -87,7 +87,7 @@ const NSInteger threadDepthInteger = 1;
 - (IBAction)displayTagListView:(id)sender {
     NTTagListViewController *tagListViewController = [[NTTagListViewController alloc] initWithManagedObjectContext:self.managedObjectContext];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:tagListViewController];
-    navController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    navController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     [self presentViewController:navController animated:YES completion:nil];
 }
 
@@ -329,10 +329,10 @@ const NSInteger threadDepthInteger = 1;
 // Top level note: UIModalTransitionStyleCoverVertical
 - (void)displayWriteView {
     NTWriteViewController *writeViewController = [[NTWriteViewController alloc] initWithThreadDepth:0 parent:nil managedObjectContext:self.managedObjectContext];
+    UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:writeViewController];
     
     [self.styleApplicationService modalStyleForThreadWriteView:writeViewController];
-    
-    [self presentViewController:writeViewController animated:YES completion:nil];
+    [self presentViewController:navController animated:YES completion:nil];
 }
 
 
@@ -346,10 +346,10 @@ const NSInteger threadDepthInteger = 1;
     
     Note *activeNote = [self.fetchedResultsController objectAtIndexPath:indexPath];
     NTWriteViewController *threadWriteViewController = [[NTWriteViewController alloc] initWithThreadDepth:threadDepthInteger parent:activeNote managedObjectContext:self.managedObjectContext];
-    
+    UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:threadWriteViewController];
     [self.styleApplicationService modalStyleForThreadWriteView:threadWriteViewController];
     
-    [self presentViewController:threadWriteViewController animated:YES completion:nil];
+    [self presentViewController:navController animated:YES completion:nil];
 }
 
 #pragma mark - NTNoteListViewController (SearchBar)

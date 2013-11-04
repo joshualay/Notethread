@@ -56,7 +56,7 @@
 
     self->_tableView.backgroundColor = [self->_styleService paperColor];
     
-    UIBarButtonItem *leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Notethread" style:UIBarButtonItemStyleBordered target:self action:@selector(dismissView:)];
+    UIBarButtonItem *leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Close" style:UIBarButtonItemStyleBordered target:self action:@selector(dismissView:)];
     self.navigationItem.leftBarButtonItem = leftBarButtonItem;
 }
     

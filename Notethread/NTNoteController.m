@@ -54,6 +54,9 @@
     UIButton *addTagButton = [self->_styleService customUIButtonStyle];
     addTagButton.frame =  CGRectMake(5.0f, 2.0f, 30.0f, 26.0f);
     addTagButton.titleLabel.font = [UIFont fontWithName:@"Courier-New-Bold" size:17.0f];
+
+    [addTagButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    
     [addTagButton setTitle:@" # " forState:UIControlStateNormal];
     
     [addTagButton addTarget:self action:@selector(addTagToNote:) forControlEvents:UIControlEventTouchUpInside];

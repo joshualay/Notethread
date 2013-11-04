@@ -123,13 +123,12 @@
 
 - (IBAction)willComposeNewNoteWithTag:(id)sender {       
     NTWriteViewController *writeViewController = [[NTWriteViewController alloc] initWithThreadDepth:0 parent:nil initialText:[NSString stringWithFormat:@" #%@", self->_tag.name] managedObjectContext:self.managedObjectContext];
+    UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:writeViewController];
     
-    writeViewController.modalTransitionStyle   = UIModalTransitionStyleCoverVertical;
-    writeViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-    
+    [self->_styleService modalStyleForThreadWriteView:writeViewController];
     writeViewController.delegate = self;
     
-    [self presentViewController:writeViewController animated:YES completion:nil];
+    [self presentViewController:navController animated:YES completion:nil];
 }
 
 - (UITableViewCell *)cellForSelectedRowForTable:(UITableView *)tableView withNote:(Note *)note {

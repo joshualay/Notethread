@@ -70,6 +70,8 @@
         [button setTitle:text forState:UIControlStateSelected];
         [button setTitle:text forState:UIControlStateDisabled];
         
+        [button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+        
         if ([delegate respondsToSelector:@selector(setTitleForStateNormalFor:atIndex:)])
             [delegate setTitleForStateNormalFor:button atIndex:i];
         
